@@ -19,7 +19,7 @@ const renderControlElements = (controlType) => {
 // Filter And Generate Sorted Control Elements
 // controlsType: filter || sorting
 const generateControlElements = (controlType) => {
-  const getControlElements = dataControlElements.controls
+  return dataControlElements.controls
     .filter((controlElement) => {
       return controlElement.type === controlType;
     })
@@ -41,7 +41,6 @@ const generateControlElements = (controlType) => {
     `;
     })
     .join(``);
-  return getControlElements;
 };
 
 export default renderControlElements;
