@@ -3,7 +3,7 @@
     {
       "type": "sorting",
       "name": "Event",
-      "isChecked": true
+      "checked": true
     },
     {
       "type": "sorting",
@@ -16,12 +16,12 @@
     {
       "type": "sorting",
       "name": "Offers",
-      "isDisabled": true
+      "disabled": true
     },
     {
       "type": "filter",
       "name": "Everything",
-      "isChecked": true
+      "checked": true
     },
     {
       "type": "filter",
