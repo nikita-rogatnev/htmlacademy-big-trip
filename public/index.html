@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Big Trip</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:500,600,700,800,900&amp;subset=cyrillic-ext" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" media="screen" href="./css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="content-wrap header__wrap">
+    <section class="trip">
+      <div class="trip__schedule">
+        <i class="trip-icon">⛰️</i>
+        <h1 class="trip__points">Amsterdam&nbsp;&mdash; Geneva&nbsp;&mdash;  Chamonix</h1>
+        <p class="trip__dates">Mar 17&nbsp;&mdash; 19</p>
+      </div>
+      <p class="trip__total">Total: <span class="trip__total-cost">&euro;&nbsp;1500</span></p>
+    </section>
+
+    <section class="trip-controls">
+      <nav class="trip-controls__menus view-switch">
+        <a href="#table" class="view-switch__item view-switch__item--active">Table</a>
+        <a href="#stats" class="view-switch__item">Stats</a>
+
+        <form class="trip-filter">
+          <input type="radio" id="filter-everything" name="filter" value="everything" checked>
+          <label class="trip-filter__item" for="filter-everything">Everything</label>
+
+          <input type="radio" id="filter-future" name="filter" value="future">
+          <label class="trip-filter__item" for="filter-future">Future</label>
+
+          <input type="radio" id="filter-past"name="filter" value="past">
+          <label class="trip-filter__item" for="filter-past">Past</label>
+        </form>
+      </nav>
+
+      <button class="trip-controls__new-event new-event">+ New Event</button>
+    </section>
+  </div>
+</header>
+
+
+<main class="main content-wrap" id="table">
+  <form class="trip-sorting">
+    <input type="radio" name="trip-sorting" id="sorting-event" value="event" checked>
+    <label class="trip-sorting__item trip-sorting__item--event" for="sorting-event">Event</label>
+
+    <input type="radio" name="trip-sorting" id="sorting-time" value="time">
+    <label class="trip-sorting__item trip-sorting__item--time" for="sorting-time">Time</label>
+
+    <input type="radio" name="trip-sorting" id="sorting-price" value="price">
+    <label class="trip-sorting__item trip-sorting__item--price" for="sorting-price">Price</label>
+
+    <span class="trip-sorting__item trip-sorting__item--offers">Offers</span>
+  </form>
+
+  <section class="trip-points">
+    <section class="trip-day">
+      <article class="trip-day__info">
+        <span class="trip-day__caption">Day</span>
+        <p class="trip-day__number">1</p>
+        <h2 class="trip-day__title">Mar 18</h2>
+      </article>
+
+      <div class="trip-day__items">
+        <article class="trip-point">
+          <i class="trip-icon">🚕</i>
+          <h3 class="trip-point__title">Taxi to Airport</h3>
+          <p class="trip-point__schedule">
+            <span class="trip-point__timetable">10:00&nbsp;&mdash; 11:00</span>
+            <span class="trip-point__duration">1h 30m</span>
+          </p>
+          <p class="trip-point__price">&euro;&nbsp;20</p>
+          <ul class="trip-point__offers">
+            <li>
+              <button class="trip-point__offer">Order UBER +&euro;&nbsp;20</button>
+            </li>
+            <li>
+              <button class="trip-point__offer">Upgrade to business +&euro;&nbsp;20</button>
+            </li>
+          </ul>
+        </article>
+        <article class="trip-point">
+          <i class="trip-icon">✈️</i>
+          <h3 class="trip-point__title">Flight to Geneva</h3>
+          <p class="trip-point__schedule">
+            <span class="trip-point__timetable">10:00&nbsp;&mdash; 11:00</span>
+            <span class="trip-point__duration">1h 30m</span>
+          </p>
+          <p class="trip-point__price">&euro;&nbsp;20</p>
+          <ul class="trip-point__offers">
+            <li>
+              <button class="trip-point__offer">Upgrade to business +&euro;&nbsp;20</button>
+            </li>
+            <li>
+              <button class="trip-point__offer">Select meal +&euro;&nbsp;20</button>
+            </li>
+          </ul>
+        </article>
+        <article class="trip-point">
+          <i class="trip-icon">🚗</i>
+          <h3 class="trip-point__title">Drive to Chamonix</h3>
+          <p class="trip-point__schedule">
+            <span class="trip-point__timetable">10:00&nbsp;&mdash; 11:00</span>
+            <span class="trip-point__duration">1h 30m</span>
+          </p>
+          <p class="trip-point__price">&euro;&nbsp;20</p>
+          <ul class="trip-point__offers">
+            <li>
+                <button class="trip-point__offer">Rent a car +&euro;&nbsp;200</button>
+              </li>
+          </ul>
+        </article>
+        <article class="trip-point">
+          <i class="trip-icon">🏨</i>
+          <h3 class="trip-point__title">Check into a hotel</h3>
+          <p class="trip-point__schedule">
+            <span class="trip-point__timetable">10:00&nbsp;&mdash; 11:00</span>
+            <span class="trip-point__duration">1h 30m</span>
+          </p>
+          <p class="trip-point__price">&euro;&nbsp;20</p>
+          <ul class="trip-point__offers">
+            <li>
+              <button class="trip-point__offer">Add breakfast +&euro;&nbsp;20</button>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </section>
+</main>
+
+</body>
+</html>
