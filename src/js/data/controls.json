@@ -1,0 +1,35 @@
+{
+  "controls": [
+    {
+      "type": "sorting",
+      "name": "Event",
+      "isChecked": true
+    },
+    {
+      "type": "sorting",
+      "name": "Time"
+    },
+    {
+      "type": "sorting",
+      "name": "Price"
+    },
+    {
+      "type": "sorting",
+      "name": "Offers",
+      "isDisabled": true
+    },
+    {
+      "type": "filter",
+      "name": "Everything",
+      "isChecked": true
+    },
+    {
+      "type": "filter",
+      "name": "Future"
+    },
+    {
+      "type": "filter",
+      "name": "Past"
+    }
+  ]
+}
