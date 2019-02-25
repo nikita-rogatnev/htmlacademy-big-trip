@@ -5,14 +5,8 @@ const filterContainer = document.querySelector(`.trip-filter`);
 const sortingContainer = document.querySelector(`.trip-sorting`);
 
 // Render Control Elements
-const renderControlElements = (controlType) => {
-  let container;
-  if (controlType === `filter`) {
-    container = filterContainer;
-  } else {
-    container = sortingContainer;
-  }
-  console.log(controlType, container);
+export const renderControlElements = (controlType) => {
+  const container = controlType === `filter` ? filterContainer : sortingContainer;
   return container.insertAdjacentHTML(`beforeend`, generateControlElements(controlType));
 };
 
@@ -20,27 +14,22 @@ const renderControlElements = (controlType) => {
 // controlsType: filter || sorting
 const generateControlElements = (controlType) => {
   return dataControlElements.controls
-    .filter((controlElement) => {
-      return controlElement.type === controlType;
-    })
+    .filter((controlElement) => controlElement.type === controlType)
     .map((controlElement) => {
       return `
-      <input
+        <input
           type="radio"
           id="${controlElement.type}-${controlElement.name.toLowerCase()}"
           name="${controlElement.type}"
           value="${controlElement.name.toLowerCase()}"
           ${controlElement.checked ? `checked` : ``}
           ${controlElement.disabled ? `disabled` : ``}
-        />
-      <label
+          />
+        <label
           for="${controlElement.type}-${controlElement.name.toLowerCase()}"
           class="trip-${controlElement.type}__item trip-${controlElement.type}__item--${controlElement.name.toLowerCase()}">
           ${controlElement.name}
-        </label>
-    `;
+        </label>`;
     })
     .join(``);
 };
-
-export default renderControlElements;

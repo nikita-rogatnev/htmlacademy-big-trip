@@ -1,5 +1,5 @@
-import renderTripPoints from './modules/points';
-import renderControlElements from './modules/controls';
+import {renderTripPoints} from './modules/points';
+import {renderControlElements} from './modules/controls';
 
 // Render Control Elements
 renderControlElements(`filter`);

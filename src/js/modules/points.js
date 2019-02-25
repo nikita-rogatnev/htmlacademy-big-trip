@@ -4,7 +4,7 @@ import * as dataTripPoints from '../data/points.json';
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
 
 // Render Trip Points
-const renderTripPoints = () => {
+export const renderTripPoints = () => {
   return tripPointsContainer.insertAdjacentHTML(`beforeend`, generateTripPoints);
 };
 
@@ -28,9 +28,6 @@ const generateTripPoints = dataTripPoints.points
             <button class="trip-point__offer">${tripPoint.offers[1].offer}</button>
           </li>
         </ul>
-      </article>
-    `;
+      </article>`;
   })
   .join(``);
-
-export default renderTripPoints;
