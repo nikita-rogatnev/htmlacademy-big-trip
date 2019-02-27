@@ -52,10 +52,8 @@ const generateTripPoints = (tripPoint) => {
 };
 
 // Render Trip Points
-export const renderTasks = (dist, amount) => {
-  if (amount) {
-    return dist.insertAdjacentHTML(`beforeend`, new Array(amount).fill(generateTripPoints(stubTripPoints())).join(``));
-  }
-  return dist.insertAdjacentHTML(`beforeend`, dataTripPoints.map((tripPoint) => generateTripPoints(tripPoint)).join(``));
+export const renderTripPoints = (dist, amount) => {
+  const renderList = amount ? new Array(amount).fill(generateTripPoints(stubTripPoints())) : dataTripPoints.map((tripPoint) => generateTripPoints(tripPoint));
+  return dist.insertAdjacentHTML(`beforeend`, renderList.join(``));
 };
 

@@ -1,5 +1,5 @@
-import {renderTasks} from './modules/points';
 import {renderControlElements} from './modules/controls';
+import {renderTripPoints} from './modules/points';
 
 // Trip Points Container
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
@@ -14,5 +14,6 @@ If real data - render from points-list.json
 If stub stub - render from stubTripPoints()
 Use: renderTasks(container, stub tripPoints number);
 */
-renderTasks(tripPointsContainer);
-renderTasks(tripPointsContainer, 5);
+
+renderTripPoints(tripPointsContainer);
+renderTripPoints(tripPointsContainer, 5);
