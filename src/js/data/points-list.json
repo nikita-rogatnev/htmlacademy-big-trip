@@ -7,14 +7,12 @@
       "to": "14:40"
     },
     "price": 20,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=1"
   },
   {
@@ -25,14 +23,12 @@
       "to": "15:30"
     },
     "price": 44,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=2"
   },
   {
@@ -43,14 +39,12 @@
       "to": "14:40"
     },
     "price": 12,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=3"
   },
   {
@@ -61,14 +55,12 @@
       "to": "14:40"
     },
     "price": 20,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=4"
   },
   {
@@ -79,14 +71,12 @@
       "to": "14:40"
     },
     "price": 20,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=5"
   },
   {
@@ -97,14 +87,12 @@
       "to": "14:40"
     },
     "price": 20,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=6"
   },
   {
@@ -115,14 +103,12 @@
       "to": "14:40"
     },
     "price": 20,
-    "offers": [
-      {
-        "offer": "Order UBER +&euro;&nbsp;20"
-      },
-      {
-        "offer": "Upgrade to business +&euro;&nbsp;20"
-      }
-    ],
+    "offers": {
+      "Add luggage": true,
+      "Switch to comfort class": false,
+      "Add meal": false,
+      "Choose seat false": true
+    },
     "picture": "//picsum.photos/100/100?r=7"
   }
 ]

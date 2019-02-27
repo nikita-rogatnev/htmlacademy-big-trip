@@ -1,6 +1,13 @@
 import * as dataTripPoints from '../data/points-list.json';
 import {emojiList, getDurationTime} from '../libs/helpers';
 
+const offers = new Set([
+  `Add luggage`,
+  `Switch to comfort class`,
+  `Add meal`,
+  `Choose seat`
+]);
+
 // Trip Points Stub Data
 const stubTripPoints = () => ({
   get icon() {
@@ -21,16 +28,7 @@ const stubTripPoints = () => ({
   get price() {
     return Math.floor(Math.random() * Math.floor(100));
   },
-  offersList: [
-    `Add luggage`,
-    `Switch to comfort class`,
-    `Add meal`,
-    `Choose seats`
-  ],
-  get offers() {
-    return this.offersList.map((offer) => `<li><button class="trip-point__offer">${offer}</button></li>`).join(``);
-  },
-  picture: `//picsum.photos/100/100?r=${Math.random()}`,
+  picture: `//picsum.photos/100/100?r=${Math.random()}`
 });
 
 // Generate Trip Points
@@ -47,7 +45,9 @@ const generateTripPoints = (tripPoint) => {
         <img src="${tripPoint.picture}" alt="${tripPoint.title}" width="100" height="100">
       </p>
       <p class="trip-point__price">&euro;&nbsp; ${tripPoint.price}</p>
-      <ul class="trip-point__offers">${tripPoint.offers}</ul>
+      <ul class="trip-point__offers">
+        ${[...offers].map((offer) => `<li><button class="trip-point__offer">${offer}</button></li>`).join(``)}
+      </ul>
     </article>`;
 };
 
@@ -56,4 +56,3 @@ export const renderTripPoints = (dist, amount) => {
   const renderList = amount ? new Array(amount).fill(generateTripPoints(stubTripPoints())) : dataTripPoints.map((tripPoint) => generateTripPoints(tripPoint));
   return dist.insertAdjacentHTML(`beforeend`, renderList.join(``));
 };
-
