@@ -1,5 +1,5 @@
 {
-  "controls": [
+  "controlsList": [
     {
       "type": "sorting",
       "name": "Event",

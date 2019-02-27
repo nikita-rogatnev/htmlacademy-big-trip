@@ -1,0 +1,114 @@
+[
+  {
+    "icon": "\uD83D\uDE95 ",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 11:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=1"
+  },
+  {
+    "icon": "\uD83D\uDE95",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 13:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=2"
+  },
+  {
+    "icon": "\uD83D\uDE95",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 15:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=3"
+  },
+  {
+    "icon": "\uD83D\uDE95",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 11:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=3"
+  },
+  {
+    "icon": "\uD83D\uDE95",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 11:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=5"
+  },
+  {
+    "icon": "\uD83D\uDE95",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 11:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=6"
+  },
+  {
+    "icon": "\uD83D\uDE95",
+    "title": "Taxi to Airport",
+    "timeTable": "10:00&nbsp;&mdash; 11:00",
+    "duration": "1h 30m",
+    "price": "&euro;&nbsp;20",
+    "offers": [
+      {
+        "offer": "Order UBER +&euro;&nbsp;20"
+      },
+      {
+        "offer": "Upgrade to business +&euro;&nbsp;20"
+      }
+    ],
+    "picture": "//picsum.photos/100/100?r=6"
+  }
+]

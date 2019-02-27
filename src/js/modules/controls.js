@@ -1,4 +1,4 @@
-import * as dataControlElements from '../data/controls.json';
+import * as dataControlElements from '../data/controls-list.json';
 
 // Control Containers
 const filterContainer = document.querySelector(`.trip-filter`);
@@ -13,7 +13,7 @@ export const renderControlElements = (controlType) => {
 // Filter And Generate Sorted Control Elements
 // controlsType: filter || sorting
 const generateControlElements = (controlType) => {
-  return dataControlElements.controls
+  return dataControlElements.controlsList
     .filter((controlElement) => controlElement.type === controlType)
     .map((controlElement) => {
       return `
