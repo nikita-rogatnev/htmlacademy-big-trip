@@ -13,7 +13,7 @@ export const renderControlElements = (controlType) => {
 // Filter And Generate Sorted Control Elements
 // controlsType: filter || sorting
 const generateControlElements = (controlType) => {
-  return dataControlElements.controlsList
+  return dataControlElements
     .filter((controlElement) => controlElement.type === controlType)
     .map((controlElement) => {
       return `
@@ -24,7 +24,7 @@ const generateControlElements = (controlType) => {
           value="${controlElement.name.toLowerCase()}"
           ${controlElement.checked ? `checked` : ``}
           ${controlElement.disabled ? `disabled` : ``}
-          />
+        />
         <label
           for="${controlElement.type}-${controlElement.name.toLowerCase()}"
           class="trip-${controlElement.type}__item trip-${controlElement.type}__item--${controlElement.name.toLowerCase()}">
