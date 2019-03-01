@@ -1,0 +1,33 @@
+[
+  {
+    "type": "sorting",
+    "name": "Event",
+    "checked": true
+  },
+  {
+    "type": "sorting",
+    "name": "Time"
+  },
+  {
+    "type": "sorting",
+    "name": "Price"
+  },
+  {
+    "type": "sorting",
+    "name": "Offers",
+    "disabled": true
+  },
+  {
+    "type": "filter",
+    "name": "Everything",
+    "checked": true
+  },
+  {
+    "type": "filter",
+    "name": "Future"
+  },
+  {
+    "type": "filter",
+    "name": "Past"
+  }
+]
