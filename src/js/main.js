@@ -15,5 +15,4 @@ If stub stub - render from stubTripPoints()
 Use: renderTasks(container, stub tripPoints number);
 */
 
-renderTripPoints(tripPointsContainer);
 renderTripPoints(tripPointsContainer, 5);

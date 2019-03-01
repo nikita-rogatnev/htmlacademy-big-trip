@@ -4,12 +4,6 @@ import * as dataControlElements from '../data/controls-list.json';
 const filterContainer = document.querySelector(`.trip-filter`);
 const sortingContainer = document.querySelector(`.trip-sorting`);
 
-// Render Control Elements
-export const renderControlElements = (controlType) => {
-  const container = controlType === `filter` ? filterContainer : sortingContainer;
-  return container.insertAdjacentHTML(`beforeend`, generateControlElements(controlType));
-};
-
 // Filter And Generate Sorted Control Elements
 // controlsType: filter || sorting
 const generateControlElements = (controlType) => {
@@ -32,4 +26,10 @@ const generateControlElements = (controlType) => {
         </label>`;
     })
     .join(``);
+};
+
+// Render Control Elements
+export const renderControlElements = (controlType) => {
+  const container = controlType === `filter` ? filterContainer : sortingContainer;
+  container.insertAdjacentHTML(`beforeend`, generateControlElements(controlType));
 };

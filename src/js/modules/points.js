@@ -1,25 +1,25 @@
 import * as dataTripPoints from '../data/points-list.json';
 import {emojiList, getDurationTime} from '../libs/helpers';
 
-const offers = new Set([
-  `Add luggage`,
-  `Switch to comfort class`,
-  `Add meal`,
-  `Choose seat`
-]);
-
 // Trip Points Stub Data
 const stubTripPoints = () => ({
   get icon() {
     return `checkIn`;
   },
-  titleList: [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-    `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
-  ],
+  titleList: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Cras aliquet varius magna, non porta ligula feugiat eget.
+              Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.
+              Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.
+              Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.
+              Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
+              Sed sed nisi sed augue convallis suscipit in sed felis.
+              Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.
+              In rutrum ac purus sit amet tempus.`,
   get title() {
-    return this.titleList[Math.floor(Math.random() * this.titleList.length)];
+    const titlesArray = this.titleList.replace(/([.?!])\s*(?=[A-Z])/g, `$1|`).split(`|`);
+    const titlesNumber = Math.floor(Math.random() * Math.floor(3) + 1);
+    const stubTitles = titlesArray.sort(() => 0.5 - Math.random()).slice(0, titlesNumber);
+    return stubTitles.join(` `);
   },
   timeTable: {
     from: `10:00`,
@@ -28,7 +28,20 @@ const stubTripPoints = () => ({
   get price() {
     return Math.floor(Math.random() * Math.floor(100));
   },
-  picture: `//picsum.photos/100/100?r=${Math.random()}`
+  picture: `//picsum.photos/100/100?r=${Math.random()}`,
+  offersList: [
+    `Add luggage`,
+    `Switch to comfort class`,
+    `Add meal`,
+    `Choose seat`
+  ],
+  get offers() {
+    const offersArray = this.offersList;
+    const offersNumber = Math.floor(Math.random() * Math.floor(3));
+    const formattedOffersArray = offersArray.map((offer) => `<li><button class="trip-point__offer">${offer}</button></li>`);
+    const stubOffers = formattedOffersArray.sort(() => 0.5 - Math.random()).slice(0, offersNumber);
+    return stubOffers.join(``);
+  }
 });
 
 // Generate Trip Points
@@ -46,13 +59,15 @@ const generateTripPoints = (tripPoint) => {
       </p>
       <p class="trip-point__price">&euro;&nbsp; ${tripPoint.price}</p>
       <ul class="trip-point__offers">
-        ${[...offers].map((offer) => `<li><button class="trip-point__offer">${offer}</button></li>`).join(``)}
+        ${tripPoint.offers}
       </ul>
     </article>`;
 };
 
 // Render Trip Points
 export const renderTripPoints = (dist, amount) => {
-  const renderList = amount ? new Array(amount).fill(generateTripPoints(stubTripPoints())) : dataTripPoints.map((tripPoint) => generateTripPoints(tripPoint));
-  return dist.insertAdjacentHTML(`beforeend`, renderList.join(``));
+  const renderList = amount ?
+    new Array(amount).fill(generateTripPoints(stubTripPoints())) :
+    dataTripPoints.map((tripPoint) => generateTripPoints(tripPoint));
+  dist.insertAdjacentHTML(`beforeend`, renderList.join(``));
 };
