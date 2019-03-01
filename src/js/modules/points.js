@@ -68,6 +68,6 @@ const generateTripPoints = (tripPoint) => {
 export const renderTripPoints = (dist, amount) => {
   const renderList = amount ?
     new Array(amount).fill(generateTripPoints(stubTripPoints())) :
-    dataTripPoints.map((tripPoint) => generateTripPoints(tripPoint));
+    dataTripPoints.map(generateTripPoints);
   dist.insertAdjacentHTML(`beforeend`, renderList.join(``));
 };

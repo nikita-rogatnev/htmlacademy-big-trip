@@ -16,8 +16,7 @@ export const emojiList = {
 
 // Get Time Residue
 export const getDurationTime = (timeFrom, timeTo) => {
-  return moment.utc(+moment
-    .duration(moment.utc(timeTo, `HH:mm`)
-      .diff(moment.utc(timeFrom, `HH:mm`))
-    )).format(`H[H] mm[M]`);
+  const fromTime = moment.utc(timeFrom, `HH:mm`);
+  const toTime = moment.utc(timeTo, `HH:mm`);
+  return moment.utc(+moment.duration(toTime.diff(fromTime))).format(`H[H] mm[M]`);
 };
