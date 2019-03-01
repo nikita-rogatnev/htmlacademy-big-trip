@@ -6,7 +6,8 @@ const stubTripPoints = () => ({
   get icon() {
     return `checkIn`;
   },
-  titleList: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  get title() {
+    const titleList = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Cras aliquet varius magna, non porta ligula feugiat eget.
               Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.
               Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.
@@ -14,9 +15,8 @@ const stubTripPoints = () => ({
               Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
               Sed sed nisi sed augue convallis suscipit in sed felis.
               Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.
-              In rutrum ac purus sit amet tempus.`,
-  get title() {
-    const titlesArray = this.titleList.replace(/([.?!])\s*(?=[A-Z])/g, `$1|`).split(`|`);
+              In rutrum ac purus sit amet tempus.`;
+    const titlesArray = titleList.replace(/([.?!])\s*(?=[A-Z])/g, `$1|`).split(`|`);
     const titlesNumber = Math.floor(Math.random() * Math.floor(3) + 1);
     const stubTitles = titlesArray.sort(() => 0.5 - Math.random()).slice(0, titlesNumber);
     return stubTitles.join(` `);
