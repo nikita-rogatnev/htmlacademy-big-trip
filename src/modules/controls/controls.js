@@ -1,12 +1,13 @@
-import * as dataControlElements from '../data/controls-list.json';
+import * as dataControlElements from './data.json';
 
 // Control Containers
 const filterContainer = document.querySelector(`.trip-filter`);
 const sortingContainer = document.querySelector(`.trip-sorting`);
 
 // Filter And Generate Sorted Control Elements
-// controlsType: filter || sorting
 const generateControlElements = (controlType) => {
+
+  // TODO: почему орет на .filter?
   return dataControlElements
     .filter((controlElement) => controlElement.type === controlType)
     .map((controlElement) => {

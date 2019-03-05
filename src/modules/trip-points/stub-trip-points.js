@@ -1,8 +1,5 @@
-import * as dataTripPoints from '../data/points-list.json';
-import {emojiList, getDurationTime} from '../libs/helpers';
-
 // Trip Points Stub Data
-const stubTripPoints = () => ({
+export const stubTripPoints = {
   get icon() {
     return `checkIn`;
   },
@@ -18,7 +15,9 @@ const stubTripPoints = () => ({
                        In rutrum ac purus sit amet tempus.`;
     const titlesArray = titleList.replace(/([.?!])\s*(?=[A-Z])/g, `$1|`).split(`|`);
     const titlesNumber = Math.floor(Math.random() * Math.floor(3) + 1);
-    const stubTitles = titlesArray.sort(() => 0.5 - Math.random()).slice(0, titlesNumber);
+    const stubTitles = titlesArray
+      .sort(() => 0.5 - Math.random())
+      .slice(0, titlesNumber);
     return stubTitles.join(` `);
   },
   timeTable: {
@@ -28,6 +27,8 @@ const stubTripPoints = () => ({
   get price() {
     return Math.floor(Math.random() * Math.floor(100));
   },
+
+  // TODO: почему генерит одинаковые картинки при каждой интерции?
   picture: `//picsum.photos/100/100?r=${Math.random()}`,
   offersList: [
     `Add luggage`,
@@ -39,35 +40,9 @@ const stubTripPoints = () => ({
     const offersArray = this.offersList;
     const offersNumber = Math.floor(Math.random() * Math.floor(3));
     const formattedOffersArray = offersArray.map((offer) => `<li><button class="trip-point__offer">${offer}</button></li>`);
-    const stubOffers = formattedOffersArray.sort(() => 0.5 - Math.random()).slice(0, offersNumber);
+    const stubOffers = formattedOffersArray
+      .sort(() => 0.5 - Math.random())
+      .slice(0, offersNumber);
     return stubOffers.join(``);
-  }
-});
-
-// Generate Trip Points
-const generateTripPoints = (tripPoint) => {
-  return `
-    <article class="trip-point">
-      <i class="trip-icon">${emojiList[tripPoint.icon]}</i>
-      <h3 class="trip-point__title">${tripPoint.title}</h3>
-      <p class="trip-point__schedule">
-        <span class="trip-point__timetable">${tripPoint.timeTable.from} &nbsp;&mdash; ${tripPoint.timeTable.to}</span>
-        <span class="trip-point__duration">
-          ${getDurationTime(tripPoint.timeTable.from, tripPoint.timeTable.to)}
-        </span>
-        <img src="${tripPoint.picture}" alt="${tripPoint.title}" width="100" height="100">
-      </p>
-      <p class="trip-point__price">&euro;&nbsp; ${tripPoint.price}</p>
-      <ul class="trip-point__offers">
-        ${tripPoint.offers}
-      </ul>
-    </article>`;
-};
-
-// Render Trip Points
-export const renderTripPoints = (dist, amount) => {
-  const renderList = amount ?
-    new Array(amount).fill(generateTripPoints(stubTripPoints())) :
-    dataTripPoints.map(generateTripPoints);
-  dist.insertAdjacentHTML(`beforeend`, renderList.join(``));
+  },
 };

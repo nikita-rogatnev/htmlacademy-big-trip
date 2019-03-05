@@ -1,18 +1,27 @@
-import {renderControlElements} from './modules/controls';
-import {renderTripPoints} from './modules/points';
+import {renderControlElements} from './modules/controls/controls';
+import {stubTripPoints} from './modules/trip-points/stub-trip-points';
+import {TripPoint} from './modules/trip-points/trip-point';
+import {TripPointEdit} from './modules/trip-points/trip-point-edit';
 
-// Trip Points Container
-const tripPointsContainer = document.querySelector(`.trip-day__items`);
-
-// Render Control Elements
+// Control Elements
 renderControlElements(`filter`);
 renderControlElements(`sorting`);
 
-/*
-Render Trip Points
-If real data - render from points-list.json
-If stub stub - render from stubTripPoints()
-Use: renderTasks(container, stub tripPoints number);
-*/
+// Trip Points
+const tripPointsContainer = document.querySelector(`.trip-day__items`);
+const tripPointsComponent = new TripPoint(stubTripPoints);
+const editTripPointsComponent = new TripPointEdit(stubTripPoints);
 
-renderTripPoints(tripPointsContainer, 5);
+tripPointsContainer.appendChild(tripPointsComponent.render());
+
+tripPointsComponent.onEdit = () => {
+  editTripPointsComponent.render();
+  tripPointsContainer.replaceChild(editTripPointsComponent.element, tripPointsComponent.element);
+  tripPointsComponent.unRender();
+};
+
+editTripPointsComponent.onSubmit = () => {
+  tripPointsComponent.render();
+  tripPointsContainer.replaceChild(tripPointsComponent.element, editTripPointsComponent.element);
+  editTripPointsComponent.unRender();
+};
