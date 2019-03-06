@@ -10,12 +10,10 @@ renderControlElements(`sorting`);
 // Trip Points
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
 const tripPointsComponent = new TripPoint(stubTripPoints);
-const tripPointsComponent2 = new TripPoint(stubTripPoints);
 
 const editTripPointsComponent = new TripPointEdit(stubTripPoints);
 
 tripPointsContainer.appendChild(tripPointsComponent.render());
-tripPointsContainer.appendChild(tripPointsComponent2.render());
 
 tripPointsComponent.onEdit = () => {
   editTripPointsComponent.render();

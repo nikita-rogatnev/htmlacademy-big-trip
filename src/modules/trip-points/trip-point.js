@@ -65,8 +65,6 @@ export class TripPoint {
   }
 
   bind() {
-    console.log(`click`);
-
     // TODO: куда вешать непонятно, повесил пока на иконку
     this._element.querySelector(`.trip-icon`)
       .addEventListener(`click`, this._onEditButtonClick);
