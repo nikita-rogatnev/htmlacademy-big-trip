@@ -14,10 +14,11 @@ export class TripPointEdit {
 
     this._element = null;
     this._onSubmit = null;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
 
-
-    // TODO: null
-    this._formElement = this._element.querySelector(`.point form`);
+    this._state = {
+      // Состояние компонента
+    };
   }
 
   _onSubmitButtonClick(evt) {
@@ -32,7 +33,6 @@ export class TripPointEdit {
     return this._element;
   }
 
-  // TODO: почему предлагает сделать static?
   get template() {
     return `
       <article class="point">
@@ -85,7 +85,7 @@ export class TripPointEdit {
       
             <label class="point__time">
               choose time
-              <input class="point__input" type="text" value="00:00 — 00:00" name="time" placeholder="00:00 — 00:00">
+              <input class="point__input" type="text" value="${this._timeTableFrom} — ${this._timeTableTo}" name="time" placeholder="00:00 — 00:00">
             </label>
       
             <label class="point__price">
@@ -161,7 +161,8 @@ export class TripPointEdit {
   }
 
   bind() {
-    this._formElement.addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    const form = this._element.querySelector(`.point form`);
+    form.addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
   unbind() {

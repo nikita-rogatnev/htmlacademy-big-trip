@@ -14,11 +14,12 @@ export class TripPoint {
     this._picture = data.picture;
 
     this._element = null;
+    this._onEdit = null;
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
+
     this._state = {
       // Состояние компонента
     };
-
-    this._onEdit = null;
   }
 
   _onEditButtonClick() {
@@ -64,9 +65,11 @@ export class TripPoint {
   }
 
   bind() {
+    console.log(`click`);
+
     // TODO: куда вешать непонятно, повесил пока на иконку
     this._element.querySelector(`.trip-icon`)
-      .addEventListener(`click`, this._onEditButtonClick.bind(this));
+      .addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {
