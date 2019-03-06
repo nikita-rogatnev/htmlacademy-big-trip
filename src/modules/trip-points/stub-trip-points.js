@@ -27,17 +27,16 @@ export const stubTripPoints = {
   get price() {
     return Math.floor(Math.random() * Math.floor(100));
   },
-
-  // TODO: почему генерит одинаковые картинки при каждой интерции?
-  picture: `//picsum.photos/100/100?r=${Math.random()}`,
-  offersList: [
-    `Add luggage`,
-    `Switch to comfort class`,
-    `Add meal`,
-    `Choose seat`
-  ],
+  get picture() {
+    return `//picsum.photos/100/100?r=${Math.random()}`;
+  },
   get offers() {
-    const offersArray = this.offersList;
+    const offersArray = [
+      `Add luggage`,
+      `Switch to comfort class`,
+      `Add meal`,
+      `Choose seat`
+    ];
     const offersNumber = Math.floor(Math.random() * Math.floor(3));
     const formattedOffersArray = offersArray.map((offer) => `<li><button class="trip-point__offer">${offer}</button></li>`);
     const stubOffers = formattedOffersArray

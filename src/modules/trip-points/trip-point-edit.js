@@ -14,11 +14,14 @@ export class TripPointEdit {
 
     this._element = null;
     this._onSubmit = null;
+
+
+    // TODO: null
+    this._formElement = this._element.querySelector(`.point form`);
   }
 
   _onSubmitButtonClick(evt) {
-    // TODO: почему в демке без return? https://up.htmlacademy.ru/ecmascript/8/demos/2159#10
-    return typeof this._onSubmit === `function` && this._onSubmit();
+    typeof this._onSubmit === `function` && this._onSubmit();
   }
 
   set onSubmit(fn) {
@@ -88,7 +91,7 @@ export class TripPointEdit {
             <label class="point__price">
               write price
               <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="160" name="price">
+              <input class="point__input" type="text" value="${this._price}" name="price">
             </label>
       
             <div class="point__buttons">
@@ -131,7 +134,7 @@ export class TripPointEdit {
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
-              <p class="point__destination-text">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+              <p class="point__destination-text">${this._title}</p>
               <div class="point__destination-images">
                 <img src="http://picsum.photos/330/140?r=123" alt="picture from place" class="point__destination-image">
                 <img src="http://picsum.photos/300/200?r=1234" alt="picture from place" class="point__destination-image">
@@ -158,8 +161,7 @@ export class TripPointEdit {
   }
 
   bind() {
-    const form = this._element.querySelector(`.point form`);
-    form.addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._formElement.addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
   }
 
   unbind() {

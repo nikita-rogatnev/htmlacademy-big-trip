@@ -22,7 +22,7 @@ export class TripPoint {
   }
 
   _onEditButtonClick() {
-    return typeof this._onEdit === `function` && this._onEdit();
+    typeof this._onEdit === `function` && this._onEdit();
   }
 
   get element() {
