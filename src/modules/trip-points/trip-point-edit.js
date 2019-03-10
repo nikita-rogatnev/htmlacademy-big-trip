@@ -18,6 +18,7 @@ export class TripPointEdit extends Component {
   }
 
   _onSubmitButtonClick(evt) {
+    evt.preventDefault();
     typeof this._onSubmit === `function` && this._onSubmit();
   }
 
