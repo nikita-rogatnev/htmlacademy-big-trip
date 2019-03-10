@@ -1,5 +1,5 @@
 import {renderControlElements} from './modules/controls/controls';
-import {stubTripPoints} from './modules/trip-points/stub-trip-points';
+import {stubTripPoints} from './modules/trip-points/data';
 import {TripPoint} from './modules/trip-points/trip-point';
 import {TripPointEdit} from './modules/trip-points/trip-point-edit';
 
@@ -18,11 +18,11 @@ tripPointsContainer.appendChild(tripPointsComponent.render());
 tripPointsComponent.onEdit = () => {
   editTripPointsComponent.render();
   tripPointsContainer.replaceChild(editTripPointsComponent.element, tripPointsComponent.element);
-  tripPointsComponent.unRender();
+  tripPointsComponent.unrender();
 };
 
 editTripPointsComponent.onSubmit = () => {
   tripPointsComponent.render();
   tripPointsContainer.replaceChild(tripPointsComponent.element, editTripPointsComponent.element);
-  editTripPointsComponent.unRender();
+  editTripPointsComponent.unrender();
 };
