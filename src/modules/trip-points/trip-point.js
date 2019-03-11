@@ -1,10 +1,11 @@
-import {emojiList} from '../helpers/emoji-list';
-import {createTripPoint} from './create-element';
-import {getDurationTime} from '../helpers/get-duration-time';
+import {Component} from '../../component';
+import {emojiList} from '../../helpers/emoji-list';
+import {getDurationTime} from '../../helpers/get-duration-time';
 
 // Trip Point Class
-export class TripPoint {
+export class TripPoint extends Component {
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._title = data.title;
     this._timeTableFrom = data.timeTable.from;
@@ -13,21 +14,12 @@ export class TripPoint {
     this._offers = data.offers;
     this._picture = data.picture;
 
-    this._element = null;
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
-
-    this._state = {
-      // Состояние компонента
-    };
   }
 
   _onEditButtonClick() {
     typeof this._onEdit === `function` && this._onEdit();
-  }
-
-  get element() {
-    return this._element;
   }
 
   set onEdit(fn) {
@@ -53,24 +45,13 @@ export class TripPoint {
       </article>`.trim();
   }
 
-  render() {
-    this._element = createTripPoint(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unRender() {
-    this.unbind();
-    this._element = null;
-  }
-
   bind() {
-    // TODO: куда вешать непонятно, повесил пока на иконку
     this._element.querySelector(`.trip-icon`)
       .addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {
-    // Remove Handlers
+    this._element.querySelector(`.trip-icon`)
+      .removeEventListener(`click`, this._onEditButtonClick);
   }
 }

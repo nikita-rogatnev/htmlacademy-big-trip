@@ -8,8 +8,7 @@ const sortingContainer = document.querySelector(`.trip-sorting`);
 const generateControlElements = (controlType) => {
 
   // TODO: почему орет на .filter?
-  return dataControlElements
-    .filter((controlElement) => controlElement.type === controlType)
+  return dataControlElements.filter((controlElement) => controlElement.type === controlType)
     .map((controlElement) => {
       return `
         <input
