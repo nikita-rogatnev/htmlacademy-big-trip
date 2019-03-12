@@ -1,9 +1,10 @@
-import {emojiList} from '../helpers/emoji-list';
-import {createTripPoint} from './create-element';
+import {Component} from '../../component';
+import {emojiList} from '../../helpers/emoji-list';
 
 // Trip Point Edit Class
-export class TripPointEdit {
+export class TripPointEdit extends Component {
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._title = data.title;
     this._timeTableFrom = data.timeTable.from;
@@ -12,25 +13,17 @@ export class TripPointEdit {
     this._offers = data.offers;
     this._picture = data.picture;
 
-    this._element = null;
     this._onSubmit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-
-    this._state = {
-      // Состояние компонента
-    };
   }
 
   _onSubmitButtonClick(evt) {
+    evt.preventDefault();
     typeof this._onSubmit === `function` && this._onSubmit();
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -149,23 +142,13 @@ export class TripPointEdit {
       </article>`.trim();
   }
 
-  render() {
-    this._element = createTripPoint(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unRender() {
-    this.unbind();
-    this._element = null;
-  }
-
   bind() {
-    const form = this._element.querySelector(`.point form`);
-    form.addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point form`)
+      .addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
   unbind() {
-    // Remove Handlers
+    this._element.querySelector(`.point form`)
+      .removeEventListener(`submit`, this._onSubmitButtonClick);
   }
 }

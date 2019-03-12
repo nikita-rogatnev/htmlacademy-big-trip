@@ -1,4 +1,4 @@
-import * as moment from '../../libs/moment';
+import * as moment from '../libs/moment';
 
 // Get Time Residue
 export const getDurationTime = (timeFrom, timeTo) => {
