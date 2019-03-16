@@ -29,6 +29,6 @@ editTripPointsComponent.onSubmit = (newObject) => {
 
   tripPointsComponent.update(tripPoint);
   tripPointsComponent.render();
-  tripPointsComponent.replaceChild(tripPointsComponent.element, editTripPointsComponent.element);
+  tripPointsContainer.replaceChild(tripPointsComponent.element, editTripPointsComponent.element);
   editTripPointsComponent.unrender();
 };
