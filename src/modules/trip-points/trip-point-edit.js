@@ -75,7 +75,7 @@ export class TripPointEdit extends Component {
         'add-luggage': false,
         'switch-to-comfort-class': false,
         'add-meal': false,
-        'choose-seats:': false
+        'choose-seats': false
       }
     };
 
@@ -192,22 +192,22 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
               
               <div class="point__offers-wrap">
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offers.addLuggage && `checked`}>
+                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offers[`add-luggage`] && `checked`}>
                 <label for="add-luggage" class="point__offers-label">
                   <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
                 </label>
       
-                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offers.comfortClass && `checked`}>
+                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offers[`switch-to-comfort-class`] && `checked`}>
                 <label for="switch-to-comfort-class" class="point__offers-label">
                   <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
                 </label>
         
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offers.addMeal && `checked`}>
+                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offers[`add-meal`] && `checked`}>
                 <label for="add-meal" class="point__offers-label">
                   <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
                 </label>
           
-                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offers.chooseSeats && `checked`}>
+                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offers[`choose-seats`] && `checked`}>
                 <label for="choose-seats" class="point__offers-label">
                   <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
                 </label>
