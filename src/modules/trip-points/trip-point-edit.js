@@ -1,29 +1,118 @@
 import {Component} from '../../component';
-import {emojiList} from '../../helpers/emoji-list';
+import moment from 'moment';
+import flatpickr from 'flatpickr';
+import "../../../node_modules/flatpickr/dist/flatpickr.css";
+import "../../../node_modules/flatpickr/dist/themes/dark.css";
 
 // Trip Point Edit Class
 export class TripPointEdit extends Component {
   constructor(data) {
     super();
-    this._icon = data.icon;
-    this._title = data.title;
+    this._favorite = data.favorite;
+    this._travelType = data.travelType;
+    this._destinationTitle = data.destinationTitle;
+    this._destinationText = data.destinationText;
     this._timeTableFrom = data.timeTable.from;
     this._timeTableTo = data.timeTable.to;
     this._price = data.price;
     this._offers = data.offers;
     this._picture = data.picture;
 
-    this._onSubmit = null;
+    this._state.isTravelWay = false;
+    this._state.isHasOffers = false;
+
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onSubmit = null;
+
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onDelete = null;
+  }
+
+  _onChangeFavorite() {
+    this._state.isFavorite = !this._state.isFavorite;
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    typeof this._onSubmit === `function` && this._onSubmit();
+
+    const formData = new FormData(this._element.querySelector(`.point form`));
+    const newData = this._processForm(formData);
+    typeof this._onSubmit === `function` && this._onSubmit(newData);
+
+    this.update(newData);
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+
+  _onDeleteButtonClick() {
+    return (typeof this._onDelete === `function`) && this._onDelete();
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
+  _onCloseFlatpickr(selectedDates) {
+    this._timeTableFrom = moment(selectedDates[0]).format(`LT`);
+    this._timeTableTo = moment(selectedDates[1]).format(`LT`);
+  }
+
+  _onChangeType() {
+  }
+
+  _processForm(formData) {
+    const entry = {
+      destinationTitle: ``,
+      timeTableFrom: this._timeTableFrom,
+      timeTableTo: this._timeTableTo,
+      price: 0,
+      offers: {
+        'add-luggage': false,
+        'switch-to-comfort-class': false,
+        'add-meal': false,
+        'choose-seats:': false
+      }
+    };
+
+    const tripPointEditMapper = TripPointEdit.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      if (tripPointEditMapper[property]) {
+        tripPointEditMapper[property](value);
+      }
+    }
+
+    console.log(entry);
+
+    return entry;
+  }
+
+  update(data) {
+    this._destinationTitle = data.destination;
+    this._timeTableFrom = new Date();
+    this._timeTableTo = new Date();
+    this._price = data.price;
+    this._offers = data.offer;
+  }
+
+  static createMapper(target) {
+    return {
+      destination: (value) => {
+        target.destinationTitle = value;
+      },
+      price: (value) => {
+        target.price = value;
+      },
+      offer: (value) => {
+        target.offers[value] = true;
+      },
+    };
   }
 
   get template() {
@@ -67,7 +156,7 @@ export class TripPointEdit extends Component {
       
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">Flight to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destinationTitle}" name="destination">
               <datalist id="destination-select">
                 <option value="airport"></option>
                 <option value="Geneva"></option>
@@ -78,7 +167,7 @@ export class TripPointEdit extends Component {
       
             <label class="point__time">
               choose time
-              <input class="point__input" type="text" value="${this._timeTableFrom} — ${this._timeTableTo}" name="time" placeholder="00:00 — 00:00">
+              <input class="point__input" type="text" value="${this._timeTableFrom} TO ${this._timeTableTo}" name="time" placeholder="00:00 — 00:00">
             </label>
       
             <label class="point__price">
@@ -93,47 +182,44 @@ export class TripPointEdit extends Component {
             </div>
       
             <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
-              <label class="point__favorite" for="favorite">favorite</label>
+              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._state.isFavorite ? `checked` : ``}>
+               <label class="point__favorite" for="favorite">favorite</label>
             </div>
           </header>
-      
+            
           <section class="point__details">
             <section class="point__offers">
               <h3 class="point__details-title">offers</h3>
-      
+              
               <div class="point__offers-wrap">
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
+                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offers.addLuggage && `checked`}>
                 <label for="add-luggage" class="point__offers-label">
                   <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
                 </label>
       
-                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class">
+                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offers.comfortClass && `checked`}>
                 <label for="switch-to-comfort-class" class="point__offers-label">
                   <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
                 </label>
-      
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal">
+        
+                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offers.addMeal && `checked`}>
                 <label for="add-meal" class="point__offers-label">
                   <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
                 </label>
-      
-                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats">
+          
+                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offers.chooseSeats && `checked`}>
                 <label for="choose-seats" class="point__offers-label">
                   <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
                 </label>
               </div>
-              
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
-              <p class="point__destination-text">${this._title}</p>
+              <p class="point__destination-text">${this._destinationText}</p>
               <div class="point__destination-images">
-                <img src="http://picsum.photos/330/140?r=123" alt="picture from place" class="point__destination-image">
-                <img src="http://picsum.photos/300/200?r=1234" alt="picture from place" class="point__destination-image">
-                <img src="http://picsum.photos/300/100?r=12345" alt="picture from place" class="point__destination-image">
-                <img src="http://picsum.photos/200/300?r=123456" alt="picture from place" class="point__destination-image">
-                <img src="http://picsum.photos/100/300?r=1234567" alt="picture from place" class="point__destination-image">
+                <img src="${this._picture}" alt="picture from place" class="point__destination-image">
+                <img src="${this._picture} + 1" alt="picture from place" class="point__destination-image">
+                <img src="${this._picture} + 2" alt="picture from place" class="point__destination-image">
               </div>
             </section>
             <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -145,10 +231,33 @@ export class TripPointEdit extends Component {
   bind() {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
+
+    this._element.querySelector(`.point__button[type="reset"]`)
+      .addEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element.querySelector(`.travel-way__select`)
+      .addEventListener(`click`, this._onChangeType);
+
+    this._element.querySelector(`.point__time .point__input`).flatpickr({
+      mode: `range`,
+      enableTime: true,
+      dateFormat: `H:i`,
+      onClose: this._onCloseFlatpickr
+    });
   }
 
   unbind() {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
+
+    this._element.querySelector(`.point__buttons button[type="reset"]`)
+      .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element.querySelector(`.travel-way__select`)
+      .removeEventListener(`click`, this._onChangeType);
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
   }
 }
