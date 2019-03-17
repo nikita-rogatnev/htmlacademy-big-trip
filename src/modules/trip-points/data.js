@@ -23,18 +23,16 @@ export const stubTripPoints = {
       .slice(0, Math.floor(Math.random() * Math.floor(3) + 1))
       .join(` `);
   },
-  timeTable: {
-    from: `10:00`,
-    to: `14:36`
-  },
+  timeTableFrom: new Date(`Tue Mar 1 2019 20:53:48 GMT+0300 (MSK)`),
+  timeTableTo: new Date(`Tue Mar 1 2019 23:53:48 GMT+0300 (MSK)`),
   price: Math.floor(Math.random() * Math.floor(100)),
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;
   },
-  offers: {
-    'add-luggage': true,
-    'switch-to-comfort-class': false,
-    'add-meal': false,
-    'choose-seats:': false
-  },
+  offers: new Set([
+    `Add-luggage`,
+    `Switch to comfort class`,
+    `Add meal`,
+    `Choose seats`
+  ]),
 };

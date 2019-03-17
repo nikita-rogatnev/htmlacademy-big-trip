@@ -12,14 +12,11 @@ export class TripPointEdit extends Component {
     this._travelType = data.travelType;
     this._destinationTitle = data.destinationTitle;
     this._destinationText = data.destinationText;
-    this._timeTableFrom = data.timeTable.from;
-    this._timeTableTo = data.timeTable.to;
+    this._timeTableFrom = data.timeTableFrom;
+    this._timeTableTo = data.timeTableTo;
     this._price = data.price;
     this._offers = data.offers;
     this._picture = data.picture;
-
-    this._state.isTravelWay = false;
-    this._state.isHasOffers = false;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -28,19 +25,14 @@ export class TripPointEdit extends Component {
     this._onDelete = null;
   }
 
-  _onChangeFavorite() {
-    this._state.isFavorite = !this._state.isFavorite;
-    this.unbind();
-    this._partialUpdate();
-    this.bind();
-  }
-
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.point form`));
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
+
+    console.log(newData);
 
     this.update(newData);
   }
@@ -57,26 +49,13 @@ export class TripPointEdit extends Component {
     this._onDelete = fn;
   }
 
-  _onCloseFlatpickr(selectedDates) {
-    this._timeTableFrom = moment(selectedDates[0]).format(`LT`);
-    this._timeTableTo = moment(selectedDates[1]).format(`LT`);
-  }
-
-  _onChangeType() {
-  }
-
   _processForm(formData) {
     const entry = {
       destinationTitle: ``,
       timeTableFrom: this._timeTableFrom,
       timeTableTo: this._timeTableTo,
       price: 0,
-      offers: {
-        'add-luggage': false,
-        'switch-to-comfort-class': false,
-        'add-meal': false,
-        'choose-seats': false
-      }
+      offers: new Set(),
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -88,15 +67,11 @@ export class TripPointEdit extends Component {
       }
     }
 
-    console.log(entry);
-
     return entry;
   }
 
   update(data) {
     this._destinationTitle = data.destination;
-    this._timeTableFrom = new Date();
-    this._timeTableTo = new Date();
     this._price = data.price;
     this._offers = data.offer;
   }
@@ -110,7 +85,7 @@ export class TripPointEdit extends Component {
         target.price = value;
       },
       offer: (value) => {
-        target.offers[value] = true;
+        target.offers.add(value);
       },
     };
   }
@@ -192,34 +167,21 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
               
               <div class="point__offers-wrap">
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offers[`add-luggage`] && `checked`}>
-                <label for="add-luggage" class="point__offers-label">
-                  <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
-                </label>
-      
-                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offers[`switch-to-comfort-class`] && `checked`}>
-                <label for="switch-to-comfort-class" class="point__offers-label">
-                  <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-                </label>
-        
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offers[`add-meal`] && `checked`}>
-                <label for="add-meal" class="point__offers-label">
-                  <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-                </label>
-          
-                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offers[`choose-seats`] && `checked`}>
-                <label for="choose-seats" class="point__offers-label">
-                  <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-                </label>
+                ${(Array.from(this._offers).map((offer) => (`
+                  <input class="point__offers-input visually-hidden" type="checkbox" name="offer" 
+                    id="${offer.split(` `).join(`-`).toLocaleLowerCase()}" 
+                    value="${offer.split(` `).join(`-`).toLocaleLowerCase()}">
+                  <label for="${offer.split(` `).join(`-`).toLocaleLowerCase()}" class="point__offers-label">
+                    <span class="point__offer-service">${offer.split(`-`).join(` `).toLocaleLowerCase()}</span> + €<span class="point__offer-price">${Math.floor(Math.random() * Math.floor(100))}</span>
+                  </label>`.trim()))).join(``)}
               </div>
+                  
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
               <p class="point__destination-text">${this._destinationText}</p>
               <div class="point__destination-images">
                 <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-                <img src="${this._picture} + 1" alt="picture from place" class="point__destination-image">
-                <img src="${this._picture} + 2" alt="picture from place" class="point__destination-image">
               </div>
             </section>
             <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -235,9 +197,6 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.point__button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element.querySelector(`.travel-way__select`)
-      .addEventListener(`click`, this._onChangeType);
-
     this._element.querySelector(`.point__time .point__input`).flatpickr({
       mode: `range`,
       enableTime: true,
@@ -246,18 +205,16 @@ export class TripPointEdit extends Component {
     });
   }
 
+  _onCloseFlatpickr(selectedDates) {
+    this._timeTableFrom = moment(selectedDates[0]);
+    this._timeTableTo = moment(selectedDates[1]);
+  }
+
   unbind() {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
 
     this._element.querySelector(`.point__buttons button[type="reset"]`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
-
-    this._element.querySelector(`.travel-way__select`)
-      .removeEventListener(`click`, this._onChangeType);
-  }
-
-  _partialUpdate() {
-    this._element.innerHTML = this.template;
   }
 }

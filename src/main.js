@@ -25,7 +25,7 @@ editTripPointsComponent.onSubmit = (newObject) => {
   tripPoint.timeTableFrom = newObject.timeTableFrom;
   tripPoint.timeTableTo = newObject.timeTableTo;
   tripPoint.price = newObject.price;
-  //tripPoint.offers = newObject.offers;
+  tripPoint.offers = newObject.offers;
 
   tripPointsComponent.update(tripPoint);
   tripPointsComponent.render();
