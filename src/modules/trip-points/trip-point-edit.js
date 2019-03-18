@@ -215,8 +215,6 @@ export class TripPointEdit extends Component {
   _onCloseFlatpickr(selectedDates) {
     this._timeTableFrom = moment(selectedDates[0]);
     this._timeTableTo = moment(selectedDates[1]);
-
-    console.log(this._timeTableFrom, this._timeTableTo);
   }
 
   unbind() {
