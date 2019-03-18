@@ -64,7 +64,12 @@ export class TripPointEdit extends Component {
       timeDuration: this._timeDuration,
       price: 0,
       totalPrice: 0,
-      offer: new Set(),
+      offer: {
+        'add-luggage': false,
+        'switch-to-comfort-class': false,
+        'add-meal': false,
+        'choose-seats': false,
+      },
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -104,18 +109,12 @@ export class TripPointEdit extends Component {
         target.price = parseInt(value, 10);
       },
       offer: (value) => {
-        target.offer.add(value);
+        target.offer[value] = true;
       },
     };
   }
 
   get template() {
-    const OFFERS = new Set([
-      `Add-luggage`,
-      `Switch to comfort class`,
-      `Add meal`,
-      `Choose seats`
-    ]);
     return `
       <article class="point">
         <form action="" method="get">
@@ -192,20 +191,31 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
               
               <div class="point__offers-wrap">
-                ${(Array.from(OFFERS).map((offerTemplate) => (`
-                  <input class="point__offers-input visually-hidden" type="checkbox" name="offer" 
-                    id="${offerTemplate.split(` `).join(`-`).toLocaleLowerCase()}" 
-                    value="${offerTemplate.split(` `).join(`-`).toLocaleLowerCase()}"
-                    ${OFFERS.has(this._offer) ? `checked` : ``}>
-                  <label for="${offerTemplate.split(` `).join(`-`).toLocaleLowerCase()}" class="point__offers-label">
-                    <span class="point__offer-service">${offerTemplate.split(`-`).join(` `).toLocaleLowerCase()}</span> + €<span class="point__offer-price">${Math.floor(Math.random() * Math.floor(100))}</span>
-                  </label>`.trim()))).join(``)}
-              </div>
-                  
-            </section>
-            <section class="point__destination">
-              <h3 class="point__details-title">Destination</h3>
-              <p class="point__destination-text">${this._destinationText}</p>
+                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offer[`add-luggage`] && `checked`}>
+                  <label for="add-luggage" class="point__offers-label">
+                    <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
+                  </label>
+        
+                  <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offer[`switch-to-comfort-class`] && `checked`}>
+                    <label for="switch-to-comfort-class" class="point__offers-label">
+                      <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
+                    </label>
+          
+                    <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offer[`add-meal`] && `checked`}>
+                    <label for="add-meal" class="point__offers-label">
+                      <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
+                    </label>
+          
+                    <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offer[`choose-seats`] && `checked`}>
+                    <label for="choose-seats" class="point__offers-label">
+                      <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
+                    </label>
+                  </div>
+                      
+                </section>
+                <section class="point__destination">
+                  <h3 class="point__details-title">Destination</h3>
+                  <p class="point__destination-text">${this._destinationText}</p>
               <div class="point__destination-images">
                 <img src="${this._picture}" alt="picture from place" class="point__destination-image">
               </div>
@@ -215,6 +225,7 @@ export class TripPointEdit extends Component {
         </form>
       </article>`.trim();
   }
+
 
   bind() {
     this._element.querySelector(`.point form`)

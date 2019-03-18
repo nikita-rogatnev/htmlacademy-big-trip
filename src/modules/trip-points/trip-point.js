@@ -1,6 +1,5 @@
 import {Component} from '../../component';
 import {emojiList} from '../../helpers/emoji-list';
-import moment from 'moment';
 
 // Trip Point Class
 export class TripPoint extends Component {
@@ -10,7 +9,6 @@ export class TripPoint extends Component {
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._destinationText = data.destinationText;
-    this._day = data.day;
     this._time = data.time;
     this._timeDuration = data.timeDuration;
     this._price = data.price;
@@ -30,6 +28,15 @@ export class TripPoint extends Component {
     this._onEdit = fn;
   }
 
+  get offersList() {
+    const list = this._offer;
+    const active = Object.keys(list).filter(function (id) {
+      return list[id];
+    });
+
+    return active.map((element) => `<li><button class="trip-point__offer">${element.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`).join(``);
+  }
+
   get template() {
     return `
       <article class="trip-point ${this._favorite ? `trip-point--favorite` : ``}">
@@ -42,7 +49,7 @@ export class TripPoint extends Component {
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
         <ul class="trip-point__offers">
-          ${(Array.from(this._offer).map((offer) => (`<li><button class="trip-point__offer">${offer.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`.trim()))).join(``)}
+          ${this.offersList}
         </ul>
       </article>`.trim();
   }

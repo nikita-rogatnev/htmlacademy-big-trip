@@ -26,8 +26,10 @@ export const stubTripPoints = {
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;
   },
-  offer: new Set([
-    `Add-luggage`,
-    `Switch to comfort class`,
-  ]),
+  offer: {
+    'add-luggage': true,
+    'switch-to-comfort-class': true,
+    'add-meal': false,
+    'choose-seats': false,
+  },
 };
