@@ -23,7 +23,7 @@ tripPointsComponent.onEdit = () => {
 
 editTripPointsComponent.onSubmit = (newObject) => {
   tripPoint.favorite = newObject.favorite;
-  tripPoint.destinationTitle = newObject.destinationTitle;
+  tripPoint.destination = newObject.destination;
   tripPoint.timeTableFrom = newObject.timeTableFrom;
   tripPoint.timeTableTo = newObject.timeTableTo;
   tripPoint.price = newObject.price;

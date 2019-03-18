@@ -1,4 +1,5 @@
 import {Component} from '../../component';
+import {emojiList} from '../../helpers/emoji-list';
 import moment from 'moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
@@ -9,8 +10,8 @@ export class TripPointEdit extends Component {
   constructor(data) {
     super();
     this._favorite = data.favorite;
-    this._travelType = data.travelType;
-    this._destinationTitle = data.destinationTitle;
+    this._travelWay = data.travelWay;
+    this._destination = data.destination;
     this._destinationText = data.destinationText;
     this._timeTableFrom = data.timeTableFrom;
     this._timeTableTo = data.timeTableTo;
@@ -53,8 +54,8 @@ export class TripPointEdit extends Component {
     const entry = {
       favorite: false,
       destinationTitle: ``,
-      timeTableFrom: this._timeTableFrom,
-      timeTableTo: this._timeTableTo,
+      timeTableFrom: new Date(),
+      timeTableTo: new Date(),
       price: 0,
       offers: new Set(),
     };
@@ -73,9 +74,11 @@ export class TripPointEdit extends Component {
 
   update(data) {
     this._favorite = data.favorite;
-    this._destinationTitle = data.destination;
+    this._destination = data.destination;
+    this._timeTableFrom = data.timeTableFrom;
+    this._timeTableTo = data.timeTableTo;
     this._price = data.price;
-    this._offers = data.offer;
+    // this._offers = data.offer;
   }
 
   static createMapper(target) {
@@ -84,7 +87,14 @@ export class TripPointEdit extends Component {
         target.favorite = (value === `on`);
       },
       destination: (value) => {
-        target.destinationTitle = value;
+        target.destination = value;
+      },
+      timeTableFrom: (value) => {
+        target.timeTableFrom = value;
+        console.log(`2`);
+      },
+      timeTableTo: (value) => {
+        target.timeTableTo = value;
       },
       price: (value) => {
         target.price = value;
@@ -106,7 +116,7 @@ export class TripPointEdit extends Component {
             </label>
       
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle">✈️</label>
+              <label class="travel-way__label" for="travel-way__toggle">${emojiList[this._travelWay]}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
               
               <div class="travel-way__select">
@@ -136,7 +146,7 @@ export class TripPointEdit extends Component {
       
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">Flight to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destinationTitle}" name="destination">
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
               <datalist id="destination-select">
                 <option value="airport"></option>
                 <option value="Geneva"></option>

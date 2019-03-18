@@ -1,8 +1,8 @@
 // Trip Points Stub Data
 export const stubTripPoints = {
-  travelType: `checkIn`,
+  travelWay: `ship`,
   favorite: true,
-  destinationTitle: [`Chamonix`, `Moscow`, `Saint-Petersburg`][Math.floor(Math.random() * 3)],
+  destination: `Saint-Petersburg`,
   get destinationText() {
     return `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
              Cras aliquet varius magna, non porta ligula feugiat eget.
