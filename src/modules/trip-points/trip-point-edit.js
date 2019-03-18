@@ -187,13 +187,13 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
               
               <div class="point__offers-wrap">
-                ${(Array.from(OFFERS).map((offer) => (`
+                ${(Array.from(OFFERS).map((offerTemplate) => (`
                   <input class="point__offers-input visually-hidden" type="checkbox" name="offer" 
-                    id="${offer.split(` `).join(`-`).toLocaleLowerCase()}" 
-                    value="${offer.split(` `).join(`-`).toLocaleLowerCase()}"
-                    checked="">
-                  <label for="${offer.split(` `).join(`-`).toLocaleLowerCase()}" class="point__offers-label">
-                    <span class="point__offer-service">${offer.split(`-`).join(` `).toLocaleLowerCase()}</span> + €<span class="point__offer-price">${Math.floor(Math.random() * Math.floor(100))}</span>
+                    id="${offerTemplate.split(` `).join(`-`).toLocaleLowerCase()}" 
+                    value="${offerTemplate.split(` `).join(`-`).toLocaleLowerCase()}"
+                    ${OFFERS.has(this._offer) ? `checked` : ``}>
+                  <label for="${offerTemplate.split(` `).join(`-`).toLocaleLowerCase()}" class="point__offers-label">
+                    <span class="point__offer-service">${offerTemplate.split(`-`).join(` `).toLocaleLowerCase()}</span> + €<span class="point__offer-price">${Math.floor(Math.random() * Math.floor(100))}</span>
                   </label>`.trim()))).join(``)}
               </div>
                   

@@ -28,7 +28,5 @@ export const stubTripPoints = {
   offer: new Set([
     `Add-luggage`,
     `Switch to comfort class`,
-    `Add meal`,
-    `Choose seats`
   ]),
 };
