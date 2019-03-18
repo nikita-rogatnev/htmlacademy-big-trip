@@ -1,6 +1,6 @@
 import {renderControlElements} from './modules/controls/controls';
-import {TripDay} from './modules/trip-points/trip-day';
 import {stubTripPoints as tripPoint} from './modules/trip-points/data';
+import {TripDay} from './modules/trip-points/trip-day';
 import {TripPoint} from './modules/trip-points/trip-point';
 import {TripPointEdit} from './modules/trip-points/trip-point-edit';
 import moment from 'moment';

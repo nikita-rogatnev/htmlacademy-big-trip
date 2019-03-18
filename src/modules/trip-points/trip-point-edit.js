@@ -17,7 +17,6 @@ export class TripPointEdit extends Component {
     this._day = data.day;
     this._time = data.time;
     this._timeDuration = data.timeDuration;
-
     this._price = data.price;
     this._totalPrice = data.totalPrice;
     this._offer = data.offer;
@@ -37,6 +36,7 @@ export class TripPointEdit extends Component {
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
 
+    // TODO: remove - Помогает для отладки, пусть будет до конца разработки
     console.log(newData);
 
     this.update(newData);
@@ -58,7 +58,7 @@ export class TripPointEdit extends Component {
     const entry = {
       favorite: false,
       destination: ``,
-      // TODO: Не придумал как иначе сделать
+      // TODO: Не придумал как иначе сделать, не нравится что через датасет и что вызываю это тут
       day: new Date(this._element.querySelector(`.point__date .point__input`).dataset.date),
       time: 0,
       timeDuration: this._timeDuration,
@@ -101,7 +101,7 @@ export class TripPointEdit extends Component {
         target.time = value;
       },
       price: (value) => {
-        target.price = value;
+        target.price = parseInt(value, 10);
       },
       offer: (value) => {
         target.offer.add(value);
