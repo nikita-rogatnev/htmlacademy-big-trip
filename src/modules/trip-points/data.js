@@ -21,6 +21,7 @@ export const stubTripPoints = {
   },
   day: new Date(`Tue Mar 01 2019 10:00:00 GMT+0300 (MSK)`),
   time: `10:00  — 14:30`,
+  timeDuration: `1h 30m`,
   price: Math.floor(Math.random() * Math.floor(100)),
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;

@@ -32,6 +32,7 @@ editTripPointsComponent.onSubmit = (newObject) => {
   tripPoint.destination = newObject.destination;
   tripPoint.day = newObject.day;
   tripPoint.time = newObject.time;
+  tripPoint.timeDuration = newObject.timeDuration;
   tripPoint.price = newObject.price;
   tripPoint.offer = newObject.offer;
 

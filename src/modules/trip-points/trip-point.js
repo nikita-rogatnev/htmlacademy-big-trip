@@ -1,6 +1,5 @@
 import {Component} from '../../component';
 import {emojiList} from '../../helpers/emoji-list';
-import {getDurationTime} from '../../helpers/get-duration-time';
 import moment from 'moment';
 
 // Trip Point Class
@@ -13,6 +12,7 @@ export class TripPoint extends Component {
     this._destinationText = data.destinationText;
     this._day = data.day;
     this._time = data.time;
+    this._timeDuration = data.timeDuration;
     this._price = data.price;
     this._totalPrice = data.totalPrice;
     this._offer = data.offer;
@@ -37,7 +37,7 @@ export class TripPoint extends Component {
         <h3 class="trip-point__title">${this._destination}</h3>
         <p class="trip-point__schedule">
           <span class="trip-point__timetable">${this._time}</span>
-          <span class="trip-point__duration">${getDurationTime(this._timeTableFrom, this._timeTableTo).format(`H[H] mm[M]`)}</span>
+          <span class="trip-point__duration">${this._timeDuration}</span>
           <img src="${this._picture}" alt="${this._destination}" width="100" height="100">
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
@@ -62,6 +62,7 @@ export class TripPoint extends Component {
     this._destination = data.destination;
     this._day = data.day;
     this._time = data.time;
+    this._timeDuration = data.timeDuration;
     this._price = data.price;
     this._offer = data.offer;
   }

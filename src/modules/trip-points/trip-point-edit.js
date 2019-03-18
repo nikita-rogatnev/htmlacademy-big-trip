@@ -4,6 +4,7 @@ import moment from 'moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
+import {getDurationTime} from "../../helpers/get-duration-time";
 
 // Trip Point Edit Class
 export class TripPointEdit extends Component {
@@ -15,6 +16,8 @@ export class TripPointEdit extends Component {
     this._destinationText = data.destinationText;
     this._day = data.day;
     this._time = data.time;
+    this._timeDuration = data.timeDuration;
+
     this._price = data.price;
     this._totalPrice = data.totalPrice;
     this._offer = data.offer;
@@ -58,6 +61,7 @@ export class TripPointEdit extends Component {
       // TODO: Не придумал как иначе сделать
       day: new Date(this._element.querySelector(`.point__date .point__input`).dataset.date),
       time: 0,
+      timeDuration: this._timeDuration,
       price: 0,
       totalPrice: 0,
       offer: new Set(),
@@ -80,6 +84,7 @@ export class TripPointEdit extends Component {
     this._destination = data.destination;
     this._day = data.day;
     this._time = data.time;
+    this._timeDuration = data.timeDuration;
     this._price = data.price;
     this._offer = data.offer;
   }
@@ -238,8 +243,15 @@ export class TripPointEdit extends Component {
       enableTime: true,
       dateFormat: `H:i`,
       defaultDate: this._time,
-      minuteIncrement: 30,
+      minuteIncrement: 5,
+      onClose: (dateObj) => {
+        this.timeDuration = dateObj;
+      }
     });
+  }
+
+  set timeDuration(timeItems) {
+    this._timeDuration = getDurationTime(timeItems[0], timeItems[1]).format(`H[H] mm[M]`);
   }
 
   unbind() {
