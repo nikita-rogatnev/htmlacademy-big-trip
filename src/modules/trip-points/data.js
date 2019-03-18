@@ -1,6 +1,6 @@
 // Trip Points Stub Data
 export const stubTripPoints = {
-  travelWay: `ship`,
+  travelWay: `Ship`,
   favorite: true,
   destination: `Saint-Petersburg`,
   get destinationText() {
@@ -19,13 +19,13 @@ export const stubTripPoints = {
       .slice(0, Math.floor(Math.random() * Math.floor(3) + 1))
       .join(` `);
   },
-  timeTableFrom: new Date(`Tue Mar 12 2019 10:00:00 GMT+0300 (MSK)`),
-  timeTableTo: new Date(`Tue Mar 12 2019 20:00:00 GMT+0300 (MSK)`),
+  day: new Date(`Tue Mar 01 2019 10:00:00 GMT+0300 (MSK)`),
+  time: `10:00  — 14:30`,
   price: Math.floor(Math.random() * Math.floor(100)),
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;
   },
-  offers: new Set([
+  offer: new Set([
     `Add-luggage`,
     `Switch to comfort class`,
     `Add meal`,

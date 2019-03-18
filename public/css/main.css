@@ -399,7 +399,6 @@ input[type=radio]:checked + .trip-sorting__item {
 }
 
 .point__date {
-  display: none;
   font-size: 0;
   width: 55px;
   margin-right: 5px;

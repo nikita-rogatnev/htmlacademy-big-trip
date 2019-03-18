@@ -11,10 +11,11 @@ export class TripPoint extends Component {
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._destinationText = data.destinationText;
-    this._timeTableFrom = data.timeTableFrom;
-    this._timeTableTo = data.timeTableTo;
+    this._day = data.day;
+    this._time = data.time;
     this._price = data.price;
-    this._offers = data.offers;
+    this._totalPrice = data.totalPrice;
+    this._offer = data.offer;
     this._picture = data.picture;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
@@ -32,16 +33,16 @@ export class TripPoint extends Component {
   get template() {
     return `
       <article class="trip-point ${this._favorite ? `trip-point--favorite` : ``}">
-        <i class="trip-icon">${emojiList[this._travelWay]}</i>
+        <i class="trip-icon">${emojiList[this._travelWay.toLocaleLowerCase()]}</i>
         <h3 class="trip-point__title">${this._destination}</h3>
         <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${moment(this._timeTableFrom).format(`HH:mm`)} &nbsp;&mdash; ${moment(this._timeTableTo).format(`HH:mm`)}</span>
+          <span class="trip-point__timetable">${this._time}</span>
           <span class="trip-point__duration">${getDurationTime(this._timeTableFrom, this._timeTableTo).format(`H[H] mm[M]`)}</span>
           <img src="${this._picture}" alt="${this._destination}" width="100" height="100">
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
         <ul class="trip-point__offers">
-          ${(Array.from(this._offers).map((offer) => (`<li><button class="trip-point__offer">${offer.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`.trim()))).join(``)}
+          ${(Array.from(this._offer).map((offer) => (`<li><button class="trip-point__offer">${offer.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`.trim()))).join(``)}
         </ul>
       </article>`.trim();
   }
@@ -59,9 +60,9 @@ export class TripPoint extends Component {
   update(data) {
     this._favorite = data.favorite;
     this._destination = data.destination;
-    this._timeTableFrom = data.timeTableFrom;
-    this._timeTableTo = data.timeTableTo;
+    this._day = data.day;
+    this._time = data.time;
     this._price = data.price;
-    // this._offers = data.offer;
+    this._offer = data.offer;
   }
 }

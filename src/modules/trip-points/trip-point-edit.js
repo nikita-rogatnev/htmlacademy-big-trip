@@ -13,10 +13,11 @@ export class TripPointEdit extends Component {
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._destinationText = data.destinationText;
-    this._timeTableFrom = data.timeTableFrom;
-    this._timeTableTo = data.timeTableTo;
+    this._day = data.day;
+    this._time = data.time;
     this._price = data.price;
-    this._offers = data.offers;
+    this._totalPrice = data.totalPrice;
+    this._offer = data.offer;
     this._picture = data.picture;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -53,11 +54,13 @@ export class TripPointEdit extends Component {
   _processForm(formData) {
     const entry = {
       favorite: false,
-      destinationTitle: ``,
-      timeTableFrom: new Date(),
-      timeTableTo: new Date(),
+      destination: ``,
+      // TODO: Не придумал как иначе сделать
+      day: new Date(this._element.querySelector(`.point__date .point__input`).dataset.date),
+      time: 0,
       price: 0,
-      offers: new Set(),
+      totalPrice: 0,
+      offer: new Set(),
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -75,10 +78,10 @@ export class TripPointEdit extends Component {
   update(data) {
     this._favorite = data.favorite;
     this._destination = data.destination;
-    this._timeTableFrom = data.timeTableFrom;
-    this._timeTableTo = data.timeTableTo;
+    this._day = data.day;
+    this._time = data.time;
     this._price = data.price;
-    // this._offers = data.offer;
+    this._offer = data.offer;
   }
 
   static createMapper(target) {
@@ -89,34 +92,36 @@ export class TripPointEdit extends Component {
       destination: (value) => {
         target.destination = value;
       },
-      timeTableFrom: (value) => {
-        target.timeTableFrom = value;
-        console.log(`2`);
-      },
-      timeTableTo: (value) => {
-        target.timeTableTo = value;
+      time: (value) => {
+        target.time = value;
       },
       price: (value) => {
         target.price = value;
       },
       offer: (value) => {
-        target.offers.add(value);
+        target.offer.add(value);
       },
     };
   }
 
   get template() {
+    const OFFERS = new Set([
+      `Add-luggage`,
+      `Switch to comfort class`,
+      `Add meal`,
+      `Choose seats`
+    ]);
     return `
       <article class="point">
         <form action="" method="get">
           <header class="point__header">
             <label class="point__date">
               choose day
-              <input class="point__input" type="text" placeholder="MAR 18" name="day">
+              <input class="point__input" type="text" data-date="${this._day}" placeholder="${moment(this._day).format(`MMM DD`)}" name="day">
             </label>
-      
+        
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle">${emojiList[this._travelWay]}</label>
+              <label class="travel-way__label" for="travel-way__toggle">${emojiList[this._travelWay.toLocaleLowerCase()]}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
               
               <div class="travel-way__select">
@@ -145,7 +150,7 @@ export class TripPointEdit extends Component {
             </div>
       
             <div class="point__destination-wrap">
-              <label class="point__destination-label" for="destination">Flight to</label>
+              <label class="point__destination-label" for="destination">${this._travelWay} to</label>
               <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
               <datalist id="destination-select">
                 <option value="airport"></option>
@@ -182,10 +187,11 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
               
               <div class="point__offers-wrap">
-                ${(Array.from(this._offers).map((offer) => (`
+                ${(Array.from(OFFERS).map((offer) => (`
                   <input class="point__offers-input visually-hidden" type="checkbox" name="offer" 
                     id="${offer.split(` `).join(`-`).toLocaleLowerCase()}" 
-                    value="${offer.split(` `).join(`-`).toLocaleLowerCase()}">
+                    value="${offer.split(` `).join(`-`).toLocaleLowerCase()}"
+                    checked="">
                   <label for="${offer.split(` `).join(`-`).toLocaleLowerCase()}" class="point__offers-label">
                     <span class="point__offer-service">${offer.split(`-`).join(` `).toLocaleLowerCase()}</span> + €<span class="point__offer-price">${Math.floor(Math.random() * Math.floor(100))}</span>
                   </label>`.trim()))).join(``)}
@@ -213,6 +219,17 @@ export class TripPointEdit extends Component {
       .addEventListener(`click`, this._onDeleteButtonClick);
 
     // Date Input
+    const dateInput = this._element.querySelector(`.point__date .point__input`);
+    dateInput.flatpickr({
+      dateFormat: `M d`,
+      altFormat: `d.m.Y`,
+      defaultDate: this._day,
+      onChange: (dateObj) => {
+        dateInput.dataset.date = dateObj.toString();
+      }
+    });
+
+    // Time Range
     this._element.querySelector(`.point__time .point__input`).flatpickr({
       locale: {
         rangeSeparator: ` — `
@@ -220,16 +237,9 @@ export class TripPointEdit extends Component {
       mode: `range`,
       enableTime: true,
       dateFormat: `H:i`,
-      defaultDate: [this._timeTableFrom, this._timeTableTo],
-      time_24hr: true,
+      defaultDate: this._time,
       minuteIncrement: 30,
-      onClose: this._onCloseFlatpickr,
     });
-  }
-
-  _onCloseFlatpickr(selectedDates) {
-    this._timeTableFrom = moment(selectedDates[0]);
-    this._timeTableTo = moment(selectedDates[1]);
   }
 
   unbind() {
