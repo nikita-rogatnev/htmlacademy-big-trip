@@ -51,6 +51,7 @@ export class TripPointEdit extends Component {
 
   _processForm(formData) {
     const entry = {
+      favorite: false,
       destinationTitle: ``,
       timeTableFrom: this._timeTableFrom,
       timeTableTo: this._timeTableTo,
@@ -71,6 +72,7 @@ export class TripPointEdit extends Component {
   }
 
   update(data) {
+    this._favorite = data.favorite;
     this._destinationTitle = data.destination;
     this._price = data.price;
     this._offers = data.offer;
@@ -78,6 +80,9 @@ export class TripPointEdit extends Component {
 
   static createMapper(target) {
     return {
+      favorite: (value) => {
+        target.favorite = (value === `on`);
+      },
       destination: (value) => {
         target.destinationTitle = value;
       },
@@ -157,7 +162,7 @@ export class TripPointEdit extends Component {
             </div>
       
             <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._state.isFavorite ? `checked` : ``}>
+              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._favorite ? `checked` : ``}>
                <label class="point__favorite" for="favorite">favorite</label>
             </div>
           </header>
@@ -197,7 +202,7 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.point__button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
-    // Flatpickr Date Input
+    // Date Input
     this._element.querySelector(`.point__time .point__input`).flatpickr({
       locale: {
         rangeSeparator: ` — `

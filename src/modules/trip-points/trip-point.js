@@ -7,6 +7,7 @@ import moment from 'moment';
 export class TripPoint extends Component {
   constructor(data) {
     super();
+    this._favorite = data.favorite;
     this._travelType = data.travelType;
     this._destinationTitle = data.destinationTitle;
     this._timeTableFrom = data.timeTableFrom;
