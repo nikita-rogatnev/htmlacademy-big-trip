@@ -226,7 +226,6 @@ export class TripPointEdit extends Component {
       </article>`.trim();
   }
 
-
   bind() {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
