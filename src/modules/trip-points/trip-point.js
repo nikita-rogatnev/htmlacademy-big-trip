@@ -33,8 +33,8 @@ export class TripPoint extends Component {
         <i class="trip-icon">${emojiList[this._travelType]}</i>
         <h3 class="trip-point__title">${this._destinationTitle}</h3>
         <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${moment(this._timeTableFrom, `MM-DD-YYYY`).format(`HH:mm`)} &nbsp;&mdash; ${moment(this._timeTableTo, `MM-DD-YYYY`).format(`HH:mm`)}</span>
-          <span class="trip-point__duration">${getDurationTime(this._timeTableFrom, this._timeTableTo)}</span>
+          <span class="trip-point__timetable">${moment(this._timeTableFrom).format(`HH:mm`)} &nbsp;&mdash; ${moment(this._timeTableTo).format(`HH:mm`)}</span>
+          <span class="trip-point__duration">${getDurationTime(this._timeTableFrom, this._timeTableTo).format(`H[H] mm[M]`)}</span>
           <img src="${this._picture}" alt="${this._destinationTitle}" width="100" height="100">
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>

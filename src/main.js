@@ -9,6 +9,7 @@ renderControlElements(`sorting`);
 
 // Trip Points
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
+
 const tripPointsComponent = new TripPoint(tripPoint);
 const editTripPointsComponent = new TripPointEdit(tripPoint);
 

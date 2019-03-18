@@ -142,7 +142,7 @@ export class TripPointEdit extends Component {
       
             <label class="point__time">
               choose time
-              <input class="point__input" type="text" value="${this._timeTableFrom} TO ${this._timeTableTo}" name="time" placeholder="00:00 — 00:00">
+              <input class="point__input" type="text" name="time" placeholder="00:00 — 00:00">
             </label>
       
             <label class="point__price">
@@ -197,17 +197,26 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.point__button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
+    // Flatpickr Date Input
     this._element.querySelector(`.point__time .point__input`).flatpickr({
+      locale: {
+        rangeSeparator: ` — `
+      },
       mode: `range`,
       enableTime: true,
       dateFormat: `H:i`,
-      onClose: this._onCloseFlatpickr
+      defaultDate: [this._timeTableFrom, this._timeTableTo],
+      time_24hr: true,
+      minuteIncrement: 30,
+      onClose: this._onCloseFlatpickr,
     });
   }
 
   _onCloseFlatpickr(selectedDates) {
     this._timeTableFrom = moment(selectedDates[0]);
     this._timeTableTo = moment(selectedDates[1]);
+
+    console.log(this._timeTableFrom, this._timeTableTo);
   }
 
   unbind() {

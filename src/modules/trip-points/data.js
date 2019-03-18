@@ -2,11 +2,7 @@
 export const stubTripPoints = {
   travelType: `checkIn`,
   favorite: true,
-  destinationTitle: [
-    `Chamonix`,
-    `Moscow`,
-    `Saint-Petersburg`,
-  ][Math.floor(Math.random() * 3)],
+  destinationTitle: [`Chamonix`, `Moscow`, `Saint-Petersburg`][Math.floor(Math.random() * 3)],
   get destinationText() {
     return `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
              Cras aliquet varius magna, non porta ligula feugiat eget.
@@ -23,8 +19,8 @@ export const stubTripPoints = {
       .slice(0, Math.floor(Math.random() * Math.floor(3) + 1))
       .join(` `);
   },
-  timeTableFrom: new Date(`Tue Mar 1 2019 20:53:48 GMT+0300 (MSK)`),
-  timeTableTo: new Date(`Tue Mar 1 2019 23:53:48 GMT+0300 (MSK)`),
+  timeTableFrom: new Date(`Tue Mar 12 2019 10:00:00 GMT+0300 (MSK)`),
+  timeTableTo: new Date(`Tue Mar 12 2019 20:00:00 GMT+0300 (MSK)`),
   price: Math.floor(Math.random() * Math.floor(100)),
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;
