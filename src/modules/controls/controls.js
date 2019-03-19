@@ -6,8 +6,6 @@ const sortingContainer = document.querySelector(`.trip-sorting`);
 
 // Filter And Generate Sorted Control Elements
 const generateControlElements = (controlType) => {
-
-  // TODO: почему орет на .filter?
   return dataControlElements.filter((controlElement) => controlElement.type === controlType)
     .map((controlElement) => {
       return `

@@ -1,21 +1,23 @@
 import {Component} from '../../component';
 import {emojiList} from '../../helpers/emoji-list';
-import {getDurationTime} from '../../helpers/get-duration-time';
 
 // Trip Point Class
 export class TripPoint extends Component {
   constructor(data) {
     super();
-    this._icon = data.icon;
-    this._title = data.title;
-    this._timeTableFrom = data.timeTable.from;
-    this._timeTableTo = data.timeTable.to;
+    this._favorite = data.favorite;
+    this._travelWay = data.travelWay;
+    this._destination = data.destination;
+    this._destinationText = data.destinationText;
+    this._time = data.time;
+    this._timeDuration = data.timeDuration;
     this._price = data.price;
-    this._offers = data.offers;
+    this._totalPrice = data.totalPrice;
+    this._offer = data.offer;
     this._picture = data.picture;
 
-    this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
+    this._onEdit = null;
   }
 
   _onEditButtonClick() {
@@ -26,21 +28,26 @@ export class TripPoint extends Component {
     this._onEdit = fn;
   }
 
+  get offersList() {
+    return Object.keys(this._offer)
+      .filter((key) => this._offer[key])
+      .map((offer) => `<li><button class="trip-point__offer">${offer.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`)
+      .join(``);
+  }
+
   get template() {
     return `
-      <article class="trip-point">
-        <i class="trip-icon">${emojiList[this._icon]}</i>
-        <h3 class="trip-point__title">${this._title}</h3>
+      <article class="trip-point ${this._favorite ? `trip-point--favorite` : ``}">
+        <i class="trip-icon">${emojiList[this._travelWay.toLocaleLowerCase()]}</i>
+        <h3 class="trip-point__title">${this._destination}</h3>
         <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${this._timeTableFrom} &nbsp;&mdash; ${this._timeTableTo}</span>
-          <span class="trip-point__duration">
-            ${getDurationTime(this._timeTableFrom, this._timeTableTo)}
-          </span>
-          <img src="${this._picture}" alt="${this._title}" width="100" height="100">
+          <span class="trip-point__timetable">${this._time}</span>
+          <span class="trip-point__duration">${this._timeDuration}</span>
+          <img src="${this._picture}" alt="${this._destination}" width="100" height="100">
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
         <ul class="trip-point__offers">
-          ${this._offers}
+          ${this.offersList}
         </ul>
       </article>`.trim();
   }
@@ -53,5 +60,15 @@ export class TripPoint extends Component {
   unbind() {
     this._element.querySelector(`.trip-icon`)
       .removeEventListener(`click`, this._onEditButtonClick);
+  }
+
+  update(data) {
+    this._favorite = data.favorite;
+    this._destination = data.destination;
+    this._day = data.day;
+    this._time = data.time;
+    this._timeDuration = data.timeDuration;
+    this._price = data.price;
+    this._offer = data.offer;
   }
 }

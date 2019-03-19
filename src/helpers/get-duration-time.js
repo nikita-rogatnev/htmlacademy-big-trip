@@ -1,8 +1,9 @@
-import * as moment from '../libs/moment';
+import * as moment from 'moment';
 
 // Get Time Residue
 export const getDurationTime = (timeFrom, timeTo) => {
-  const fromTime = moment.utc(timeFrom, `HH:mm`);
-  const toTime = moment.utc(timeTo, `HH:mm`);
-  return moment.utc(+moment.duration(toTime.diff(fromTime))).format(`H[H] mm[M]`);
+  const fromTime = moment.utc(timeFrom);
+  const toTime = moment.utc(timeTo);
+
+  return moment.utc(+moment.duration(toTime.diff(fromTime)));
 };
