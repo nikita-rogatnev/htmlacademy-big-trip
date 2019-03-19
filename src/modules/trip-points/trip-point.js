@@ -29,12 +29,10 @@ export class TripPoint extends Component {
   }
 
   get offersList() {
-    const list = this._offer;
-    const active = Object.keys(list).filter(function (id) {
-      return list[id];
-    });
-
-    return active.map((element) => `<li><button class="trip-point__offer">${element.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`).join(``);
+    return Object.keys(this._offer)
+      .filter((key) => this._offer[key])
+      .map((offer) => `<li><button class="trip-point__offer">${offer.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`)
+      .join(``);
   }
 
   get template() {
