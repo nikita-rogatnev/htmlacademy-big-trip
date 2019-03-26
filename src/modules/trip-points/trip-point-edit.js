@@ -58,7 +58,6 @@ export class TripPointEdit extends Component {
     const entry = {
       favorite: false,
       destination: ``,
-      // TODO: Не придумал как иначе сделать, не нравится что через датасет и что вызываю это тут
       day: new Date(this._element.querySelector(`.point__date .point__input`).dataset.date),
       time: 0,
       timeDuration: this._timeDuration,

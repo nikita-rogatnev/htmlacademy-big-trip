@@ -1,5 +1,5 @@
 // Trip Points Stub Data
-export const stubTripPoints = {
+export const tripPointsData = [{
   travelWay: `Ship`,
   favorite: true,
   destination: `Saint-Petersburg`,
@@ -32,4 +32,4 @@ export const stubTripPoints = {
     'add-meal': false,
     'choose-seats': false,
   },
-};
+}];
