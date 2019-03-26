@@ -4,6 +4,7 @@ import {tripPointsData} from './modules/trip-points/data';
 import {TripPoint} from './modules/trip-points/trip-point';
 import {TripPointEdit} from './modules/trip-points/trip-point-edit';
 import {getStatistics} from './modules/statistics/statistics';
+import moment from 'moment';
 
 // Trip Day
 const tripDayContainer = document.querySelector(`.trip-day__info`);
@@ -21,8 +22,6 @@ export const filters = [
 ];
 
 const filterList = (items, name) => {
-  console.log(items);
-
   switch (name) {
     case `filter-everything`:
       return items;
@@ -33,7 +32,8 @@ const filterList = (items, name) => {
     case `filter-past`:
       return items.filter((item) => item.day < Date.now());
 
-    // default: return items;
+    default:
+      return items;
   }
 };
 
@@ -71,7 +71,17 @@ const renderTripPoints = (items) => {
     };
 
     tripPointEditComponent.onSubmit = (newObject) => {
+      point.favorite = newObject.favorite;
+      point.destination = newObject.destination;
+      point.day = newObject.day;
+      point.time = newObject.time;
+      point.timeDuration = newObject.timeDuration;
       point.price = newObject.price;
+      point.offer = newObject.offer;
+
+      // TODO: Refactor later
+      const dayContainer = document.querySelector(`.trip-day .trip-day__title`);
+      dayContainer.innerHTML = moment(point.day).format(`MMM DD`);
 
       tripPointComponent.update(point);
       tripPointComponent.render();
