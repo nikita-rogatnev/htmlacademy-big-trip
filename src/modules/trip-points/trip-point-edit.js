@@ -5,6 +5,7 @@ import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
 import {getDurationTime} from "../../helpers/get-duration-time";
+import {createElement} from "../../helpers/create-element";
 
 // Trip Point Edit Class
 export class TripPointEdit extends Component {
@@ -53,17 +54,21 @@ export class TripPointEdit extends Component {
     return (typeof this._onDelete === `function`) && this._onDelete();
   }
 
-  // TODO: srcElement не очень решение как понимаю
+
+  // TODO: что то перемудрил
   _onTravelWayChange(event) {
-    this._travelWay = event.srcElement.textContent.split(` `)[1];
+    const travelWayCheckbox = this._element.querySelector(`.travel-way__toggle`);
+    const travelWayLabel = this._element.querySelector(`.travel-way__label`);
+    const travelWayLabelContent = event.srcElement.textContent.split(` `)[1];
+    const destinationLabel = this._element.querySelector(`.point__destination-label`);
+
+    this._travelWay = travelWayLabelContent.toLocaleLowerCase();
+    travelWayCheckbox.checked = false;
+    travelWayLabel.innerHTML = emojiList[this._travelWay];
+    destinationLabel.innerHTML = `${travelWayLabelContent} to`;
 
     this.unbind();
-    this._partialUpdate();
     this.bind();
-  }
-
-  _partialUpdate() {
-    this._element.innerHTML = this.template;
   }
 
   _travelWaySelect() {
