@@ -79,6 +79,7 @@ const renderTripPoints = (items) => {
 
     tripPointEditComponent.onSubmit = (newObject) => {
       point.favorite = newObject.favorite;
+      point.travelWay = newObject.travelWay;
       point.destination = newObject.destination;
       point.day = newObject.day;
       point.time = newObject.time;

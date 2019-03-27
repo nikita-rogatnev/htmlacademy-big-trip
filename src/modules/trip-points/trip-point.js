@@ -5,6 +5,7 @@ import {emojiList} from '../../helpers/emoji-list';
 export class TripPoint extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._favorite = data.favorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
@@ -63,6 +64,7 @@ export class TripPoint extends Component {
 
   update(data) {
     this._favorite = data.favorite;
+    this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._day = data.day;
     this._time = data.time;

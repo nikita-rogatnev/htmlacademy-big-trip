@@ -1,5 +1,6 @@
 // Trip Points Stub Data
 export const tripPointsData = [{
+  id: Math.floor(Math.random() * 100),
   travelWay: `Ship`,
   favorite: true,
   destination: `Saint-Petersburg`,
