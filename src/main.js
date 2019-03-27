@@ -44,6 +44,13 @@ const renderFilterItems = (items) => {
     const item = filters[i];
     const itemComponent = new Filter(item);
     filtersContainer.appendChild(itemComponent.render());
+
+    itemComponent.onFilter = (evt) => {
+      const filterName = evt.target.htmlFor;
+      const filteredPoints = filterList(tripPointsData, filterName);
+
+      renderTripPoints(filteredPoints);
+    };
   }
 };
 
@@ -110,13 +117,6 @@ const toggleFilter = (element) => {
     }
   });
 };
-
-filtersContainer.addEventListener(`change`, (evt) => {
-  const filterName = evt.target.id;
-  const filteredPoints = filterList(tripPointsData, filterName);
-
-  renderTripPoints(filteredPoints);
-});
 
 renderTripPoints(tripPointsData);
 

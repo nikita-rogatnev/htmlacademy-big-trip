@@ -9,8 +9,10 @@ export class Filter extends Component {
     this._onFilterClick = this._onFilterClick.bind(this);
   }
 
-  _onFilterClick() {
-    typeof this._onFilter === `function` && this._onFilter();
+  _onFilterClick(evt) {
+    if (typeof this._onFilter === `function`) {
+      this._onFilter(evt);
+    }
   }
 
   set onFilter(fn) {
