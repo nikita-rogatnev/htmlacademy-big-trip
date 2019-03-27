@@ -28,6 +28,8 @@ export class TripPointEdit extends Component {
 
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDelete = null;
+
+    this._onTravelWayChange = this._onTravelWayChange.bind(this);
   }
 
   _onSubmitButtonClick(evt) {
@@ -51,14 +53,25 @@ export class TripPointEdit extends Component {
     return (typeof this._onDelete === `function`) && this._onDelete();
   }
 
+  // TODO: srcElement не очень решение как понимаю
+  _onTravelWayChange(event) {
+    this._travelWay = event.srcElement.textContent.split(` `)[1];
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
+  }
+
   _travelWaySelect() {
-    const listTravelWaySelect = [];
+    const travelWaySelectList = [];
 
     for (const key in emojiList) {
       if (emojiList.hasOwnProperty(key)) {
-        console.log(this._travelWay);
-
-        listTravelWaySelect.push(`
+        travelWaySelectList.push(`
           <input class="travel-way__select-input visually-hidden" 
             type="radio" 
             id="travel-way-${key.toLowerCase()}-${this._id}" 
@@ -70,7 +83,7 @@ export class TripPointEdit extends Component {
       }
     }
 
-    return listTravelWaySelect.join(``);
+    return travelWaySelectList.join(``);
   }
 
   set onDelete(fn) {
@@ -244,6 +257,9 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.point__button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
+    this._element.querySelector(`.travel-way__select-group`)
+      .addEventListener(`click`, this._onTravelWayChange);
+
     // Date Input
     const dateInput = this._element.querySelector(`.point__date .point__input`);
     dateInput.flatpickr({
@@ -281,5 +297,8 @@ export class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__buttons button[type="reset"]`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element.querySelector(`.travel-way__select-group`)
+      .removeEventListener(`click`, this._onTravelWayChange);
   }
 }
