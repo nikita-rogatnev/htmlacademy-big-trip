@@ -5,7 +5,7 @@ import moment from 'moment';
 export class TripDay extends Component {
   constructor(data) {
     super();
-    this._date = data.day;
+    this._day = data.day;
   }
 
   get template() {
@@ -13,7 +13,7 @@ export class TripDay extends Component {
       <div>
         <span class="trip-day__caption">Day</span>
         <p class="trip-day__number">1</p>
-        <h2 class="trip-day__title">${moment(this._date).format(`MMM DD`)}</h2>
+        <h2 class="trip-day__title">${moment(this._day).format(`MMM DD`)}</h2>
       </div>`.trim();
   }
 }

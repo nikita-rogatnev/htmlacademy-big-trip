@@ -43,7 +43,6 @@ export class TripPoint extends Component {
         <p class="trip-point__schedule">
           <span class="trip-point__timetable">${this._time}</span>
           <span class="trip-point__duration">${this._timeDuration}</span>
-          <img src="${this._picture}" alt="${this._destination}" width="100" height="100">
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
         <ul class="trip-point__offers">
@@ -64,6 +63,7 @@ export class TripPoint extends Component {
 
   update(data) {
     this._favorite = data.favorite;
+    this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._day = data.day;
     this._time = data.time;
