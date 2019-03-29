@@ -11,7 +11,6 @@ import {createElement} from "../../helpers/create-element";
 export class TripPointEdit extends Component {
   constructor(data) {
     super();
-    this._id = data.id;
     this._favorite = data.favorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
@@ -55,7 +54,6 @@ export class TripPointEdit extends Component {
   }
 
 
-  // TODO: что то перемудрил
   _onTravelWayChange(event) {
     const travelWayCheckbox = this._element.querySelector(`.travel-way__toggle`);
     const travelWayLabel = this._element.querySelector(`.travel-way__label`);
@@ -71,7 +69,7 @@ export class TripPointEdit extends Component {
     this.bind();
   }
 
-  _travelWaySelect() {
+  _travelWayList() {
     const travelWaySelectList = [];
 
     for (const key in emojiList) {
@@ -79,11 +77,11 @@ export class TripPointEdit extends Component {
         travelWaySelectList.push(`
           <input class="travel-way__select-input visually-hidden" 
             type="radio" 
-            id="travel-way-${key.toLowerCase()}-${this._id}" 
+            id="travel-way-${key.toLowerCase()}" 
             name="travelWay" 
             value="${key.toLowerCase()}" 
             ${(this._travelWay === key) ? `checked` : ``}>
-          <label class="travel-way__select-label" for="travel-way-${key.toLowerCase()}-${this._id}">${emojiList[key] + ` ` + key.toLowerCase()}</label>
+          <label class="travel-way__select-label" for="travel-way-${key.toLowerCase()}">${emojiList[key] + ` ` + key.toLowerCase()}</label>
         `);
       }
     }
@@ -170,14 +168,14 @@ export class TripPointEdit extends Component {
             </label>
         
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle-${this._id}">
+              <label class="travel-way__label" for="travel-way__toggle">
                 ${emojiList[this._travelWay.toLocaleLowerCase()]}
               </label>
-              <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle-${this._id}">
+              <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
               
               <div class="travel-way__select">
                 <div class="travel-way__select-group">
-                  ${this._travelWaySelect()}
+                  ${this._travelWayList()}
                 </div>
               </div>
             </div>

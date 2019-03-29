@@ -5,7 +5,6 @@ import {emojiList} from '../../helpers/emoji-list';
 export class TripPoint extends Component {
   constructor(data) {
     super();
-    this._id = data.id;
     this._favorite = data.favorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;

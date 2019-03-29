@@ -87,10 +87,6 @@ const renderTripPoints = (items) => {
       point.price = newObject.price;
       point.offer = newObject.offer;
 
-      // TODO: Refactor later
-      const dayContainer = document.querySelector(`.trip-day .trip-day__title`);
-      dayContainer.innerHTML = moment(point.day).format(`MMM DD`);
-
       tripPointComponent.update(point);
       tripPointComponent.render();
       tripPointsContainer.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
