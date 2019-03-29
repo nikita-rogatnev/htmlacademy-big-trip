@@ -7,7 +7,7 @@ export const emojiList = {
   transport: `🚊`,
   drive: `🚗`,
   flight: `✈`,
-  checkIn: `🏨`,
+  checkin: `🏨`,
   sightseeing: `🏛️`,
   restaurant: `🍴`,
 };

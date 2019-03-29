@@ -5,6 +5,7 @@ import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
 import {getDurationTime} from "../../helpers/get-duration-time";
+import {createElement} from "../../helpers/create-element";
 
 // Trip Point Edit Class
 export class TripPointEdit extends Component {
@@ -27,6 +28,8 @@ export class TripPointEdit extends Component {
 
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDelete = null;
+
+    this._onTravelWayChange = this._onTravelWayChange.bind(this);
   }
 
   _onSubmitButtonClick(evt) {
@@ -50,6 +53,42 @@ export class TripPointEdit extends Component {
     return (typeof this._onDelete === `function`) && this._onDelete();
   }
 
+
+  _onTravelWayChange(event) {
+    const travelWayCheckbox = this._element.querySelector(`.travel-way__toggle`);
+    const travelWayLabel = this._element.querySelector(`.travel-way__label`);
+    const travelWayLabelContent = event.srcElement.textContent.split(` `)[1];
+    const destinationLabel = this._element.querySelector(`.point__destination-label`);
+
+    this._travelWay = travelWayLabelContent.toLocaleLowerCase();
+    travelWayCheckbox.checked = false;
+    travelWayLabel.innerHTML = emojiList[this._travelWay];
+    destinationLabel.innerHTML = `${travelWayLabelContent} to`;
+
+    this.unbind();
+    this.bind();
+  }
+
+  _travelWayList() {
+    const travelWaySelectList = [];
+
+    for (const key in emojiList) {
+      if (emojiList.hasOwnProperty(key)) {
+        travelWaySelectList.push(`
+          <input class="travel-way__select-input visually-hidden" 
+            type="radio" 
+            id="travel-way-${key.toLowerCase()}" 
+            name="travelWay" 
+            value="${key.toLowerCase()}" 
+            ${(this._travelWay === key) ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-${key.toLowerCase()}">${emojiList[key] + ` ` + key.toLowerCase()}</label>
+        `);
+      }
+    }
+
+    return travelWaySelectList.join(``);
+  }
+
   set onDelete(fn) {
     this._onDelete = fn;
   }
@@ -57,8 +96,8 @@ export class TripPointEdit extends Component {
   _processForm(formData) {
     const entry = {
       favorite: false,
+      travelWay: ``,
       destination: ``,
-      // TODO: Не придумал как иначе сделать, не нравится что через датасет и что вызываю это тут
       day: new Date(this._element.querySelector(`.point__date .point__input`).dataset.date),
       time: 0,
       timeDuration: this._timeDuration,
@@ -86,6 +125,7 @@ export class TripPointEdit extends Component {
 
   update(data) {
     this._favorite = data.favorite;
+    this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._day = data.day;
     this._time = data.time;
@@ -98,6 +138,9 @@ export class TripPointEdit extends Component {
     return {
       favorite: (value) => {
         target.favorite = (value === `on`);
+      },
+      travelWay: (value) => {
+        target.travelWay = value;
       },
       destination: (value) => {
         target.destination = value;
@@ -125,30 +168,14 @@ export class TripPointEdit extends Component {
             </label>
         
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle">${emojiList[this._travelWay.toLocaleLowerCase()]}</label>
+              <label class="travel-way__label" for="travel-way__toggle">
+                ${emojiList[this._travelWay.toLocaleLowerCase()]}
+              </label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
               
               <div class="travel-way__select">
                 <div class="travel-way__select-group">
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi">
-                  <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-      
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus">
-                  <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-      
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train">
-                  <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-      
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked>
-                  <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-                </div>
-      
-                <div class="travel-way__select-group">
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-                  <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-      
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-                  <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
+                  ${this._travelWayList()}
                 </div>
               </div>
             </div>
@@ -192,30 +219,30 @@ export class TripPointEdit extends Component {
               
               <div class="point__offers-wrap">
                 <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offer[`add-luggage`] && `checked`}>
-                  <label for="add-luggage" class="point__offers-label">
-                    <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
-                  </label>
-        
-                  <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offer[`switch-to-comfort-class`] && `checked`}>
-                    <label for="switch-to-comfort-class" class="point__offers-label">
-                      <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-                    </label>
-          
-                    <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offer[`add-meal`] && `checked`}>
-                    <label for="add-meal" class="point__offers-label">
-                      <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-                    </label>
-          
-                    <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offer[`choose-seats`] && `checked`}>
-                    <label for="choose-seats" class="point__offers-label">
-                      <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-                    </label>
-                  </div>
+                <label for="add-luggage" class="point__offers-label">
+                  <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
+                </label>
+      
+                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offer[`switch-to-comfort-class`] && `checked`}>
+                <label for="switch-to-comfort-class" class="point__offers-label">
+                  <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
+                </label>
+      
+                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offer[`add-meal`] && `checked`}>
+                <label for="add-meal" class="point__offers-label">
+                  <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
+                </label>
+      
+                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offer[`choose-seats`] && `checked`}>
+                <label for="choose-seats" class="point__offers-label">
+                  <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
+                </label>
+              </div>
                       
-                </section>
-                <section class="point__destination">
-                  <h3 class="point__details-title">Destination</h3>
-                  <p class="point__destination-text">${this._destinationText}</p>
+            </section>
+            <section class="point__destination">
+              <h3 class="point__details-title">Destination</h3>
+              <p class="point__destination-text">${this._destinationText}</p>
               <div class="point__destination-images">
                 <img src="${this._picture}" alt="picture from place" class="point__destination-image">
               </div>
@@ -232,6 +259,9 @@ export class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__button[type="reset"]`)
       .addEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element.querySelector(`.travel-way__select-group`)
+      .addEventListener(`click`, this._onTravelWayChange);
 
     // Date Input
     const dateInput = this._element.querySelector(`.point__date .point__input`);
@@ -270,5 +300,8 @@ export class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__buttons button[type="reset"]`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    this._element.querySelector(`.travel-way__select-group`)
+      .removeEventListener(`click`, this._onTravelWayChange);
   }
 }
