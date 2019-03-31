@@ -66,11 +66,11 @@ export class TripPoint extends Component {
     this._favorite = data.favorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
-    this._destinationText = data.destinationText;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offer = data.offer;
-    this._picture = data.picture;
+    // this._destinationText = data.destinationText;
+    // this._picture = data.picture;
   }
 }

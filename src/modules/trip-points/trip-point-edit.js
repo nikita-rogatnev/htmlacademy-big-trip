@@ -121,35 +121,35 @@ export class TripPointEdit extends Component {
     this._favorite = data.favorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
-    this._destinationText = data.destinationText;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offer = data.offer;
-    this._picture = data.picture;
+    // this._destinationText = data.destinationText;
+    // this._picture = data.picture;
   }
 
   static createMapper(target) {
     return {
-      favorite: (value) => {
+      'favorite': (value) => {
         target.favorite = (value === `on`);
       },
-      travelWay: (value) => {
+      'travelWay': (value) => {
         target.travelWay = value;
       },
-      destination: (value) => {
+      'destination': (value) => {
         target.destination = value;
       },
-      "date-start": (value) => {
+      'date-start': (value) => {
         target.dateStart = value;
       },
-      "date-end": (value) => {
+      'date-end': (value) => {
         target.dateEnd = value;
       },
-      price: (value) => {
+      'price': (value) => {
         target.price = parseInt(value, 10);
       },
-      offer: (value) => {
+      'offer': (value) => {
         target.offer[value] = true;
       },
     };
