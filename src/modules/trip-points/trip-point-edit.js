@@ -9,7 +9,9 @@ import "../../../node_modules/flatpickr/dist/themes/dark.css";
 export class TripPointEdit extends Component {
   constructor(data) {
     super();
-    this._favorite = data.favorite;
+    this._id = data.id;
+    this._isDone = data.isDone;
+    this._isFavorite = data.isFavorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._destinationText = data.destinationText;
@@ -90,7 +92,7 @@ export class TripPointEdit extends Component {
 
   _processForm(formData) {
     const entry = {
-      favorite: false,
+      isFavorite: false,
       travelWay: ``,
       destination: ``,
       dateStart: ``,
@@ -118,7 +120,7 @@ export class TripPointEdit extends Component {
   }
 
   update(data) {
-    this._favorite = data.favorite;
+    this._isFavorite = data.isFavorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._dateStart = data.dateStart;
@@ -132,7 +134,7 @@ export class TripPointEdit extends Component {
   static createMapper(target) {
     return {
       'favorite': (value) => {
-        target.favorite = (value === `on`);
+        target.isFavorite = (value === `on`);
       },
       'travelWay': (value) => {
         target.travelWay = value;
@@ -202,7 +204,7 @@ export class TripPointEdit extends Component {
             </div>
       
             <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._favorite ? `checked` : ``}>
+              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
                <label class="point__favorite" for="favorite">favorite</label>
             </div>
           </header>

@@ -7,7 +7,9 @@ import moment from 'moment';
 export class TripPoint extends Component {
   constructor(data) {
     super();
-    this._favorite = data.favorite;
+    this._id = data.id;
+    this._isDone = data.isDone;
+    this._isFavorite = data.isFavorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._destinationText = data.destinationText;
@@ -38,7 +40,7 @@ export class TripPoint extends Component {
 
   get template() {
     return `
-      <article class="trip-point ${this._favorite ? `trip-point--favorite` : ``}">
+      <article class="trip-point ${this._isFavorite ? `trip-point--favorite` : ``}">
         <i class="trip-icon">${emojiList[this._travelWay.toLocaleLowerCase()]}</i>
         <h3 class="trip-point__title">${this._destination}</h3>
         <p class="trip-point__schedule">
@@ -63,7 +65,7 @@ export class TripPoint extends Component {
   }
 
   update(data) {
-    this._favorite = data.favorite;
+    this._isFavorite = data.isFavorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._dateStart = data.dateStart;
