@@ -4,7 +4,6 @@ import {tripPointsData} from './modules/trip-points/data';
 import {TripPoint} from './modules/trip-points/trip-point';
 import {TripPointEdit} from './modules/trip-points/trip-point-edit';
 import {getStatistics} from './modules/statistics/statistics';
-import moment from 'moment';
 
 // Trip Day
 const tripDayContainer = document.querySelector(`.trip-day__info`);
@@ -81,9 +80,8 @@ const renderTripPoints = (items) => {
       point.favorite = newObject.favorite;
       point.travelWay = newObject.travelWay;
       point.destination = newObject.destination;
-      point.day = newObject.day;
-      point.time = newObject.time;
-      point.timeDuration = newObject.timeDuration;
+      point.dateStart = newObject.dateStart;
+      point.dateEnd = newObject.dateEnd;
       point.price = newObject.price;
       point.offer = newObject.offer;
 

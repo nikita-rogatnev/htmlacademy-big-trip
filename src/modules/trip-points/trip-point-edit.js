@@ -4,8 +4,6 @@ import moment from 'moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
-import {getDurationTime} from "../../helpers/get-duration-time";
-import {createElement} from "../../helpers/create-element";
 
 // Trip Point Edit Class
 export class TripPointEdit extends Component {
@@ -15,11 +13,9 @@ export class TripPointEdit extends Component {
     this._travelWay = data.travelWay;
     this._destination = data.destination;
     this._destinationText = data.destinationText;
-    this._day = data.day;
-    this._time = data.time;
-    this._timeDuration = data.timeDuration;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._totalPrice = data.totalPrice;
     this._offer = data.offer;
     this._picture = data.picture;
 
@@ -52,7 +48,6 @@ export class TripPointEdit extends Component {
   _onDeleteButtonClick() {
     return (typeof this._onDelete === `function`) && this._onDelete();
   }
-
 
   _onTravelWayChange(event) {
     const travelWayCheckbox = this._element.querySelector(`.travel-way__toggle`);
@@ -98,9 +93,8 @@ export class TripPointEdit extends Component {
       favorite: false,
       travelWay: ``,
       destination: ``,
-      day: new Date(this._element.querySelector(`.point__date .point__input`).dataset.date),
-      time: 0,
-      timeDuration: this._timeDuration,
+      dateStart: ``,
+      dateEnd: ``,
       price: 0,
       totalPrice: 0,
       offer: {
@@ -127,11 +121,12 @@ export class TripPointEdit extends Component {
     this._favorite = data.favorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
-    this._day = data.day;
-    this._time = data.time;
-    this._timeDuration = data.timeDuration;
+    this._destinationText = data.destinationText;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offer = data.offer;
+    this._picture = data.picture;
   }
 
   static createMapper(target) {
@@ -145,8 +140,11 @@ export class TripPointEdit extends Component {
       destination: (value) => {
         target.destination = value;
       },
-      time: (value) => {
-        target.time = value;
+      "date-start": (value) => {
+        target.dateStart = value;
+      },
+      "date-end": (value) => {
+        target.dateEnd = value;
       },
       price: (value) => {
         target.price = parseInt(value, 10);
@@ -162,11 +160,6 @@ export class TripPointEdit extends Component {
       <article class="point">
         <form action="" method="get">
           <header class="point__header">
-            <label class="point__date">
-              choose day
-              <input class="point__input" type="text" data-date="${this._day}" placeholder="${moment(this._day).format(`MMM DD`)}" name="day">
-            </label>
-        
             <div class="travel-way">
               <label class="travel-way__label" for="travel-way__toggle">
                 ${emojiList[this._travelWay.toLocaleLowerCase()]}
@@ -191,10 +184,11 @@ export class TripPointEdit extends Component {
               </datalist>
             </div>
       
-            <label class="point__time">
+            <div class="point__time">
               choose time
-              <input class="point__input" type="text" name="time" placeholder="00:00 — 00:00">
-            </label>
+              <input class="point__input" type="text" name="date-start" placeholder="19:00">
+              <input class="point__input" type="text" name="date-end" placeholder="21:00">
+            </div>
       
             <label class="point__price">
               write price
@@ -263,35 +257,22 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.travel-way__select-group`)
       .addEventListener(`click`, this._onTravelWayChange);
 
-    // Date Input
-    const dateInput = this._element.querySelector(`.point__date .point__input`);
-    dateInput.flatpickr({
-      dateFormat: `M d`,
-      altFormat: `d.m.Y`,
-      defaultDate: this._day,
-      onChange: (dateObj) => {
-        dateInput.dataset.date = dateObj.toString();
-      }
-    });
-
     // Time Range
-    this._element.querySelector(`.point__time .point__input`).flatpickr({
-      locale: {
-        rangeSeparator: ` — `
-      },
-      mode: `range`,
+    this._element.querySelector(`.point__time .point__input:nth-child(1)`).flatpickr({
+      time_24hr: true,
       enableTime: true,
+      noCalendar: true,
       dateFormat: `H:i`,
-      defaultDate: this._time,
-      minuteIncrement: 5,
-      onClose: (dateObj) => {
-        this.timeDuration = dateObj;
-      }
+      defaultDate: this._dateStart,
     });
-  }
 
-  set timeDuration(timeItems) {
-    this._timeDuration = getDurationTime(timeItems[0], timeItems[1]).format(`H[H] mm[M]`);
+    this._element.querySelector(`.point__time .point__input:nth-child(2)`).flatpickr({
+      time_24hr: true,
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: `H:i`,
+      defaultDate: this._dateEnd,
+    });
   }
 
   unbind() {

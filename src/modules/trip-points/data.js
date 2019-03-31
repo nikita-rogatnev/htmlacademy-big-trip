@@ -20,9 +20,8 @@ export const tripPointsData = [{
       .slice(0, Math.floor(Math.random() * Math.floor(3) + 1))
       .join(` `);
   },
-  day: new Date(`Tue Mar 01 2019 10:00:00 GMT+0300 (MSK)`),
-  time: `10:00  — 14:30`,
-  timeDuration: `4h 30m`,
+  dateStart: `10:00`,
+  dateEnd: `12:00`,
   price: Math.floor(Math.random() * Math.floor(100)),
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;
