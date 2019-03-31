@@ -26,10 +26,27 @@ export const tripPointsData = [{
   get picture() {
     return `//picsum.photos/100/100?r=${Math.random()}`;
   },
-  offer: {
-    'add-luggage': true,
-    'switch-to-comfort-class': true,
-    'add-meal': false,
-    'choose-seats': false,
-  },
+  offer: [
+    {
+      title: `add-luggage`,
+      price: 100,
+      accepted: false
+    },
+    {
+      title: `switch-to-comfort-class`,
+      price: 110,
+      accepted: false
+    },
+    {
+      title: `add-meal`,
+      price: 120,
+      accepted: false
+    },
+    {
+      title: `choose-seats`,
+      price: 130,
+      accepted: false
+    }
+  ],
 }];
+

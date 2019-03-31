@@ -1,9 +1,23 @@
-import TripPointView from '../view/trip-point-view';
-import TripPointEditView from '../view/trip-point-edit-view';
-import FilterView from '../view/filter-view';
-import {filterPoints} from '../utils';
+import {TripPoint} from '../modules/trip-points/trip-point';
+import {TripPointEdit} from '../modules/trip-points/trip-point-edit';
+import {Filter} from '../modules/filter/filter';
 import {api} from '../main';
 
+const filterPoints = (points, filterName) => {
+  switch (filterName) {
+    case `everything`:
+      return points;
+
+    case `future`:
+      return points.filter((it) => it.time > Date.now());
+
+    case `past`:
+      return points.filter((it) => it.time < Date.now());
+
+    default:
+      return points;
+  }
+};
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
@@ -12,7 +26,7 @@ export const renderFilters = (filters, points) => {
   filtersContainer.innerHTML = ``;
 
   filters.forEach((filter) => {
-    const filterComponent = new FilterView(filter);
+    const filterComponent = new Filter(filter);
     filtersContainer.appendChild(filterComponent.render());
 
     filterComponent.onFilter = () => {
@@ -26,8 +40,8 @@ export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
 
   points.forEach((point) => {
-    const tripPoint = new TripPointView(point);
-    const tripPointEdit = new TripPointEditView(point);
+    const tripPoint = new TripPoint(point);
+    const tripPointEdit = new TripPointEdit(point);
 
     tripPointsContainer.appendChild(tripPoint.render());
 
@@ -38,14 +52,14 @@ export const renderTripPoints = (points) => {
     };
 
     tripPointEdit.onSubmit = (newObject) => {
-      point.type = newObject.type;
-      point.title = newObject.title;
-      point.dateFrom = newObject.dateFrom;
-      point.dateTo = newObject.dateTo;
-      point.price = newObject.price;
+      point.isDone = newObject.isDone;
       point.isFavorite = newObject.isFavorite;
-      point.offers = newObject.offers;
-      point.activeOffers = newObject.activeOffers;
+      point.travelWay = newObject.travelWay;
+      point.destination = newObject.destination;
+      point.dateStart = newObject.dateStart;
+      point.dateEnd = newObject.dateEnd;
+      point.price = newObject.price;
+      point.offer = newObject.offer;
 
       tripPointEdit.block(`save`);
       tripPointEdit.showBorder();

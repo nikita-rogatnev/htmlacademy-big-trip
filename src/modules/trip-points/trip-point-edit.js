@@ -1,5 +1,5 @@
 import {Component} from '../../component';
-import {emojiList} from '../../helpers/emoji-list';
+import {emojiList} from '../../utils';
 import moment from 'moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
@@ -10,7 +10,6 @@ export class TripPointEdit extends Component {
   constructor(data) {
     super();
     this._id = data.id;
-    this._isDone = data.isDone;
     this._isFavorite = data.isFavorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
@@ -99,12 +98,7 @@ export class TripPointEdit extends Component {
       dateEnd: ``,
       price: 0,
       totalPrice: 0,
-      offer: {
-        'add-luggage': false,
-        'switch-to-comfort-class': false,
-        'add-meal': false,
-        'choose-seats': false,
-      },
+      offer: [],
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -214,25 +208,11 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
               
               <div class="point__offers-wrap">
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage" ${this._offer[`add-luggage`] && `checked`}>
-                <label for="add-luggage" class="point__offers-label">
-                  <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
-                </label>
-      
-                <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class" ${this._offer[`switch-to-comfort-class`] && `checked`}>
-                <label for="switch-to-comfort-class" class="point__offers-label">
-                  <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-                </label>
-      
-                <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal" ${this._offer[`add-meal`] && `checked`}>
-                <label for="add-meal" class="point__offers-label">
-                  <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-                </label>
-      
-                <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats" ${this._offer[`choose-seats`] && `checked`}>
-                <label for="choose-seats" class="point__offers-label">
-                  <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-                </label>
+                ${this._offer.map((offer, i) => `
+                <input class="point__offers-input visually-hidden" type="checkbox" name="offer" id="offer-${i}" value="${offer.title} + €${offer.price}" ${offer.accepted && `checked`}>
+                <label for="offer-${i}" class="point__offers-label">
+                  <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
+                </label>`.trim()).join(``)}
               </div>
                       
             </section>
@@ -240,13 +220,13 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">Destination</h3>
               <p class="point__destination-text">${this._destinationText}</p>
               <div class="point__destination-images">
-                <img src="${this._picture}" alt="picture from place" class="point__destination-image">
+                ${this._picture.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`.trim()).join(``)}
               </div>
+              </section>
+              <input type="hidden" class="point__total-price" name="total-price" value="">
             </section>
-            <input type="hidden" class="point__total-price" name="total-price" value="">
-          </section>
-        </form>
-      </article>`.trim();
+          </form>
+        </article>`.trim();
   }
 
   bind() {
@@ -258,6 +238,10 @@ export class TripPointEdit extends Component {
 
     this._element.querySelector(`.travel-way__select-group`)
       .addEventListener(`click`, this._onTravelWayChange);
+
+    this._buttonSave = this._element.querySelector(`.point__button--save`);
+    this._buttonDelete = this._element.querySelector(`.point__button--delete`);
+    this._tripPointItem = this._element.querySelector(`.trip-point`);
 
     // Time Range
     this._element.querySelector(`.point__time .point__input:nth-child(1)`).flatpickr({
@@ -286,5 +270,41 @@ export class TripPointEdit extends Component {
 
     this._element.querySelector(`.travel-way__select-group`)
       .removeEventListener(`click`, this._onTravelWayChange);
+  }
+
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+    }, ANIMATION_TIMEOUT);
+  }
+
+  block(method) {
+    this._buttonSave.disabled = true;
+    this._buttonDelete.disabled = true;
+
+    if (method === `save`) {
+      this._buttonSave.innerText = `Saving...`;
+    } else {
+      this._buttonDelete.innerText = `Deleting...`;
+    }
+  }
+
+  unblock() {
+    this._buttonSave.disabled = false;
+    this._buttonDelete.disabled = false;
+
+    this._buttonSave.innerText = `Save`;
+    this._buttonDelete.innerText = `Delete`;
+  }
+
+  showBorder(isShown) {
+    if (isShown) {
+      this._tripPointItem.style.border = `1px solid red`;
+    } else {
+      this._tripPointItem.style.border = `none`;
+    }
   }
 }

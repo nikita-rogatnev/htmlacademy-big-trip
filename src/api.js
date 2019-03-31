@@ -1,4 +1,7 @@
-import ModelPoint from "./modules/trip-points/model-point";
+import {showError} from './utils';
+import TripPointModel from './modules/trip-points/trip-point-model';
+
+const messageContainer = document.querySelector(`.message`);
 
 const Method = {
   GET: `GET`,
@@ -15,78 +18,44 @@ const checkStatus = (response) => {
   }
 };
 
-const toJSON = (response) => {
-  return response.json();
-};
-
-const API = class {
-  constructor({endPoint, authorization}) {
-    this._endPoint = endPoint;
+export default class API {
+  constructor(apiUrl, authorization) {
+    this._api = apiUrl;
     this._authorization = authorization;
   }
 
-  getTasks() {
-    return this._load({url: `tasks`})
-      .then(toJSON)
-      .then(ModelPoint.parseTripPoints);
+  getTripPoints() {
+    return this._load({url: `points`})
+      .then((res) => res.json())
+      .then(TripPointModel.parseTrips);
   }
 
-  createTask({task}) {
-    return this._load({
-      url: `tasks`,
-      method: Method.POST,
-      body: JSON.stringify(task),
-      headers: new Headers({
-        'Content-Type': `application/json`
-      })
-    })
-      .then(toJSON)
-      .then(ModelPoint.parseTripPoint);
+  createTripPoint() {
   }
 
-  updateTask({id, data}) {
+  updateTripPoint({id, data}) {
     return this._load({
-      url: `tasks/${id}`,
+      url: `points/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data),
-      headers: new Headers({
-        'Content-Type': `application/json`
-      })
+      headers: new Headers({'Content-Type': `application/json`})
     })
-      .then(toJSON)
-      .then(ModelPoint.parseTripPoint);
+      .then((res) => res.json())
+      .then(TripPointModel.parseTrip);
   }
 
-  deleteTask({id}) {
-    return this._load({
-      url: `tasks/${id}`,
-      method: Method.DELETE
-    });
-  }
-
-  syncTasks({tasks}) {
-    return this._load({
-      url: `tasks/sync`,
-      method: `POST`,
-      body: JSON.stringify(tasks),
-      headers: new Headers({
-        'Content-Type': `application/json`
-      })
-    })
-      .then(toJSON);
+  deleteTripPoint({id}) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+    return fetch(`${this._api}/${url}`, {method, body, headers})
       .then(checkStatus)
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(`fetch error: ${error}`);
-        throw error;
+      .catch((err) => {
+        showError(messageContainer);
+        throw err;
       });
   }
-};
-
-export {API};
+}

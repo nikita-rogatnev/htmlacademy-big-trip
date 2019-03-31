@@ -3,7 +3,7 @@ import {Component} from '../../component';
 export class Filter extends Component {
   constructor(data) {
     super();
-    this._caption = data.caption;
+    this._name = data.name;
     this._isChecked = data.checked;
     this._isDisabled = data.disabled;
 
@@ -23,8 +23,8 @@ export class Filter extends Component {
 
   get template() {
     return `<span>
-      <input type="radio" id="filter-${this._caption.toLowerCase()}" name="filter" value="${this._caption.toLowerCase()}" ${this._isChecked ? `checked` : ``} ${this._isDisabled ? `disabled` : ``}>
-      <label class="trip-filter__item" for="filter-${this._caption.toLowerCase()}">${this._caption}</label>
+      <input type="radio" id="filter-${this._name.toLowerCase()}" name="filter" value="${this._name.toLowerCase()}" ${this._isChecked ? `checked` : ``} ${this._isDisabled ? `disabled` : ``}>
+      <label class="trip-filter__item" for="filter-${this._name.toLowerCase()}">${this._name}</label>
     </span>`.trim();
   }
 
