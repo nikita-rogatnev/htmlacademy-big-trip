@@ -137,10 +137,10 @@ export class TripPointEdit extends Component {
         target.destination = value;
       },
       'date-start': (value) => {
-        target.dateStart = value;
+        target.dateStart = value * 1000;
       },
       'date-end': (value) => {
-        target.dateEnd = value;
+        target.dateEnd = value * 1000;
       },
       'price': (value) => {
         target.price = parseInt(value, 10);
@@ -248,7 +248,9 @@ export class TripPointEdit extends Component {
       'time_24hr': true,
       'enableTime': true,
       'noCalendar': true,
-      'dateFormat': `H:i`,
+      'altInput': true,
+      'altFormat': `H:i`,
+      'dateFormat': `U`,
       'defaultDate': this._dateStart,
     });
 
@@ -256,7 +258,9 @@ export class TripPointEdit extends Component {
       'time_24hr': true,
       'enableTime': true,
       'noCalendar': true,
-      'dateFormat': `H:i`,
+      'altInput': true,
+      'altFormat': `H:i`,
+      'dateFormat': `U`,
       'defaultDate': this._dateEnd,
     });
   }
