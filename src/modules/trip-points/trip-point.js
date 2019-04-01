@@ -30,6 +30,7 @@ export class TripPoint extends Component {
   }
 
   get template() {
+    console.log(this._dateStart);
     return `
       <article class="trip-point ${this._isFavorite ? `trip-point--favorite` : ``}">
         <i class="trip-icon">${emojiList[this._travelWay.toLocaleLowerCase()]}</i>

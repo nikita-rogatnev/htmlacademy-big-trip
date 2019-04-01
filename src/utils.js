@@ -15,16 +15,16 @@ export const showError = (container) => {
 
 // List Of Emoji Icons
 export const emojiList = {
-  taxi: `🚕`,
-  bus: `🚌`,
-  train: `🚂`,
-  ship: `🛳`,
-  transport: `🚊`,
-  drive: `🚗`,
-  flight: `✈`,
-  checkin: `🏨`,
-  sightseeing: `🏛️`,
-  restaurant: `🍴`,
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'train': `🚂`,
+  'ship': `🛳`,
+  'transport': `🚊`,
+  'drive': `🚗`,
+  'flight': `✈`,
+  'check-in': `🏨`,
+  'sightseeing': `🏛️`,
+  'restaurant': `🍴`,
 };
 
 // Get Time Residue

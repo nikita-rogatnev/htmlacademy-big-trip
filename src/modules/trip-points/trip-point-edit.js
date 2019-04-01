@@ -36,7 +36,7 @@ export class TripPointEdit extends Component {
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
 
-    // TODO: remove - Помогает для отладки, пусть будет до конца разработки
+    // TODO: remove
     console.log(newData);
 
     this.update(newData);
@@ -194,7 +194,7 @@ export class TripPointEdit extends Component {
       
             <div class="point__buttons">
               <button class="point__button point__button--save" type="submit">Save</button>
-              <button class="point__button" type="reset">Delete</button>
+              <button class="point__button point__button--delete" type="reset">Delete</button>
             </div>
       
             <div class="paint__favorite-wrap">
@@ -233,31 +233,31 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
 
-    this._element.querySelector(`.point__button[type="reset"]`)
+    this._element.querySelector(`.point__button--delete`)
       .addEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element.querySelector(`.travel-way__select-group`)
-      .addEventListener(`click`, this._onTravelWayChange);
+    this._element.querySelectorAll(`.travel-way__select-label`).forEach((select) => {
+      select.addEventListener(`click`, this._onTravelWayChange);
+    });
 
     this._buttonSave = this._element.querySelector(`.point__button--save`);
     this._buttonDelete = this._element.querySelector(`.point__button--delete`);
-    this._tripPointItem = this._element.querySelector(`.trip-point`);
 
     // Time Range
-    this._element.querySelector(`.point__time .point__input:nth-child(1)`).flatpickr({
-      time_24hr: true,
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: `H:i`,
-      defaultDate: this._dateStart,
+    this._element.querySelector(`.point__time .point__input[name="date-start"]`).flatpickr({
+      'time_24hr': true,
+      'enableTime': true,
+      'noCalendar': true,
+      'dateFormat': `H:i`,
+      'defaultDate': this._dateStart,
     });
 
-    this._element.querySelector(`.point__time .point__input:nth-child(2)`).flatpickr({
-      time_24hr: true,
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: `H:i`,
-      defaultDate: this._dateEnd,
+    this._element.querySelector(`.point__time .point__input[name="date-end"]`).flatpickr({
+      'time_24hr': true,
+      'enableTime': true,
+      'noCalendar': true,
+      'dateFormat': `H:i`,
+      'defaultDate': this._dateEnd,
     });
   }
 
@@ -265,10 +265,10 @@ export class TripPointEdit extends Component {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
 
-    this._element.querySelector(`.point__buttons button[type="reset"]`)
+    this._element.querySelector(`.point__button--delete`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element.querySelector(`.travel-way__select-group`)
+    this._element.querySelector(`.travel-way__select-label`)
       .removeEventListener(`click`, this._onTravelWayChange);
   }
 
@@ -282,6 +282,7 @@ export class TripPointEdit extends Component {
   }
 
   block(method) {
+    console.log(method);
     this._buttonSave.disabled = true;
     this._buttonDelete.disabled = true;
 
@@ -302,9 +303,9 @@ export class TripPointEdit extends Component {
 
   showBorder(isShown) {
     if (isShown) {
-      this._tripPointItem.style.border = `1px solid red`;
+      this._element.style.border = `1px solid red`;
     } else {
-      this._tripPointItem.style.border = `none`;
+      this._element.style.border = `none`;
     }
   }
 }
