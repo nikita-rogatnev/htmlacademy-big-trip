@@ -99,7 +99,7 @@ export class TripPointEdit extends Component {
       dateEnd: ``,
       price: 0,
       totalPrice: 0,
-      offer: [],
+      offer: this._offer,
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -162,14 +162,14 @@ export class TripPointEdit extends Component {
                 ${emojiList[this._travelWay.toLocaleLowerCase()]}
               </label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-              
+
               <div class="travel-way__select">
                 <div class="travel-way__select-group">
                   ${this._travelWayList()}
                 </div>
               </div>
             </div>
-      
+
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">${this._travelWay} to</label>
               <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
@@ -180,34 +180,34 @@ export class TripPointEdit extends Component {
                 <option value="hotel"></option>
               </datalist>
             </div>
-      
+
             <div class="point__time">
               choose time
               <input class="point__input" type="text" name="date-start" placeholder="19:00">
               <input class="point__input" type="text" name="date-end" placeholder="21:00">
             </div>
-      
+
             <label class="point__price">
               write price
               <span class="point__price-currency">€</span>
               <input class="point__input" type="text" value="${this._price}" name="price">
             </label>
-      
+
             <div class="point__buttons">
               <button class="point__button point__button--save" type="submit">Save</button>
               <button class="point__button point__button--delete" type="reset">Delete</button>
             </div>
-      
+
             <div class="paint__favorite-wrap">
               <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
                <label class="point__favorite" for="favorite">favorite</label>
             </div>
           </header>
-            
+
           <section class="point__details">
             <section class="point__offers">
               <h3 class="point__details-title">offers</h3>
-              
+
               <div class="point__offers-wrap">
                 ${this._offer.map((offer, i) => `
                 <input class="point__offers-input visually-hidden" type="checkbox" name="offer" id="offer-${i}" value="${offer.title} + €${offer.price}" ${offer.accepted && `checked`}>
@@ -215,7 +215,7 @@ export class TripPointEdit extends Component {
                   <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
                 </label>`.trim()).join(``)}
               </div>
-                      
+
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
