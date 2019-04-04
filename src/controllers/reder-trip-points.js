@@ -30,7 +30,6 @@ export const renderFilters = (filters, points) => {
     filtersContainer.appendChild(filterComponent.render());
 
     filterComponent.onFilter = (evt) => {
-      // console.log(points);
       const filterName = evt.target.textContent;
       const filteredPoints = filterPoints(points, filterName);
       renderTripPoints(filteredPoints);

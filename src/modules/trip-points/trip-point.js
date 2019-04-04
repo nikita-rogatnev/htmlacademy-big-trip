@@ -22,7 +22,6 @@ export class TripPoint extends Component {
   }
 
   _onEditButtonClick() {
-    console.log(this._offer);
     typeof this._onEdit === `function` && this._onEdit();
   }
 
