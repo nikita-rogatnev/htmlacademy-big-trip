@@ -9,10 +9,10 @@ const filterPoints = (points, filterName) => {
       return points;
 
     case `future`:
-      return points.filter((it) => it.time > Date.now());
+      return points.filter((it) => it.dateStart > Date.now());
 
     case `past`:
-      return points.filter((it) => it.time < Date.now());
+      return points.filter((it) => it.dateStart < Date.now());
 
     default:
       return points;
@@ -29,8 +29,10 @@ export const renderFilters = (filters, points) => {
     const filterComponent = new Filter(filter);
     filtersContainer.appendChild(filterComponent.render());
 
-    filterComponent.onFilter = () => {
-      const filteredPoints = filterPoints(points, filterComponent.name);
+    filterComponent.onFilter = (evt) => {
+      // console.log(points);
+      const filterName = evt.target.textContent;
+      const filteredPoints = filterPoints(points, filterName);
       renderTripPoints(filteredPoints);
     };
   });
