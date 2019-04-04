@@ -1,6 +1,6 @@
 import Api from './api';
-import {renderFilters, renderTripPoints} from './views/view-trip-points';
-import {switchView} from './views/switch-view';
+import {renderFilters, renderTripPoints} from './controllers/reder-trip-points';
+import {switchView} from './controllers/switch-view';
 
 // API
 const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;

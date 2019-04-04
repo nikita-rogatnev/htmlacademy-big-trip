@@ -21,8 +21,9 @@ export class TripPoint extends Component {
     this._onEdit = null;
   }
 
+  /* eslint-disable-next-line */
   _onEditButtonClick() {
-    return typeof this._onEdit === `function` && this._onEdit();
+    typeof this._onEdit === `function` && this._onEdit();
   }
 
   set onClick(fn) {

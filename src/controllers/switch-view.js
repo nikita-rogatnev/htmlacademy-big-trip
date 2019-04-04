@@ -1,4 +1,4 @@
-import {viewStatistics} from './view-statistics';
+import {rederStatistics} from './reder-statistics';
 
 // Switch View
 const switchContainer = document.querySelector(`.view-switch__items`);
@@ -20,7 +20,7 @@ export const switchView = () => {
     if (evt.target.textContent === `Stats`) {
       mainContainer.classList.add(`visually-hidden`);
       statisticsContainer.classList.remove(`visually-hidden`);
-      viewStatistics();
+      rederStatistics();
     } else {
       mainContainer.classList.remove(`visually-hidden`);
       statisticsContainer.classList.add(`visually-hidden`);

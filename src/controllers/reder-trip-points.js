@@ -52,6 +52,7 @@ export const renderTripPoints = (points) => {
     };
 
     tripPointEdit.onSubmit = (newObject) => {
+      point.id = newObject.id;
       point.isDone = newObject.isDone;
       point.isFavorite = newObject.isFavorite;
       point.travelWay = newObject.travelWay;
@@ -83,8 +84,10 @@ export const renderTripPoints = (points) => {
       tripPointEdit.block();
       tripPointEdit.showBorder();
 
-      api.deleteTripPoint(id)
-        .then(() => tripPointEdit.unrender())
+      api.deleteTripPoint({id})
+        .then(() => {
+          tripPointEdit.unrender();
+        })
         .catch(() => {
           tripPointEdit.shake();
           tripPointEdit.unblock();

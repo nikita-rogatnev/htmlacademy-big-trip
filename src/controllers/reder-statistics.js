@@ -1,7 +1,7 @@
 import {renderChart} from '../modules/charts/charts';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-export const viewStatistics = () => {
+export const rederStatistics = () => {
   const transportChartOptions = {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,

@@ -47,7 +47,7 @@ export class TripPointEdit extends Component {
   }
 
   _onDeleteButtonClick() {
-    return (typeof this._onDelete === `function`) && this._onDelete();
+    return (typeof this._onDelete === `function`) && this._onDelete(this._id);
   }
 
   _onTravelWayChange(event) {
@@ -91,6 +91,7 @@ export class TripPointEdit extends Component {
 
   _processForm(formData) {
     const entry = {
+      id: this._id,
       isFavorite: false,
       travelWay: ``,
       destination: ``,
@@ -153,7 +154,7 @@ export class TripPointEdit extends Component {
 
   get template() {
     return `
-      <article class="point" id="${this._id}">
+      <article class="point">
         <form action="" method="get">
           <header class="point__header">
             <div class="travel-way">
@@ -286,7 +287,6 @@ export class TripPointEdit extends Component {
   }
 
   block(method) {
-    console.log(method);
     this._buttonSave.disabled = true;
     this._buttonDelete.disabled = true;
 
