@@ -63,10 +63,10 @@ export const renderTripPoints = (points) => {
       point.offer = newObject.offer;
 
       tripPointEdit.block(`save`);
-      tripPointEdit.showBorder();
 
       api.updateTripPoint({id: point.id, data: point.toRAW()})
         .then((newPoint) => {
+          tripPointEdit.showBorder(false);
           tripPointEdit.unblock();
           tripPoint.update(newPoint);
           tripPoint.render();
@@ -74,24 +74,26 @@ export const renderTripPoints = (points) => {
           tripPointEdit.unrender();
         })
         .catch(() => {
+          tripPointEdit.showBorder(true);
           tripPointEdit.shake();
           tripPointEdit.unblock();
-          tripPointEdit.showBorder(true);
         });
     };
 
     tripPointEdit.onDelete = (id) => {
       tripPointEdit.block();
-      tripPointEdit.showBorder();
 
       api.deleteTripPoint({id})
-        .then(() => {
+        .then(() => api.getTripPoints())
+        .then((updatedTripPoints) => {
+          tripPointEdit.showBorder(false);
+          renderTripPoints(updatedTripPoints);
           tripPointEdit.unrender();
         })
         .catch(() => {
+          tripPointEdit.showBorder(true);
           tripPointEdit.shake();
           tripPointEdit.unblock();
-          tripPointEdit.showBorder(true);
         });
     };
   });

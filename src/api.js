@@ -24,22 +24,32 @@ export default class API {
     this._authorization = authorization;
   }
 
+  getOffers() {
+    return this._load({url: `offers`})
+      .then((res) => res.json());
+  }
+
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then((res) => res.json());
+  }
+
   getTripPoints() {
     return this._load({url: `points`})
       .then((res) => res.json())
       .then(TripPointModel.parseTrips);
   }
 
-  createTripPoint({tripPoint}) {
-    return this._load({
-      url: `points`,
-      method: Method.POST,
-      body: JSON.stringify(tripPoint),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then((res) => res.json())
-      .then(TripPointModel.parseTrips);
-  }
+  // createTripPoint({tripPoint}) {
+  //   return this._load({
+  //     url: `points`,
+  //     method: Method.POST,
+  //     body: JSON.stringify(tripPoint),
+  //     headers: new Headers({'Content-Type': `application/json`})
+  //   })
+  //     .then((res) => res.json())
+  //     .then(TripPointModel.parseTrips);
+  // }
 
   updateTripPoint({id, data}) {
     return this._load({
@@ -53,8 +63,6 @@ export default class API {
   }
 
   deleteTripPoint({id}) {
-    console.log(id);
-    
     return this._load({
       url: `points/${id}`,
       method: Method.DELETE

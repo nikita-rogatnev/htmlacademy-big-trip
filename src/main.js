@@ -16,7 +16,9 @@ const messageContainer = document.querySelector(`.message-container`);
 
 export const fetchTripPoints = () => {
   return Promise.all([
-    api.getTripPoints()
+    api.getTripPoints(),
+    api.getOffers(),
+    api.getDestinations()
   ]);
 };
 
