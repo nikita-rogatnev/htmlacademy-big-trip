@@ -38,10 +38,19 @@
   </div>
 </header>
 
-<h2 class="message-container">Loading route...</h2>
-
 <main class="main content-wrap" id="table">
-  <form class="trip-sorting"></form>
+  <form class="trip-sorting">
+    <input type="radio" name="trip-sorting" id="sorting-event" value="event" checked>
+    <label class="trip-sorting__item trip-sorting__item--event" for="sorting-event">Event</label>
+
+    <input type="radio" name="trip-sorting" id="sorting-time" value="time">
+    <label class="trip-sorting__item trip-sorting__item--time" for="sorting-time">Time</label>
+
+    <input type="radio" name="trip-sorting" id="sorting-price" value="price">
+    <label class="trip-sorting__item trip-sorting__item--price" for="sorting-price">Price</label>
+
+    <span class="trip-sorting__item trip-sorting__item--offers">Offers</span>
+  </form>
 
   <section class="trip-points">
     <section class="trip-day">

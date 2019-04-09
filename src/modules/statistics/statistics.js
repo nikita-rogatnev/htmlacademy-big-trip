@@ -1,7 +1,7 @@
-import {renderChart} from '../modules/charts/charts';
+import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-export const rederStatistics = () => {
+const createStatistics = () => {
   const transportChartOptions = {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
@@ -136,6 +136,12 @@ export const rederStatistics = () => {
   const moneyChartCtx = document.querySelector(`.statistic__money`);
   moneyChartCtx.height = 330;
 
+  const renderChart = (ctx, options) => {
+    return new Chart(ctx, options);
+  };
+
   renderChart(transportChartCtx, transportChartOptions);
   renderChart(moneyChartCtx, moneyChartOptions);
 };
+
+export default createStatistics;

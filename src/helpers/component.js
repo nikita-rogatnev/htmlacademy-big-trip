@@ -1,16 +1,14 @@
 import {createElement} from './utils';
 
-export class Component {
+class Component {
   constructor() {
     if (new.target === Component) {
       throw new Error(`Can't instantiate BaseComponent, only concrete one.`);
     }
 
     this._element = null;
-
-    this._state = {
-      // Component state
-    };
+    this._container = null;
+    this._state = {};
   }
 
   get element() {
@@ -21,21 +19,35 @@ export class Component {
     throw new Error(`You have to define template.`);
   }
 
-  render() {
+  render(container) {
     this._element = createElement(this.template);
+    this._container = container;
     this.bind();
     return this._element;
-  }
-
-  bind() {
-  }
-
-  unbind() {
   }
 
   unrender() {
     this.unbind();
     this._element.remove();
     this._element = null;
+    this._container = null;
+  }
+
+  bind() {
+    // Bind
+  }
+
+  unbind() {
+    // Unbind
+  }
+
+  _partialUpdate() {
+    this.unbind();
+    this._element = createElement(this.template);
+    this._container.replaceChild(this._element, this._element);
+    this._element.remove();
+    this.bind();
   }
 }
+
+export default Component;

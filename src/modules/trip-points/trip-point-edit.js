@@ -1,24 +1,35 @@
-import {Component} from '../../component';
-import {emojiList} from '../../utils';
-import moment from 'moment';
+import Component from '../../helpers/component';
+import * as moment from 'moment/moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
 
 // Trip Point Edit Class
-export class TripPointEdit extends Component {
+class TripPointEdit extends Component {
   constructor(data) {
     super();
+    this._types = [
+      {icon: `🏨`, name: `Hotel`, transport: false},
+      {icon: `🚗`, name: `Drive`, transport: true},
+      {icon: `🚌`, name: `Bus`, transport: true},
+      {icon: `🚂`, name: `Train`, transport: true},
+      {icon: `🛳️`, name: `Ship`, transport: true},
+      {icon: `🚊`, name: `Transport`, transport: true},
+      {icon: `🏛️`, name: `Sightseeing`, transport: false},
+      {icon: `🍴`, name: `Restaurant`, transport: false},
+      {icon: `🚕`, name: `Taxi`, transport: true},
+      {icon: `✈️`, name: `Flight`, transport: true},
+    ];
     this._id = data.id;
     this._isFavorite = data.isFavorite;
     this._travelWay = data.travelWay;
     this._destination = data.destination;
-    this._destinationText = data.destinationText;
+    this.description = data.description;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._offer = data.offer;
-    this._picture = data.picture;
+    this._offers = data.offers;
+    this._pictures = data.pictures;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -61,8 +72,12 @@ export class TripPointEdit extends Component {
     travelWayLabel.innerHTML = emojiList[this._travelWay];
     destinationLabel.innerHTML = `${travelWayLabelContent} to`;
 
-    this.unbind();
-    this.bind();
+
+    // Изменяем данные, отвечающие за отображение (в нашему случае это вроде this._travelWay
+
+    // Отображаем новый список офферов
+
+    // Перерендериваем шаблон с помощью partialUpdate
   }
 
   _travelWayList() {
@@ -99,7 +114,7 @@ export class TripPointEdit extends Component {
       dateEnd: ``,
       price: 0,
       totalPrice: 0,
-      offer: this._offer,
+      offers: this._offers,
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -121,9 +136,9 @@ export class TripPointEdit extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._offer = data.offer;
-    // this._destinationText = data.destinationText;
-    // this._picture = data.picture;
+    this._offers = data.offers;
+    // this.description = data.description;
+    // this._pictures = data.pictures;
   }
 
   static createMapper(target) {
@@ -146,8 +161,8 @@ export class TripPointEdit extends Component {
       'price': (value) => {
         target.price = parseInt(value, 10);
       },
-      'offer': (value) => {
-        target.offer[value] = true;
+      'offers': (value) => {
+        target.offers = value;
       },
     };
   }
@@ -209,10 +224,10 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">offers</h3>
 
               <div class="point__offers-wrap">
-                ${this._offer.map((offer, i) => `
-                <input class="point__offers-input visually-hidden" type="checkbox" name="offer" id="offer-${i}" value="${offer.title} + €${offer.price}" ${offer.accepted && `checked`}>
+                ${this._offers.map((offers, i) => `
+                <input class="point__offers-input visually-hidden" type="checkbox" name="offer" id="offer-${i}" value="${offers.title} + €${offers.price}" ${offers.accepted && `checked`}>
                 <label for="offer-${i}" class="point__offers-label">
-                  <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
+                  <span class="point__offer-service">${offers.title}</span> + €<span class="point__offer-price">${offers.price}</span>
                 </label>`.trim()).join(``)}
               </div>
 
@@ -221,7 +236,7 @@ export class TripPointEdit extends Component {
               <h3 class="point__details-title">Destination</h3>
               <p class="point__destination-text">${this._destinationText}</p>
               <div class="point__destination-images">
-                ${this._picture.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`.trim()).join(``)}
+                ${this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`.trim()).join(``)}
               </div>
               </section>
               <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -313,3 +328,5 @@ export class TripPointEdit extends Component {
     }
   }
 }
+
+export default TripPointEdit;

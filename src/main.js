@@ -1,38 +1,68 @@
-import Api from './api';
-import {renderFilters, renderTripPoints} from './controllers/reder-trip-points';
-import {switchView} from './controllers/switch-view';
+import API from './helpers/api';
+import createTripPoints from './modules/trip-points/trip-point';
+import createFilters from './modules/filters/filters';
+import createStatistics from './modules/statistics/statistics';
 
 // API
 const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;
-const API_URL = `https://es8-demo-srv.appspot.com/big-trip`;
-export const api = new Api(API_URL, AUTHORIZATION);
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
-// Navigation
-switchView();
+const tripDayContainer = document.querySelector(`.trip-day__items`);
+const mainContainer = document.querySelector(`.main`);
+const statisticsContainer = document.querySelector(`.statistic`);
 
-// Containers
-const contentContainer = document.querySelector(`.main.content-wrap`);
-const messageContainer = document.querySelector(`.message-container`);
+const filtersNames = [`everything`, `future`, `past`];
+const switchContainer = document.querySelector(`.view-switch__items`);
+const switchItems = document.querySelectorAll(`.view-switch__item`);
 
-export const fetchTripPoints = () => {
-  return Promise.all([
-    api.getTripPoints(),
-    api.getOffers(),
-    api.getDestinations()
-  ]);
+const renderTripPoints = (filter, filterId) => {
+  tripDayContainer.innerHTML = `Loading route...`;
+
+  let allTripPoints;
+  let allOffers;
+
+  api.getTripPoints()
+    .then((points) => {
+      if (filter) {
+        allTripPoints = filter(filterId, points);
+      } else {
+        allTripPoints = points;
+      }
+      api.getOffers()
+        .then((offers) => {
+          allOffers = offers;
+          api.getDestinations()
+            .then((destinations) => {
+              createTripPoints(destinations, allTripPoints, allOffers, api);
+            })
+            .catch(() => {
+              tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+            });
+        });
+    });
 };
 
-const filtersList = [
-  {name: `everything`},
-  {name: `future`},
-  {name: `past`}
-];
+renderTripPoints();
+createFilters(filtersNames, renderTripPoints, api);
 
-fetchTripPoints()
-  .then((data) => {
-    messageContainer.classList.add(`visually-hidden`);
-    contentContainer.classList.remove(`visually-hidden`);
-
-    renderFilters(filtersList, data[0]);
-    renderTripPoints(data[0]);
-  });
+// // Switch View Controller
+// switchContainer.addEventListener(`click`, (evt) => {
+//   evt.preventDefault();
+//
+//   switchItems.forEach((item) => {
+//     item.classList.remove(`view-switch__item--active`);
+//   });
+//
+//   const activeItem = evt.target;
+//   activeItem.classList.add(`view-switch__item--active`);
+//
+//   if (evt.target.textContent === `Stats`) {
+//     mainContainer.classList.add(`visually-hidden`);
+//     statisticsContainer.classList.remove(`visually-hidden`);
+//     createStatistics();
+//   } else {
+//     mainContainer.classList.remove(`visually-hidden`);
+//     statisticsContainer.classList.add(`visually-hidden`);
+//   }
+// });
