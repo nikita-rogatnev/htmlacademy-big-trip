@@ -41,12 +41,12 @@ class TripPointEdit extends Component {
     this._onDelete = null;
   }
 
-  _renderPictures() {
+  _createPictures() {
     const picturesList = this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`);
     return `<div class="point__destination-images">${picturesList.join(``)}</div>`;
   }
 
-  _renderOffers() {
+  _createOffers() {
     const allOffers = [];
     for (let offerItem of this._offers) {
       const offerName = offerItem.title.split(` `).join(`-`).toLowerCase();
@@ -58,7 +58,7 @@ class TripPointEdit extends Component {
     return `<div class="point__offers-wrap">${allOffers.join(``)}</div>`.trim();
   }
 
-  _renderDestination() {
+  _createDestination() {
     // let options = [];
     // let selectedOption;
     // let destinationLabel;
@@ -88,7 +88,7 @@ class TripPointEdit extends Component {
     // </div>`;
   }
 
-  _renderTravelWays(arrayOfWays, selectedIcon) {
+  _createTravelWays(arrayOfWays, selectedIcon) {
     const firstGroup = arrayOfWays.filter((el) => el.transport)
       .map((el) => {
         const lowName = el.name.toLowerCase();
@@ -142,10 +142,10 @@ class TripPointEdit extends Component {
             <div class="travel-way">
               <label class="travel-way__label" for="travel-way__toggle">${this._type.icon}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-              ${this._renderTravelWays(this._types, this._type.icon)}
+              ${this._createTravelWays(this._types, this._type.icon)}
             </div>
             
-            ${this._renderDestination()}
+            ${this._createDestination()}
         
             <div class="point__time">
               choose time
@@ -173,12 +173,12 @@ class TripPointEdit extends Component {
           <section class="point__details">
             <section class="point__offers">
               <h3 class="point__details-title">Offers</h3>
-              ${this._renderOffers()}
+              ${this._createOffers()}
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
               <p class="point__destination-text">${this._description}</p>
-              ${this._renderPictures()}
+              ${this._createPictures()}
             </section>
             <input type="hidden" class="point__total-price" name="total-price" value="">
           </section>
