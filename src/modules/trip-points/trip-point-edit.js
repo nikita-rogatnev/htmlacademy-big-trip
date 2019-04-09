@@ -42,50 +42,31 @@ class TripPointEdit extends Component {
     this._onDelete = null;
   }
 
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-
-    const formData = new FormData(this._element.querySelector(`.point form`));
-    const newData = this._processForm(formData);
-
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit(newData);
-    }
-
-    // TODO: remove
-    console.log(newData);
-
-    this.update(newData);
-  }
-
-  set onSubmit(fn) {
-    this._onSubmit = fn;
-  }
-
-  _onDeleteButtonClick() {
-    return (typeof this._onDelete === `function`) && this._onDelete(this._id);
-  }
-
-  set onDelete(fn) {
-    this._onDelete = fn;
-  }
-
   _renderPictures() {
     const picturesList = this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`);
     return `<div class="point__destination-images">${picturesList.join(``)}</div>`;
   }
 
+  _renderOffers() {
+    const allOffers = [];
+    for (let offer of this._offers) {
+      const classText = offer.title.split(` `).join(`-`).toLowerCase();
+      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${offer.accepted ? `checked` : ``}><label for="${classText}" class="point__offers-label">          <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span></label>`);
+    }
+    return `<div class="point__offers-wrap">${allOffers.join(``)}</div>`.trim();
+  }
+
   _renderDestination() {
     let options = [];
     let selectedOption;
-    let labelText;
+    let destinationLabel;
 
     if (this._type.transport) {
       for (let cityOfSet of this._destinations) {
         options.push(cityOfSet.name);
       }
       selectedOption = this._destination.name;
-      labelText = `${this._type.name} to`;
+      destinationLabel = `${this._type.name} to`;
     } else {
       options = this._types.filter((el) => !el.transport)
         .map((el) => el.name.toLowerCase());
@@ -94,13 +75,13 @@ class TripPointEdit extends Component {
       } else {
         selectedOption = this._type.name.toLowerCase();
       }
-      labelText = `Check into`;
+      destinationLabel = `Check into`;
     }
 
     options = options.map((el) => `<option value="${el}">`);
 
     return `<div>
-     <label class="point__destination-label" for="destination">${labelText}</label>
+     <label class="point__destination-label" for="destination">${destinationLabel}</label>
       <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
       <datalist id="destination-select">
        ${options.join(``)}
@@ -132,15 +113,6 @@ class TripPointEdit extends Component {
   </div>`.trim();
   }
 
-  _renderOffers() {
-    const allOffers = [];
-    for (let offer of this._offers) {
-      const classText = offer.title.split(` `).join(`-`).toLowerCase();
-      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${offer.accepted ? `checked` : ``}><label for="${classText}" class="point__offers-label">          <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span></label>`);
-    }
-    return `<div class="point__offers-wrap">${allOffers.join(``)}</div>`.trim();
-  }
-
   _onChangeType(evt) {
     if (evt.target.classList.contains(`travel-way__select-input`)) {
       let val = evt.target.value;
@@ -149,10 +121,7 @@ class TripPointEdit extends Component {
         if (key.name === val) {
           this._type = key;
           this._offers = this._allOffers.find((el) => {
-            if (el.type === key.name.toLocaleLowerCase()) {
-              return true;
-            }
-            return false;
+            return el.type === key.name.toLocaleLowerCase();
           });
           if (!this._offers) {
             this._offers = [];
@@ -163,67 +132,6 @@ class TripPointEdit extends Component {
         }
       }
     }
-  }
-
-  _processForm(formData) {
-    const entry = {
-      id: this._id,
-      isFavorite: false,
-      travelWay: ``,
-      destination: ``,
-      dateStart: ``,
-      dateEnd: ``,
-      price: 0,
-      totalPrice: 0,
-      offers: this._offers,
-    };
-
-    const tripPointEditMapper = TripPointEdit.createMapper(entry);
-
-    for (const pair of formData.entries()) {
-      const [property, value] = pair;
-      if (tripPointEditMapper[property]) {
-        tripPointEditMapper[property](value);
-      }
-    }
-
-    return entry;
-  }
-
-  update(data) {
-    this._isFavorite = data.isFavorite;
-    this._type = data.type;
-    this._destination = data.destination;
-    this._dateStart = data.dateStart;
-    this._dateEnd = data.dateEnd;
-    this._price = data.price;
-    this._offers = data.offers;
-  }
-
-  static createMapper(target) {
-    return {
-      'favorite': (value) => {
-        target.isFavorite = (value === `on`);
-      },
-      'travelWay': (value) => {
-        target.travelWay = value;
-      },
-      'destination': (value) => {
-        target.destination = value;
-      },
-      'date-start': (value) => {
-        target.dateStart = value * 1000;
-      },
-      'date-end': (value) => {
-        target.dateEnd = value * 1000;
-      },
-      'price': (value) => {
-        target.price = parseInt(value, 10);
-      },
-      'offers': (value) => {
-        target.offers = value;
-      },
-    };
   }
 
   get template() {
@@ -287,6 +195,94 @@ class TripPointEdit extends Component {
       </article>`.trim();
   }
 
+  update(data) {
+    this._isFavorite = data.isFavorite;
+    this._type = data.type;
+    this._destination = data.destination;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
+    this._price = data.price;
+    this._offers = data.offers;
+  }
+
+  _processForm(formData) {
+    const entry = {
+      id: this._id,
+      isFavorite: false,
+      type: ``,
+      destination: ``,
+      dateStart: ``,
+      dateEnd: ``,
+      price: 0,
+      offers: this._offers,
+    };
+
+    const tripPointEditMapper = TripPointEdit.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      if (tripPointEditMapper[property]) {
+        tripPointEditMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
+  static createMapper(target) {
+    return {
+      'favorite': (value) => {
+        target.isFavorite = (value === `on`);
+      },
+      'type': (value) => {
+        target.type = value;
+      },
+      'destination': (value) => {
+        target.destination = value;
+      },
+      'date-start': (value) => {
+        target.dateStart = value * 1000;
+      },
+      'date-end': (value) => {
+        target.dateEnd = value * 1000;
+      },
+      'price': (value) => {
+        target.price = parseInt(value, 10);
+      },
+      'offers': (value) => {
+        target.offers = value;
+      },
+    };
+  }
+
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+
+    const formData = new FormData(this._element.querySelector(`.point form`));
+    const newData = this._processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+
+    // TODO: remove
+    console.log(newData);
+
+    this.update(newData);
+  }
+
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  _onDeleteButtonClick() {
+    return (typeof this._onDelete === `function`) && this._onDelete(this._id);
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   bind() {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
@@ -327,40 +323,17 @@ class TripPointEdit extends Component {
       .removeEventListener(`click`, this._onDeleteButtonClick);
   }
 
-  shake() {
+  deleteError() {
+    this._element.style.border = ``;
+  }
+
+  error() {
     const ANIMATION_TIMEOUT = 600;
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-
+    this._element.style.border = `1px solid red`;
     setTimeout(() => {
       this._element.style.animation = ``;
     }, ANIMATION_TIMEOUT);
-  }
-
-  block(method) {
-    this._buttonSave.disabled = true;
-    this._buttonDelete.disabled = true;
-
-    if (method === `save`) {
-      this._buttonSave.innerText = `Saving...`;
-    } else {
-      this._buttonDelete.innerText = `Deleting...`;
-    }
-  }
-
-  unblock() {
-    this._buttonSave.disabled = false;
-    this._buttonDelete.disabled = false;
-
-    this._buttonSave.innerText = `Save`;
-    this._buttonDelete.innerText = `Delete`;
-  }
-
-  showBorder(isShown) {
-    if (isShown) {
-      this._element.style.border = `1px solid red`;
-    } else {
-      this._element.style.border = `none`;
-    }
   }
 }
 
