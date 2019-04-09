@@ -1,5 +1,5 @@
 import API from './helpers/api';
-import createTripPoints from './modules/trip-points/trip-point';
+import createTripPoints from './modules/trip-points/trip-points';
 import createFilters from './modules/filters/filters';
 import createStatistics from './modules/statistics/statistics';
 
@@ -35,10 +35,10 @@ const renderTripPoints = (filter, filterId) => {
           api.getDestinations()
             .then((destinations) => {
               createTripPoints(destinations, allTripPoints, allOffers, api);
-            })
-            .catch(() => {
-              tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
             });
+          // .catch(() => {
+          //   tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+          // });
         });
     });
 };

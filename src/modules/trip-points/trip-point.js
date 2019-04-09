@@ -20,7 +20,7 @@ class TripPoint extends Component {
     ];
     this._id = data.id;
     this._isFavorite = data.isFavorite;
-    this._travelWay = data.travelWay;
+    this._type = data.type;
     this._destination = data.destination;
     this.description = data.description;
     this._dateStart = data.dateStart;
@@ -79,7 +79,7 @@ class TripPoint extends Component {
 
   update(data) {
     this._isFavorite = data.isFavorite;
-    this._travelWay = data.travelWay;
+    this._type = data.type;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;

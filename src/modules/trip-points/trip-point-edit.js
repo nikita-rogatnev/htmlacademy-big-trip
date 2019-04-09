@@ -22,7 +22,7 @@ class TripPointEdit extends Component {
     ];
     this._id = data.id;
     this._isFavorite = data.isFavorite;
-    this._travelWay = data.travelWay;
+    this._type = data.type;
     this._destination = data.destination;
     this.description = data.description;
     this._dateStart = data.dateStart;
@@ -36,8 +36,6 @@ class TripPointEdit extends Component {
 
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDelete = null;
-
-    this._onTravelWayChange = this._onTravelWayChange.bind(this);
   }
 
   _onSubmitButtonClick(evt) {
@@ -61,47 +59,109 @@ class TripPointEdit extends Component {
     return (typeof this._onDelete === `function`) && this._onDelete(this._id);
   }
 
-  _onTravelWayChange(event) {
-    const travelWayCheckbox = this._element.querySelector(`.travel-way__toggle`);
-    const travelWayLabel = this._element.querySelector(`.travel-way__label`);
-    const travelWayLabelContent = event.srcElement.textContent.split(` `)[1];
-    const destinationLabel = this._element.querySelector(`.point__destination-label`);
-
-    this._travelWay = travelWayLabelContent.toLocaleLowerCase();
-    travelWayCheckbox.checked = false;
-    travelWayLabel.innerHTML = emojiList[this._travelWay];
-    destinationLabel.innerHTML = `${travelWayLabelContent} to`;
-
-
-    // Изменяем данные, отвечающие за отображение (в нашему случае это вроде this._travelWay
-
-    // Отображаем новый список офферов
-
-    // Перерендериваем шаблон с помощью partialUpdate
-  }
-
-  _travelWayList() {
-    const travelWaySelectList = [];
-
-    for (const key in emojiList) {
-      if (emojiList.hasOwnProperty(key)) {
-        travelWaySelectList.push(`
-          <input class="travel-way__select-input visually-hidden" 
-            type="radio" 
-            id="travel-way-${key.toLowerCase()}" 
-            name="travelWay" 
-            value="${key.toLowerCase()}" 
-            ${(this._travelWay === key) ? `checked` : ``}>
-          <label class="travel-way__select-label" for="travel-way-${key.toLowerCase()}">${emojiList[key] + ` ` + key.toLowerCase()}</label>
-        `);
-      }
-    }
-
-    return travelWaySelectList.join(``);
-  }
-
   set onDelete(fn) {
     this._onDelete = fn;
+  }
+
+  _makeImgies() {
+    const imgies = this._destination.pictures.map((el) => `<img src="${el.src}" alt="${el.description}" class="point__destination-image">`);
+    return `<div class="point__destination-images">
+    ${imgies.join(``)}
+  </div>`;
+  }
+
+  _makeDestination() {
+    let options = [];
+    let selectedOption;
+    let labelText;
+    if (this._type.transport) {
+      for (let cityOfSet of this._destinations) {
+        options.push(cityOfSet.name);
+      }
+      selectedOption = this._destination.name;
+      labelText = `${this._type.name} to`;
+    } else {
+      options = this._types.filter((el) => !el.transport)
+        .map((el) => el.name.toLowerCase());
+      if (this._type.name === `Check-in`) {
+        selectedOption = `hotel`;
+      } else {
+        selectedOption = this._type.name.toLowerCase();
+      }
+      labelText = `Check into`;
+    }
+
+    options = options.map((el) => `<option value="${el}">`);
+
+    return `<div class="point__destination-wrap">
+    <label class="point__destination-label" for="destination">${labelText}</label>
+     <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
+     <datalist id="destination-select">
+      ${options.join(``)}
+     </datalist>
+   </div> `;
+  }
+
+  _makeTravelWays(arrayOfWays, selectedIcon) {
+    const firstGroup = arrayOfWays.filter((el) => el.transport)
+      .map((el) => {
+        const lowName = el.name.toLowerCase();
+        return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${lowName}" name="travel-way" value="${lowName}" ${selectedIcon === el.icon ? `checked` : ``}>
+        <label class="travel-way__select-label" for="travel-way-${lowName}">${el.icon} ${lowName}</label>`.trim();
+      }).join(``);
+    const secondGroup = arrayOfWays.filter((el) => !el.transport)
+      .map((el) => {
+        const lowName = el.name.toLowerCase();
+        return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${lowName}" name="travel-way" value="${lowName}" ${selectedIcon === el.icon ? `checked` : ``}>
+        <label class="travel-way__select-label" for="travel-way-${lowName}">${el.icon} ${lowName}</label>`.trim();
+      }).join(``);
+
+    return `<div class="travel-way__select">
+    <div class="travel-way__select-group">
+          ${firstGroup}   
+        </div>
+        <div class="travel-way__select-group">
+          ${secondGroup}    
+        </div>
+  </div>`.trim();
+  }
+
+  _makeOffers() {
+    const allOffers = [];
+    for (let offer of this._offers) {
+      const classText = offer.title.split(` `).join(`-`).toLowerCase();
+      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${offer.accepted ? `checked` : ``}>
+        <label for="${classText}" class="point__offers-label">
+          <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
+        </label>`);
+    }
+    return `<div class="point__offers-wrap">
+        ${allOffers.join(``)}
+      </div>`.trim();
+  }
+
+  _onChangeType(evt) {
+    if (evt.target.classList.contains(`travel-way__select-input`)) {
+      let val = evt.target.value;
+      val = val[0].toUpperCase() + val.slice(1);
+      for (let key of this._types) {
+        if (key.name === val) {
+          this._type = key;
+          this._offers = this._allOffers.find((el) => {
+            if (el.type === key.name.toLocaleLowerCase()) {
+              return true;
+            }
+            return false;
+          });
+          if (!this._offers) {
+            this._offers = [];
+          } else {
+            this._offers = this._offers.offers;
+          }
+          this._partialUpdate();
+        }
+      }
+    }
   }
 
   _processForm(formData) {
@@ -128,6 +188,7 @@ class TripPointEdit extends Component {
 
     return entry;
   }
+
 
   update(data) {
     this._isFavorite = data.isFavorite;
@@ -172,30 +233,19 @@ class TripPointEdit extends Component {
       <article class="point">
         <form action="" method="get">
           <header class="point__header">
+            <label class="point__date">
+              choose day
+              <input class="point__input" type="text" placeholder="MAR 18" name="day">
+            </label>
+
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle">
-                ${emojiList[this._travelWay.toLocaleLowerCase()]}
-              </label>
+              <label class="travel-way__label" for="travel-way__toggle">${this._type.icon}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-
-              <div class="travel-way__select">
-                <div class="travel-way__select-group">
-                  ${this._travelWayList()}
-                </div>
-              </div>
+              ${this._makeTravelWays(this._types, this._type.icon)}
             </div>
-
-            <div class="point__destination-wrap">
-              <label class="point__destination-label" for="destination">${this._travelWay} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
-              <datalist id="destination-select">
-                <option value="airport"></option>
-                <option value="Geneva"></option>
-                <option value="Chamonix"></option>
-                <option value="hotel"></option>
-              </datalist>
-            </div>
-
+            
+            ${this._makeDestination()}
+        
             <div class="point__time">
               choose time
               <input class="point__input" type="text" name="date-start" placeholder="19:00">
@@ -234,7 +284,7 @@ class TripPointEdit extends Component {
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
-              <p class="point__destination-text">${this._destinationText}</p>
+              <p class="point__destination-text">${this._destination.description}</p>
               <div class="point__destination-images">
                 ${this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`.trim()).join(``)}
               </div>
@@ -251,10 +301,6 @@ class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__button--delete`)
       .addEventListener(`click`, this._onDeleteButtonClick);
-
-    this._element.querySelectorAll(`.travel-way__select-label`).forEach((select) => {
-      select.addEventListener(`click`, this._onTravelWayChange);
-    });
 
     this._buttonSave = this._element.querySelector(`.point__button--save`);
     this._buttonDelete = this._element.querySelector(`.point__button--delete`);
@@ -287,9 +333,6 @@ class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__button--delete`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
-
-    this._element.querySelector(`.travel-way__select-label`)
-      .removeEventListener(`click`, this._onTravelWayChange);
   }
 
   shake() {
