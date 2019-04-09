@@ -28,13 +28,13 @@ const createFilters = (names, renderTripPoints, api) => {
 
       if (document.querySelector(`.statistic`).classList.contains(`visually-hidden`)) {
         renderTripPoints(filterTripPoints, activeFilter);
-      } else {
-        api.getTripPoints()
-          .then((points) => {
-            points = filterTripPoints(activeFilter, points);
-            createStatistics(evt, points);
-          });
       }
+
+      api.getTripPoints()
+        .then((points) => {
+          points = filterTripPoints(activeFilter, points);
+          createStatistics(evt, points);
+        });
     };
   }
 };

@@ -1,6 +1,7 @@
 class ModelTripPoint {
   constructor(data) {
-    this._types = [{icon: `🏨`, name: `Check-in`, transport: false},
+    this._types = [
+      {icon: `🏨`, name: `Check-in`, transport: false},
       {icon: `🚗`, name: `Drive`, transport: true},
       {icon: `🚌`, name: `Bus`, transport: true},
       {icon: `🚂`, name: `Train`, transport: true},
@@ -9,9 +10,10 @@ class ModelTripPoint {
       {icon: `🏛️`, name: `Sightseeing`, transport: false, title: ``},
       {icon: `🍴`, name: `Restaurant`, transport: false},
       {icon: `🚕`, name: `Taxi`, transport: true},
-      {icon: `✈️`, name: `Flight`, transport: true}];
+      {icon: `✈️`, name: `Flight`, transport: true}
+    ];
     this.id = data.id;
-    this.type = this._findDataType(data.type);
+    this.type = this._getType(data.type);
     this.destination = data[`destination`] ? data[`destination`].name : ``;
     this.description = data[`destination`] ? data[`destination`].description : ``;
     this.pictures = data[`destination`] ? data[`destination`].pictures : [];
@@ -22,7 +24,7 @@ class ModelTripPoint {
     this.offers = data.offers;
   }
 
-  _findDataType(dataType) {
+  _getType(dataType) {
     for (let type of this._types) {
       if (type.name.toLocaleLowerCase() === dataType) {
         return type;
@@ -31,29 +33,16 @@ class ModelTripPoint {
     return dataType;
   }
 
-  _findTypeReverse() {
-    return this.type.name.toLocaleLowerCase();
-  }
-
   toRAW() {
     return {
       'id': this.id,
-      'type': this._findTypeReverse(this._type),
+      'is_favorite': this.isFavorite,
+      'type': this.type,
       'base_price': this.price,
       'date_from': this.dateStart,
       'date_to': this.dateEnd,
-      'is_favorite': this.isFavorite,
-      'destination': {
-        'name': this.destination,
-        'description': this.description,
-        'pictures': this.pictures
-      },
-      'offers': [...(this.offers || [])].reduce((offers, data) => {
-        const [title, offerData] = data;
-        offerData.title = title;
-        offers.push(offerData);
-        return offers;
-      }, []),
+      'destination': this.destination,
+      'offers': this.offers,
     };
   }
 

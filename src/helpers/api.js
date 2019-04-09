@@ -4,14 +4,11 @@ import ModelTripPoint from '../models/model-trip-point';
 const CheckStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
     return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
   }
+  throw new Error(`${response.status}: ${response.statusText}`);
 };
 
-const toJSON = (response) => {
-  return response.json();
-};
+const toJSON = (response) => response.json();
 
 class API {
   constructor({endPoint, authorization}) {

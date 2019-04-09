@@ -11,6 +11,5 @@ export const createElement = (template) => {
 export const getDurationTime = (timeFrom, timeTo) => {
   const fromTime = moment(timeFrom);
   const toTime = moment(timeTo);
-
   return moment.utc(+moment.duration(toTime.diff(fromTime)));
 };

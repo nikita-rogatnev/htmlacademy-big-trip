@@ -6,11 +6,9 @@ import * as moment from 'moment/moment';
 class TripPoint extends Component {
   constructor(data) {
     super();
-    this._id = data.id;
     this._isFavorite = data.isFavorite;
     this._type = data.type;
     this._destination = data.destination;
-    this._description = data.description;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;

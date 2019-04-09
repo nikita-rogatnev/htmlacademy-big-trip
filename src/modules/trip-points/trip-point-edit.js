@@ -1,5 +1,4 @@
 import Component from '../../helpers/component';
-import * as moment from 'moment/moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
@@ -49,44 +48,44 @@ class TripPointEdit extends Component {
 
   _renderOffers() {
     const allOffers = [];
-    for (let offer of this._offers) {
-      const classText = offer.title.split(` `).join(`-`).toLowerCase();
-      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${offer.accepted ? `checked` : ``}><label for="${classText}" class="point__offers-label">          <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span></label>`);
+    for (let offerItem of this._offers) {
+      const offerName = offerItem.title.split(` `).join(`-`).toLowerCase();
+      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${offerName}" name="offer" value="${offerName}" ${offerItem.accepted ? `checked` : ``}>
+        <label for="${offerName}" class="point__offers-label">
+        <span class="point__offer-service">${offerItem.title}</span> + €<span class="point__offer-price">${offerItem.price}</span>
+      </label>`);
     }
     return `<div class="point__offers-wrap">${allOffers.join(``)}</div>`.trim();
   }
 
   _renderDestination() {
-    let options = [];
-    let selectedOption;
-    let destinationLabel;
-
-    if (this._type.transport) {
-      for (let cityOfSet of this._destinations) {
-        options.push(cityOfSet.name);
-      }
-      selectedOption = this._destination.name;
-      destinationLabel = `${this._type.name} to`;
-    } else {
-      options = this._types.filter((el) => !el.transport)
-        .map((el) => el.name.toLowerCase());
-      if (this._type.name === `Check-in`) {
-        selectedOption = `hotel`;
-      } else {
-        selectedOption = this._type.name.toLowerCase();
-      }
-      destinationLabel = `Check into`;
-    }
-
-    options = options.map((el) => `<option value="${el}">`);
-
-    return `<div>
-     <label class="point__destination-label" for="destination">${destinationLabel}</label>
-      <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
-      <datalist id="destination-select">
-       ${options.join(``)}
-      </datalist>
-    </div> `;
+    // let options = [];
+    // let selectedOption;
+    // let destinationLabel;
+    //
+    // if (this._type.transport) {
+    //   for (let cityOfSet of this._destinations) {
+    //     options.push(cityOfSet.name);
+    //   }
+    //   selectedOption = this._destination.name;
+    //   destinationLabel = `${this._type.name} to`;
+    // } else {
+    //   options = this._types.filter((el) => !el.transport).map((el) => el.name.toLowerCase());
+    //   if (this._type.name === `Check-in`) {
+    //     selectedOption = `hotel`;
+    //   } else {
+    //     selectedOption = this._type.name.toLowerCase();
+    //   }
+    //   destinationLabel = `Check into`;
+    // }
+    //
+    // options = options.map((el) => `<option value="${el}">`);
+    //
+    // return `<div class="point__destination-wrap">
+    //  <label class="point__destination-label" for="destination">${destinationLabel}</label>
+    //   <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
+    //   <datalist id="destination-select">${options.join(``)}</datalist>
+    // </div>`;
   }
 
   _renderTravelWays(arrayOfWays, selectedIcon) {
@@ -104,13 +103,9 @@ class TripPointEdit extends Component {
       }).join(``);
 
     return `<div class="travel-way__select">
-    <div class="travel-way__select-group">
-          ${firstGroup}   
-        </div>
-        <div class="travel-way__select-group">
-          ${secondGroup}    
-        </div>
-  </div>`.trim();
+      <div class="travel-way__select-group">${firstGroup}</div>
+      <div class="travel-way__select-group">${secondGroup}</div>
+    </div>`.trim();
   }
 
   _onChangeType(evt) {
@@ -150,9 +145,7 @@ class TripPointEdit extends Component {
               ${this._renderTravelWays(this._types, this._type.icon)}
             </div>
             
-            <div class="point__destination-wrap">
-              ${this._renderDestination()}
-            </div>
+            ${this._renderDestination()}
         
             <div class="point__time">
               choose time
@@ -185,9 +178,7 @@ class TripPointEdit extends Component {
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
               <p class="point__destination-text">${this._description}</p>
-              <div class="point__destination-images">
-                ${this._renderPictures()}
-              </div>
+              ${this._renderPictures()}
             </section>
             <input type="hidden" class="point__total-price" name="total-price" value="">
           </section>
