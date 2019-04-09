@@ -16,11 +16,13 @@ const filterTripPoints = (filterName, points) => {
   }
 };
 
-const createFilters = (names, renderTripPoints, api) => {
+const createFilters = (filtersNames, renderTripPoints, api) => {
   filtersContainer.innerHTML = ``;
 
-  for (let filterName of names) {
-    const filterComponent = new Filter(filterName, names.indexOf(filterName) === 0);
+  for (let filterName of filtersNames) {
+    const filterComponent = new Filter(filterName, filtersNames.indexOf(filterName) === 0);
+
+    console.log(filterComponent);
 
     filtersContainer.appendChild(filterComponent.render(filtersContainer));
     filterComponent.onFilter = (evt) => {
