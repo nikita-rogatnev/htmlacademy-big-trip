@@ -6,39 +6,30 @@ import * as moment from 'moment/moment';
 class TripPoint extends Component {
   constructor(data) {
     super();
-    this._types = [
-      {icon: `🏨`, name: `Hotel`, transport: false},
-      {icon: `🚗`, name: `Drive`, transport: true},
-      {icon: `🚌`, name: `Bus`, transport: true},
-      {icon: `🚂`, name: `Train`, transport: true},
-      {icon: `🛳️`, name: `Ship`, transport: true},
-      {icon: `🚊`, name: `Transport`, transport: true},
-      {icon: `🏛️`, name: `Sightseeing`, transport: false},
-      {icon: `🍴`, name: `Restaurant`, transport: false},
-      {icon: `🚕`, name: `Taxi`, transport: true},
-      {icon: `✈️`, name: `Flight`, transport: true},
-    ];
     this._id = data.id;
     this._isFavorite = data.isFavorite;
     this._type = data.type;
     this._destination = data.destination;
-    this.description = data.description;
+    this._description = data.description;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offers = data.offers;
-    this._pictures = data.pictures;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._onEdit = null;
   }
 
   _onEditButtonClick() {
-    typeof this._onEdit === `function` && this._onEdit();
+    if (typeof this._onEdit === `function`) {
+      this._onEdit();
+    }
   }
 
-  set onClick(fn) {
-    this._onEdit = fn;
+  set onEdit(fn) {
+    if (typeof fn === `function`) {
+      this._onEdit = fn;
+    }
   }
 
   _renderTripPointOffers() {
@@ -68,23 +59,23 @@ class TripPoint extends Component {
   }
 
   bind() {
-    this._element
+    this._element.querySelector(`.trip-icon`)
       .addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {
-    this._element
+    this._element.querySelector(`.trip-icon`)
       .removeEventListener(`click`, this._onEditButtonClick);
   }
 
   update(data) {
     this._isFavorite = data.isFavorite;
     this._type = data.type;
+    this._destination = data.destination;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offers = data.offers;
-    this._destination = data.destination;
   }
 }
 

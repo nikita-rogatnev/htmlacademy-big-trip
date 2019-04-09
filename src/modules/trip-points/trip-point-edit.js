@@ -6,8 +6,22 @@ import "../../../node_modules/flatpickr/dist/themes/dark.css";
 
 // Trip Point Edit Class
 class TripPointEdit extends Component {
-  constructor(data) {
+  constructor(data, destinations, allOffers) {
     super();
+    this._id = data.id;
+    this._isFavorite = data.isFavorite;
+    this._type = data.type;
+    this._destination = data.destination;
+    this._description = data.description;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
+    this._price = data.price;
+    this._offers = data.offers;
+    this._pictures = data.pictures;
+
+    this._allOffers = allOffers;
+    this._destinations = destinations;
+
     this._types = [
       {icon: `🏨`, name: `Hotel`, transport: false},
       {icon: `🚗`, name: `Drive`, transport: true},
@@ -20,16 +34,6 @@ class TripPointEdit extends Component {
       {icon: `🚕`, name: `Taxi`, transport: true},
       {icon: `✈️`, name: `Flight`, transport: true},
     ];
-    this._id = data.id;
-    this._isFavorite = data.isFavorite;
-    this._type = data.type;
-    this._destination = data.destination;
-    this.description = data.description;
-    this._dateStart = data.dateStart;
-    this._dateEnd = data.dateEnd;
-    this._price = data.price;
-    this._offers = data.offers;
-    this._pictures = data.pictures;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -43,7 +47,10 @@ class TripPointEdit extends Component {
 
     const formData = new FormData(this._element.querySelector(`.point form`));
     const newData = this._processForm(formData);
-    typeof this._onSubmit === `function` && this._onSubmit(newData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
 
     // TODO: remove
     console.log(newData);
@@ -63,17 +70,16 @@ class TripPointEdit extends Component {
     this._onDelete = fn;
   }
 
-  _makeImgies() {
-    const imgies = this._destination.pictures.map((el) => `<img src="${el.src}" alt="${el.description}" class="point__destination-image">`);
-    return `<div class="point__destination-images">
-    ${imgies.join(``)}
-  </div>`;
+  _renderPictures() {
+    const picturesList = this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`);
+    return `<div class="point__destination-images">${picturesList.join(``)}</div>`;
   }
 
-  _makeDestination() {
+  _renderDestination() {
     let options = [];
     let selectedOption;
     let labelText;
+
     if (this._type.transport) {
       for (let cityOfSet of this._destinations) {
         options.push(cityOfSet.name);
@@ -93,16 +99,16 @@ class TripPointEdit extends Component {
 
     options = options.map((el) => `<option value="${el}">`);
 
-    return `<div class="point__destination-wrap">
-    <label class="point__destination-label" for="destination">${labelText}</label>
-     <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
-     <datalist id="destination-select">
-      ${options.join(``)}
-     </datalist>
-   </div> `;
+    return `<div>
+     <label class="point__destination-label" for="destination">${labelText}</label>
+      <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
+      <datalist id="destination-select">
+       ${options.join(``)}
+      </datalist>
+    </div> `;
   }
 
-  _makeTravelWays(arrayOfWays, selectedIcon) {
+  _renderTravelWays(arrayOfWays, selectedIcon) {
     const firstGroup = arrayOfWays.filter((el) => el.transport)
       .map((el) => {
         const lowName = el.name.toLowerCase();
@@ -126,18 +132,13 @@ class TripPointEdit extends Component {
   </div>`.trim();
   }
 
-  _makeOffers() {
+  _renderOffers() {
     const allOffers = [];
     for (let offer of this._offers) {
       const classText = offer.title.split(` `).join(`-`).toLowerCase();
-      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${offer.accepted ? `checked` : ``}>
-        <label for="${classText}" class="point__offers-label">
-          <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
-        </label>`);
+      allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${offer.accepted ? `checked` : ``}><label for="${classText}" class="point__offers-label">          <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span></label>`);
     }
-    return `<div class="point__offers-wrap">
-        ${allOffers.join(``)}
-      </div>`.trim();
+    return `<div class="point__offers-wrap">${allOffers.join(``)}</div>`.trim();
   }
 
   _onChangeType(evt) {
@@ -189,17 +190,14 @@ class TripPointEdit extends Component {
     return entry;
   }
 
-
   update(data) {
     this._isFavorite = data.isFavorite;
-    this._travelWay = data.travelWay;
+    this._type = data.type;
     this._destination = data.destination;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offers = data.offers;
-    // this.description = data.description;
-    // this._pictures = data.pictures;
   }
 
   static createMapper(target) {
@@ -241,10 +239,12 @@ class TripPointEdit extends Component {
             <div class="travel-way">
               <label class="travel-way__label" for="travel-way__toggle">${this._type.icon}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-              ${this._makeTravelWays(this._types, this._type.icon)}
+              ${this._renderTravelWays(this._types, this._type.icon)}
             </div>
             
-            ${this._makeDestination()}
+            <div class="point__destination-wrap">
+              ${this._renderDestination()}
+            </div>
         
             <div class="point__time">
               choose time
@@ -265,34 +265,26 @@ class TripPointEdit extends Component {
 
             <div class="paint__favorite-wrap">
               <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
-               <label class="point__favorite" for="favorite">favorite</label>
+              <label class="point__favorite" for="favorite">favorite</label>
             </div>
           </header>
 
           <section class="point__details">
             <section class="point__offers">
-              <h3 class="point__details-title">offers</h3>
-
-              <div class="point__offers-wrap">
-                ${this._offers.map((offers, i) => `
-                <input class="point__offers-input visually-hidden" type="checkbox" name="offer" id="offer-${i}" value="${offers.title} + €${offers.price}" ${offers.accepted && `checked`}>
-                <label for="offer-${i}" class="point__offers-label">
-                  <span class="point__offer-service">${offers.title}</span> + €<span class="point__offer-price">${offers.price}</span>
-                </label>`.trim()).join(``)}
-              </div>
-
+              <h3 class="point__details-title">Offers</h3>
+              ${this._renderOffers()}
             </section>
             <section class="point__destination">
               <h3 class="point__details-title">Destination</h3>
-              <p class="point__destination-text">${this._destination.description}</p>
+              <p class="point__destination-text">${this._description}</p>
               <div class="point__destination-images">
-                ${this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`.trim()).join(``)}
+                ${this._renderPictures()}
               </div>
-              </section>
-              <input type="hidden" class="point__total-price" name="total-price" value="">
             </section>
-          </form>
-        </article>`.trim();
+            <input type="hidden" class="point__total-price" name="total-price" value="">
+          </section>
+        </form>
+      </article>`.trim();
   }
 
   bind() {

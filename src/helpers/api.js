@@ -77,8 +77,8 @@ class API {
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(CheckStatus)
-      .catch((err) => {
-        throw err;
+      .catch((error) => {
+        throw error;
       });
   }
 }
