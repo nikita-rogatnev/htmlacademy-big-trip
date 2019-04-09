@@ -35,10 +35,10 @@ const renderTripPoints = (filter, filterId) => {
           api.getDestinations()
             .then((destinations) => {
               createTripPoints(destinations, allTripPoints, allOffers, api);
+            })
+            .catch(() => {
+              tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
             });
-          // .catch(() => {
-          //   tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
-          // });
         });
     });
 };
@@ -46,23 +46,23 @@ const renderTripPoints = (filter, filterId) => {
 renderTripPoints();
 createFilters(filtersNames, renderTripPoints, api);
 
-// // Switch View Controller
-// switchContainer.addEventListener(`click`, (evt) => {
-//   evt.preventDefault();
-//
-//   switchItems.forEach((item) => {
-//     item.classList.remove(`view-switch__item--active`);
-//   });
-//
-//   const activeItem = evt.target;
-//   activeItem.classList.add(`view-switch__item--active`);
-//
-//   if (evt.target.textContent === `Stats`) {
-//     mainContainer.classList.add(`visually-hidden`);
-//     statisticsContainer.classList.remove(`visually-hidden`);
-//     createStatistics();
-//   } else {
-//     mainContainer.classList.remove(`visually-hidden`);
-//     statisticsContainer.classList.add(`visually-hidden`);
-//   }
-// });
+// Switch View Controller
+switchContainer.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+
+  switchItems.forEach((item) => {
+    item.classList.remove(`view-switch__item--active`);
+  });
+
+  const activeItem = evt.target;
+  activeItem.classList.add(`view-switch__item--active`);
+
+  if (evt.target.textContent === `Stats`) {
+    mainContainer.classList.add(`visually-hidden`);
+    statisticsContainer.classList.remove(`visually-hidden`);
+    createStatistics();
+  } else {
+    mainContainer.classList.remove(`visually-hidden`);
+    statisticsContainer.classList.add(`visually-hidden`);
+  }
+});
