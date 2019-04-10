@@ -26,6 +26,7 @@ const createTripPoints = (destinations, points, allOffers, api) => {
         buttonDelete.disabled = true;
         buttonSave.textContent = `Saving...`;
       };
+
       const unblock = () => {
         buttonSave.disabled = false;
         buttonDelete.disabled = false;

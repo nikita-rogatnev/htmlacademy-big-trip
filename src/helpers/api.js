@@ -40,16 +40,16 @@ class API {
       .then(ModelOffer.parseOffers);
   }
 
-  createTripPoint({point}) {
-    return this._load({
-      url: `points`,
-      method: this._METHODS.POST,
-      body: JSON.stringify(point),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then(toJSON)
-      .then(ModelTripPoint.parseTripPoints);
-  }
+  // createTripPoint({point}) {
+  //   return this._load({
+  //     url: `points`,
+  //     method: this._METHODS.POST,
+  //     body: JSON.stringify(point),
+  //     headers: new Headers({'Content-Type': `application/json`})
+  //   })
+  //     .then(toJSON)
+  //     .then(ModelTripPoint.parseTripPoints);
+  // }
 
   updateTripPoint({id, data}) {
     return this._load({
