@@ -21,9 +21,6 @@ const createFilters = (filtersNames, renderTripPoints, api) => {
 
   for (let filterName of filtersNames) {
     const filterComponent = new Filter(filterName, filtersNames.indexOf(filterName) === 0);
-
-    console.log(filterComponent);
-
     filtersContainer.appendChild(filterComponent.render(filtersContainer));
     filterComponent.onFilter = (evt) => {
       const activeFilter = evt.target.id;

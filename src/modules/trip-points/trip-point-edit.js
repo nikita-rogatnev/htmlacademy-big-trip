@@ -64,13 +64,13 @@ class TripPointEdit extends Component {
     let destinationLabel;
 
     if (this._type.transport) {
-      for (let cityOfSet of this._destinations) {
-        options.push(cityOfSet.name);
+      for (let destination of this._destinations) {
+        options.push(destination.name);
       }
-      selectedOption = this._destination.name;
+      selectedOption = this._destination;
       destinationLabel = `${this._type.name} to`;
     } else {
-      options = this._types.filter((el) => !el.transport).map((el) => el.name.toLowerCase());
+      options = this._types.filter((el) => !el.transport).map((item) => item.name.toLowerCase());
       if (this._type.name === `Check-in`) {
         selectedOption = `hotel`;
       } else {
@@ -79,8 +79,7 @@ class TripPointEdit extends Component {
       destinationLabel = `Check into`;
     }
 
-    options = options.map((el) => `<option value="${el}">`);
-
+    options = options.map((item) => `<option value="${item}">`);
     return `<div class="point__destination-wrap">
      <label class="point__destination-label" for="destination">${destinationLabel}</label>
       <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
@@ -88,18 +87,18 @@ class TripPointEdit extends Component {
     </div>`;
   }
 
-  _createTravelWays(arrayOfWays, selectedIcon) {
-    const firstGroup = arrayOfWays.filter((el) => el.transport)
-      .map((el) => {
-        const lowName = el.name.toLowerCase();
-        return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${lowName}" name="travel-way" value="${lowName}" ${selectedIcon === el.icon ? `checked` : ``}>
-        <label class="travel-way__select-label" for="travel-way-${lowName}">${el.icon} ${lowName}</label>`.trim();
+  _createTravelWays(arrayTravelWays, selectedIcon) {
+    const firstGroup = arrayTravelWays.filter((groupItem) => groupItem.transport)
+      .map((groupItem) => {
+        const itemName = groupItem.name.toLowerCase();
+        return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${itemName}" name="travel-way" value="${itemName}" ${selectedIcon === groupItem.icon ? `checked` : ``}>
+        <label class="travel-way__select-label" for="travel-way-${itemName}">${groupItem.icon} ${itemName}</label>`.trim();
       }).join(``);
-    const secondGroup = arrayOfWays.filter((el) => !el.transport)
-      .map((el) => {
-        const lowName = el.name.toLowerCase();
-        return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${lowName}" name="travel-way" value="${lowName}" ${selectedIcon === el.icon ? `checked` : ``}>
-        <label class="travel-way__select-label" for="travel-way-${lowName}">${el.icon} ${lowName}</label>`.trim();
+    const secondGroup = arrayTravelWays.filter((groupItem) => !groupItem.transport)
+      .map((groupItem) => {
+        const itemName = groupItem.name.toLowerCase();
+        return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${itemName}" name="travel-way" value="${itemName}" ${selectedIcon === groupItem.icon ? `checked` : ``}>
+        <label class="travel-way__select-label" for="travel-way-${itemName}">${groupItem.icon} ${itemName}</label>`.trim();
       }).join(``);
 
     return `<div class="travel-way__select">
@@ -109,24 +108,24 @@ class TripPointEdit extends Component {
   }
 
   _onChangeType(evt) {
-    if (evt.target.classList.contains(`travel-way__select-input`)) {
-      let val = evt.target.value;
-      val = val[0].toUpperCase() + val.slice(1);
-      for (let key of this._types) {
-        if (key.name === val) {
-          this._type = key;
-          this._offers = this._allOffers.find((el) => {
-            return el.type === key.name.toLocaleLowerCase();
-          });
-          if (!this._offers) {
-            this._offers = [];
-          } else {
-            this._offers = this._offers.offers;
-          }
-          this._partialUpdate();
-        }
-      }
-    }
+    // if (evt.target.classList.contains(`travel-way__select-input`)) {
+    //   let val = evt.target.value;
+    //   val = val[0].toUpperCase() + val.slice(1);
+    //   for (let key of this._types) {
+    //     if (key.name === val) {
+    //       this._type = key;
+    //       this._offers = this._allOffers.find((el) => {
+    //         return el.type === key.name.toLocaleLowerCase();
+    //       });
+    //       if (!this._offers) {
+    //         this._offers = [];
+    //       } else {
+    //         this._offers = this._offers.offers;
+    //       }
+    //       this._partialUpdate();
+    //     }
+    //   }
+    // }
   }
 
   get template() {
