@@ -59,33 +59,33 @@ class TripPointEdit extends Component {
   }
 
   _createDestination() {
-    // let options = [];
-    // let selectedOption;
-    // let destinationLabel;
-    //
-    // if (this._type.transport) {
-    //   for (let cityOfSet of this._destinations) {
-    //     options.push(cityOfSet.name);
-    //   }
-    //   selectedOption = this._destination.name;
-    //   destinationLabel = `${this._type.name} to`;
-    // } else {
-    //   options = this._types.filter((el) => !el.transport).map((el) => el.name.toLowerCase());
-    //   if (this._type.name === `Check-in`) {
-    //     selectedOption = `hotel`;
-    //   } else {
-    //     selectedOption = this._type.name.toLowerCase();
-    //   }
-    //   destinationLabel = `Check into`;
-    // }
-    //
-    // options = options.map((el) => `<option value="${el}">`);
-    //
-    // return `<div class="point__destination-wrap">
-    //  <label class="point__destination-label" for="destination">${destinationLabel}</label>
-    //   <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
-    //   <datalist id="destination-select">${options.join(``)}</datalist>
-    // </div>`;
+    let options = [];
+    let selectedOption;
+    let destinationLabel;
+
+    if (this._type.transport) {
+      for (let cityOfSet of this._destinations) {
+        options.push(cityOfSet.name);
+      }
+      selectedOption = this._destination.name;
+      destinationLabel = `${this._type.name} to`;
+    } else {
+      options = this._types.filter((el) => !el.transport).map((el) => el.name.toLowerCase());
+      if (this._type.name === `Check-in`) {
+        selectedOption = `hotel`;
+      } else {
+        selectedOption = this._type.name.toLowerCase();
+      }
+      destinationLabel = `Check into`;
+    }
+
+    options = options.map((el) => `<option value="${el}">`);
+
+    return `<div class="point__destination-wrap">
+     <label class="point__destination-label" for="destination">${destinationLabel}</label>
+      <input class="point__destination-input" list="destination-select" id="destination" value="${selectedOption}" name="destination">
+      <datalist id="destination-select">${options.join(``)}</datalist>
+    </div>`;
   }
 
   _createTravelWays(arrayOfWays, selectedIcon) {
