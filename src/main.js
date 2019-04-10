@@ -43,7 +43,7 @@ const renderTripPoints = (filter, filterId) => {
     });
 };
 
-//renderTripPoints();
+renderTripPoints();
 createFilters(filtersNames, renderTripPoints, api);
 
 // Switch View Controller
