@@ -52,9 +52,7 @@ class TripPointEdit extends Component {
     let destinationLabel;
 
     if (this._type.transport) {
-      for (let destination of this._destinations) {
-        options.push(destination.name);
-      }
+      this._destinations.map((destination) => options.push(destination.name));
       selectedOption = this._destination;
       destinationLabel = `${this._type.name} to`;
     } else {
@@ -71,14 +69,14 @@ class TripPointEdit extends Component {
     </div>`;
   }
 
-  _createTravelWays(arrayTravelWays, selectedIcon) {
-    const firstGroup = arrayTravelWays.filter((groupItem) => groupItem.transport)
+  _createTravelWays(travelwAYS, selectedIcon) {
+    const firstGroup = travelwAYS.filter((groupItem) => groupItem.transport)
       .map((groupItem) => {
         const itemName = groupItem.name.toLowerCase();
         return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${itemName}" name="travel-way" value="${itemName}" ${selectedIcon === groupItem.icon ? `checked` : ``}>
         <label class="travel-way__select-label" for="travel-way-${itemName}">${groupItem.icon} ${itemName}</label>`.trim();
       }).join(``);
-    const secondGroup = arrayTravelWays.filter((groupItem) => !groupItem.transport)
+    const secondGroup = travelwAYS.filter((groupItem) => !groupItem.transport)
       .map((groupItem) => {
         const itemName = groupItem.name.toLowerCase();
         return `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${itemName}" name="travel-way" value="${itemName}" ${selectedIcon === groupItem.icon ? `checked` : ``}>
