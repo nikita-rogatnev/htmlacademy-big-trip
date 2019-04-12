@@ -24,22 +24,20 @@ const renderTripPoints = (filter, filterId) => {
 
   api.getTripPoints()
     .then((points) => {
-      if (filter) {
-        allTripPoints = filter(filterId, points);
-      } else {
-        allTripPoints = points;
-      }
-      api.getOffers()
-        .then((offers) => {
-          allOffers = offers;
-          api.getDestinations()
-            .then((destinations) => {
-              createTripPoints(destinations, allTripPoints, allOffers, api);
-            })
-            .catch(() => {
-              tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
-            });
-        });
+      allTripPoints = (filter) ? filter(filterId, points) : points;
+    })
+    .catch(() => {
+      tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+    });
+
+  api.getOffers()
+    .then((offers) => {
+      allOffers = offers;
+    });
+
+  api.getDestinations()
+    .then((destinations) => {
+      createTripPoints(destinations, allTripPoints, allOffers, api);
     });
 };
 
