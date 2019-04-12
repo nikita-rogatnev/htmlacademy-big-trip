@@ -1,17 +1,7 @@
+import {travelTypes} from '../helpers/utils';
+
 class ModelTripPoint {
   constructor(data) {
-    this._types = [
-      {icon: `🏨`, name: `Check-in`, transport: false},
-      {icon: `🚗`, name: `Drive`, transport: true},
-      {icon: `🚌`, name: `Bus`, transport: true},
-      {icon: `🚂`, name: `Train`, transport: true},
-      {icon: `🛳️`, name: `Ship`, transport: true},
-      {icon: `🚊`, name: `Transport`, transport: true},
-      {icon: `🏛️`, name: `Sightseeing`, transport: false, title: ``},
-      {icon: `🍴`, name: `Restaurant`, transport: false},
-      {icon: `🚕`, name: `Taxi`, transport: true},
-      {icon: `✈️`, name: `Flight`, transport: true}
-    ];
     this.id = data.id;
     this.type = this._getType(data.type);
     this.destination = data[`destination`] ? data[`destination`].name : ``;
@@ -25,12 +15,7 @@ class ModelTripPoint {
   }
 
   _getType(dataType) {
-    for (let type of this._types) {
-      if (type.name.toLocaleLowerCase() === dataType) {
-        return type;
-      }
-    }
-    return dataType;
+    return travelTypes.find((type) => type.name.toLocaleLowerCase() === dataType);
   }
 
   toRAW() {

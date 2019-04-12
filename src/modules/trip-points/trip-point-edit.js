@@ -1,5 +1,6 @@
 import Component from '../../helpers/component';
 import flatpickr from 'flatpickr';
+import {travelTypes} from '../../helpers/utils';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
 
@@ -20,19 +21,6 @@ class TripPointEdit extends Component {
 
     this._allOffers = allOffers;
     this._destinations = destinations;
-
-    this._types = [
-      {icon: `🏨`, name: `Hotel`, transport: false},
-      {icon: `🚗`, name: `Drive`, transport: true},
-      {icon: `🚌`, name: `Bus`, transport: true},
-      {icon: `🚂`, name: `Train`, transport: true},
-      {icon: `🛳️`, name: `Ship`, transport: true},
-      {icon: `🚊`, name: `Transport`, transport: true},
-      {icon: `🏛️`, name: `Sightseeing`, transport: false},
-      {icon: `🍴`, name: `Restaurant`, transport: false},
-      {icon: `🚕`, name: `Taxi`, transport: true},
-      {icon: `✈️`, name: `Flight`, transport: true},
-    ];
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -70,12 +58,8 @@ class TripPointEdit extends Component {
       selectedOption = this._destination;
       destinationLabel = `${this._type.name} to`;
     } else {
-      options = this._types.filter((el) => !el.transport).map((item) => item.name.toLowerCase());
-      if (this._type.name === `Check-in`) {
-        selectedOption = `hotel`;
-      } else {
-        selectedOption = this._type.name.toLowerCase();
-      }
+      options = travelTypes.filter((item) => !item.transport).map((item) => item.name.toLowerCase());
+      selectedOption = (this._type.name === `Check-in`) ? `hotel` : this._type.name.toLowerCase();
       destinationLabel = `Check into`;
     }
 
@@ -111,7 +95,7 @@ class TripPointEdit extends Component {
     // if (evt.target.classList.contains(`travel-way__select-input`)) {
     //   let val = evt.target.value;
     //   val = val[0].toUpperCase() + val.slice(1);
-    //   for (let key of this._types) {
+    //   for (let key of travelTypes) {
     //     if (key.name === val) {
     //       this._type = key;
     //       this._offers = this._allOffers.find((el) => {
@@ -141,7 +125,7 @@ class TripPointEdit extends Component {
             <div class="travel-way">
               <label class="travel-way__label" for="travel-way__toggle">${this._type.icon}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-              ${this._createTravelWays(this._types, this._type.icon)}
+              ${this._createTravelWays(travelTypes, this._type.icon)}
             </div>
             
             ${this._createDestination()}
