@@ -26,18 +26,20 @@ const renderTripPoints = (filter, filterId) => {
     .then((points) => {
       allTripPoints = (filter) ? filter(filterId, points) : points;
     })
+    .then(() => {
+      api.getOffers()
+        .then((offers) => {
+          allOffers = offers;
+        });
+    })
+    .then(() => {
+      api.getDestinations()
+        .then((destinations) => {
+          createTripPoints(destinations, allTripPoints, allOffers, api);
+        });
+    })
     .catch(() => {
       tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
-    });
-
-  api.getOffers()
-    .then((offers) => {
-      allOffers = offers;
-    });
-
-  api.getDestinations()
-    .then((destinations) => {
-      createTripPoints(destinations, allTripPoints, allOffers, api);
     });
 };
 
