@@ -32,19 +32,6 @@ const totalPriceContainer = document.querySelector(`.trip__total-cost`);
 
 const provider = new Provider({api, store, generateId});
 
-// Online and Offline
-window.addEventListener(`offline`, () => {
-  console.log(`offline`);
-  document.title = `${document.title}[OFFLINE]`;
-});
-
-window.addEventListener(`online`, () => {
-  console.log(`online`);
-  document.title = `${document.title}[ONLINE]`;
-  // document.title = document.title.split(`[OFFLINE]`)[0];
-  provider.syncTripPoints();
-});
-
 // Render Trip Points
 let tripPoints = null;
 let eventsDestination = null;
@@ -158,6 +145,16 @@ const renderDays = (days) => {
     renderTripPoints(eventList, distEvents);
   });
 };
+
+// Online and Offline
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title} [OFFLINE]`;
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(` [OFFLINE]`)[0];
+  provider.syncTripPoints();
+});
 
 // Get Trip Points, Destinations And Offers
 document.addEventListener(`DOMContentLoaded`, () => {
