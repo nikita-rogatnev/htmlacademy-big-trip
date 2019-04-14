@@ -1,10 +1,10 @@
 class ModelOffers {
   constructor(data) {
     this.type = data.type;
-    this.offers = this._changeOffers(data.offers);
+    this.offers = ModelOffers._changeOffers(data.offers);
   }
 
-  _changeOffers(offers) {
+  static _changeOffers(offers) {
     offers = offers.map((offer) => {
       const newOffers = {};
       newOffers.accepted = false;
@@ -12,6 +12,7 @@ class ModelOffers {
       newOffers.price = offer.price;
       return newOffers;
     });
+
     return offers;
   }
 

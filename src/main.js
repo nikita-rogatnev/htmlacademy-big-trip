@@ -19,7 +19,8 @@ const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const store = new Store({key: STORE_KEY, storage: localStorage});
 const generateId = Date.now() + Math.random();
 
-const tripDayContainer = document.querySelector(`.trip-day__items`);
+
+const tripDayContainer = document.querySelector(`.trip-points`);
 const mainContainer = document.querySelector(`.main`);
 const statisticsContainer = document.querySelector(`.statistic`);
 
@@ -49,8 +50,8 @@ let tripPoints = null;
 let eventsDestination = null;
 let eventsOffers = null;
 
-const renderTripPoints = (data) => {
-  tripDayContainer.innerHTML = ``;
+const renderTripPoints = (data, dist) => {
+  dist.innerHTML = ``;
 
   for (let tripPoint of data) {
     let tripPointComponent = new TripPoint(tripPoint);
@@ -59,7 +60,7 @@ const renderTripPoints = (data) => {
     // Enter Trip Point Edit Mode
     tripPointComponent.onEdit = () => {
       tripPointEditComponent.render(tripDayContainer);
-      tripDayContainer.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
+      dist.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
       tripPointComponent.unrender();
     };
 
@@ -121,11 +122,11 @@ const renderTripPoints = (data) => {
     // Exit Trip Point Edit Mode
     tripPointEditComponent.onKeydownEsc = () => {
       tripPointComponent.render(tripDayContainer);
-      tripDayContainer.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
+      dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
       tripPointEditComponent.unrender();
     };
 
-    tripDayContainer.appendChild(tripPointComponent.render(tripDayContainer));
+    dist.appendChild(tripPointComponent.render(tripDayContainer));
   }
 };
 
@@ -152,7 +153,9 @@ const renderDays = (days) => {
     const dayTripPoints = new TravelDay(day).render();
 
     tripDayContainer.appendChild(dayTripPoints);
-    renderTripPoints(eventList);
+
+    const distEvents = dayTripPoints.querySelector(`.trip-day__items`);
+    renderTripPoints(eventList, distEvents);
   });
 };
 
