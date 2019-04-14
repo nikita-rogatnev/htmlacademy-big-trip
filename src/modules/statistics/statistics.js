@@ -140,8 +140,76 @@ const createStatistics = () => {
     return new Chart(ctx, options);
   };
 
+  const timeChartOptions = {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: [`🛳️ HOTEL`, `🚕 TO AIRPORT`, `🚗 TO GENEVA`, `🚕 TO CHAMONIX`],
+      datasets: [{
+        data: [72, 1, 3, 2],
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `${val}H`
+        }
+      },
+      title: {
+        display: true,
+        text: `TIME SPENT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
+    }
+  };
+  const timeChartCtx = document.querySelector(`.statistic__time-spend`);
+  timeChartCtx.height = 220;
+
   renderChart(transportChartCtx, transportChartOptions);
   renderChart(moneyChartCtx, moneyChartOptions);
+  renderChart(timeChartCtx, timeChartOptions);
 };
 
 export default createStatistics;
