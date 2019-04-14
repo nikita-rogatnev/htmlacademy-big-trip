@@ -203,8 +203,8 @@ newTripPointButton.addEventListener(`click`, () => {
       .then((newPoint) => {
         tripPointEditComponent.unlockSave();
         tripPoints.push(newPoint);
-        getTotalPrice(tripPoints);
         renderTripDays(tripPoints);
+        getTotalPrice(tripPoints);
       })
       .catch(() => {
         tripPointEditComponent.error();
@@ -238,8 +238,8 @@ document.addEventListener(`DOMContentLoaded`, () => {
       tripPoints = responseTripPoints;
       eventsDestination = responseDestinations;
       eventsOffers = responseOffers;
-      getTotalPrice(tripPoints);
       renderTripDays(tripPoints);
+      getTotalPrice(tripPoints);
     })
     .catch(() => {
       tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
