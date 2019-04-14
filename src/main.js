@@ -119,7 +119,7 @@ const renderTripPoints = (data, dist) => {
   }
 };
 
-const getSortedEventByDay = (points) => {
+const getSortedTripPointsByDay = (points) => {
   let result = {};
   for (let point of points) {
     const day = moment(point.dateStart).format(`D MMM YY`);
@@ -127,6 +127,7 @@ const getSortedEventByDay = (points) => {
     if (!result[day]) {
       result[day] = [];
     }
+
     result[day].push(point);
   }
 
@@ -135,7 +136,7 @@ const getSortedEventByDay = (points) => {
 
 const renderDays = (days) => {
   tripDayContainer.innerHTML = ``;
-  const pointSortedDay = getSortedEventByDay(days);
+  const pointSortedDay = getSortedTripPointsByDay(days);
 
   Object.entries(pointSortedDay).forEach((points) => {
     const [day, eventList] = points;
@@ -148,15 +149,70 @@ const renderDays = (days) => {
   });
 };
 
+// Create New Trip Point
+newTripPointButton.addEventListener(`click`, () => {
+  const tripPointMockData = {
+    id: null,
+    type: {typeName: `taxi`, icon: `🚕`},
+    city: ``,
+    destination: [],
+    price: 0,
+    dateStart: Date.now(),
+    dateEnd: Date.now(),
+    pictures: [],
+    offers: [],
+    description: ``,
+    isFavorite: false,
+  };
 
-// Online and Offline
-window.addEventListener(`offline`, () => {
-  document.title = `${document.title} [OFFLINE]`;
-});
+  const convertNewTripPointData = (data) => {
+    return {
+      'type': data.type,
+      'base_price': data.price,
+      'destination': data.destination,
+      'date_from': data.dateStart,
+      'date_to': data.dateEnd,
+      'offers': data.offers,
+      'is_favorite': data.favorite,
+    };
+  };
 
-window.addEventListener(`online`, () => {
-  document.title = document.title.split(` [OFFLINE]`)[0];
-  provider.syncTripPoints();
+  newTripPointButton.disabled = true;
+  let tripPointEditComponent = new TripPointEdit(tripPointMockData, eventsOffers, eventsDestination);
+  tripDayContainer.insertBefore(tripPointEditComponent.render(), tripDayContainer.firstChild);
+
+  tripPointEditComponent.onSubmit = (newData) => {
+    tripPointEditComponent.lockSave();
+    provider.createTripPoint({point: convertNewTripPointData(newData)})
+      .then((newPoint) => {
+        tripPointEditComponent.unlockSave();
+        tripPoints.push(newPoint);
+        getTotalPrice(tripPoints);
+        renderDays(tripPoints);
+      })
+      .catch(() => {
+        tripPointEditComponent.error();
+        tripPointEditComponent.element.style.border = `1px solid red`;
+      })
+      .then(() => {
+        tripPointEditComponent.element.style.border = ``;
+        newTripPointButton.disabled = false;
+      });
+  };
+
+  tripPointEditComponent.onDelete = () => {
+    tripPointEditComponent.lockDelete();
+    tripPointEditComponent.unrender();
+    renderDays(tripPoints);
+    newTripPointButton.disabled = false;
+  };
+
+  tripPointEditComponent.onKeydownEsc = () => {
+    tripPointEditComponent.unlockDelete();
+    tripPointEditComponent.unrender();
+    renderDays(tripPoints);
+    newTripPointButton.disabled = false;
+  };
 });
 
 // Get Trip Points, Destinations And Offers
@@ -206,4 +262,15 @@ switchContainer.addEventListener(`click`, (evt) => {
     mainContainer.classList.remove(`visually-hidden`);
     statisticsContainer.classList.add(`visually-hidden`);
   }
+});
+
+// Offline
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title} [OFFLINE]`;
+});
+
+// Online
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(` [OFFLINE]`)[0];
+  provider.syncTripPoints();
 });
