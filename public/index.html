@@ -39,18 +39,33 @@
 </header>
 
 <main class="main content-wrap" id="table">
-  <form class="trip-sorting"></form>
+  <form class="trip-sorting">
+    <input type="radio" name="trip-sorting" id="sorting-event" value="event" checked>
+    <label class="trip-sorting__item trip-sorting__item--event" for="sorting-event">Event</label>
+
+    <input type="radio" name="trip-sorting" id="sorting-time" value="time">
+    <label class="trip-sorting__item trip-sorting__item--time" for="sorting-time">Time</label>
+
+    <input type="radio" name="trip-sorting" id="sorting-price" value="price">
+    <label class="trip-sorting__item trip-sorting__item--price" for="sorting-price">Price</label>
+
+    <span class="trip-sorting__item trip-sorting__item--offers">Offers</span>
+  </form>
 
   <section class="trip-points">
     <section class="trip-day">
-      <article class="trip-day__info"></article>
+      <article class="trip-day__info">
+        <span class="trip-day__caption">Day</span>
+        <p class="trip-day__number">1</p>
+        <h2 class="trip-day__title">Mar 31</h2>
+      </article>
 
       <div class="trip-day__items"></div>
     </section>
   </section>
 </main>
 
-<section class="statistic content-wrap" id="stats">
+<section class="statistic content-wrap visually-hidden" id="stats">
   <div class="statistic__item statistic__item--money">
     <canvas class="statistic__money" width="900"></canvas>
   </div>

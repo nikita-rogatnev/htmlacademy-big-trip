@@ -1,138 +1,63 @@
-import {Filter} from './modules/filter/filter';
-import {TripDay} from './modules/trip-points/trip-day';
-import {tripPointsData} from './modules/trip-points/data';
-import {TripPoint} from './modules/trip-points/trip-point';
-import {TripPointEdit} from './modules/trip-points/trip-point-edit';
-import {getStatistics} from './modules/statistics/statistics';
-import moment from 'moment';
+import API from './helpers/api';
+import createTripPoints from './modules/trip-points/trip-points';
+import createFilters from './modules/filters/filters';
+import createStatistics from './modules/statistics/statistics';
 
-// Trip Day
-const tripDayContainer = document.querySelector(`.trip-day__info`);
-const tripDayComponent = new TripDay(tripPointsData);
+// API
+const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
-tripDayContainer.appendChild(tripDayComponent.render());
+const tripDayContainer = document.querySelector(`.trip-day__items`);
+const mainContainer = document.querySelector(`.main`);
+const statisticsContainer = document.querySelector(`.statistic`);
 
-// Filters
-const filtersContainer = document.querySelector(`.trip-filter`);
+const filtersNames = [`everything`, `future`, `past`];
+const switchContainer = document.querySelector(`.view-switch__items`);
+const switchItems = document.querySelectorAll(`.view-switch__item`);
 
-export const filters = [
-  {caption: `Everything`},
-  {caption: `Future`},
-  {caption: `Past`}
-];
+const renderTripPoints = (filter, filterId) => {
+  tripDayContainer.innerHTML = `Loading route...`;
 
-const filterList = (items, name) => {
-  switch (name) {
-    case `filter-everything`:
-      return items;
+  let allTripPoints;
+  let allOffers;
 
-    case `filter-future`:
-      return items.filter((item) => item.day > Date.now());
+  Promise.all([
+    api.getOffers(),
+    api.getDestinations(),
+    api.getTripPoints()
+  ])
+    .then(([offers, destinations, points]) => {
+      allTripPoints = (filter) ? filter(filterId, points) : points;
+      allOffers = offers;
 
-    case `filter-past`:
-      return items.filter((item) => item.day < Date.now());
-
-    default:
-      return items;
-  }
+      createTripPoints(destinations, allTripPoints, allOffers, api);
+    })
+    .catch(() => {
+      tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+    });
 };
 
-const renderFilterItems = (items) => {
-  filtersContainer.innerHTML = ``;
+renderTripPoints();
+createFilters(filtersNames, renderTripPoints, api);
 
-  for (let i = 0; i < items.length; i++) {
-    const item = filters[i];
-    const itemComponent = new Filter(item);
-    filtersContainer.appendChild(itemComponent.render());
-
-    itemComponent.onFilter = (evt) => {
-      const filterName = evt.target.htmlFor;
-      const filteredPoints = filterList(tripPointsData, filterName);
-
-      renderTripPoints(filteredPoints);
-    };
-  }
-};
-
-renderFilterItems(filters);
-
-// Trip Points
-const tripPointsContainer = document.querySelector(`.trip-day__items`);
-
-const deleteTripPoint = (items, i) => {
-  items.splice(i, 1);
-};
-
-const renderTripPoints = (items) => {
-  tripPointsContainer.innerHTML = ``;
-
-  for (let i = 0; i < items.length; i++) {
-    const point = items[i];
-    const tripPointComponent = new TripPoint(point);
-    const tripPointEditComponent = new TripPointEdit(point);
-
-    tripPointComponent.onEdit = () => {
-      tripPointEditComponent.render();
-      tripPointsContainer.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
-      tripPointComponent.unrender();
-    };
-
-    tripPointEditComponent.onSubmit = (newObject) => {
-      point.favorite = newObject.favorite;
-      point.travelWay = newObject.travelWay;
-      point.destination = newObject.destination;
-      point.day = newObject.day;
-      point.time = newObject.time;
-      point.timeDuration = newObject.timeDuration;
-      point.price = newObject.price;
-      point.offer = newObject.offer;
-
-      tripPointComponent.update(point);
-      tripPointComponent.render();
-      tripPointsContainer.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
-      tripPointEditComponent.unrender();
-    };
-
-    tripPointEditComponent.onDelete = () => {
-      deleteTripPoint(items, i);
-      tripPointEditComponent.unrender();
-      renderTripPoints(items);
-    };
-
-    tripPointsContainer.appendChild(tripPointComponent.render());
-  }
-};
-
-const toggleFilter = (element) => {
-  let items = element.querySelectorAll(`.view-switch__item`);
-
-  items.forEach((item) => {
-    if (item.classList.contains(`.view-switch__item--active`)) {
-      item.classList.remove(`view-switch__item--active`);
-    } else {
-      item.classList.add(`view-switch__item--active`);
-    }
-  });
-};
-
-renderTripPoints(tripPointsData);
-
-// Statistics
-const container = document.querySelector(`.main`);
-const viewSwitch = document.querySelector(`.view-switch__items`);
-const statistics = document.querySelector(`.statistic`);
-
-viewSwitch.addEventListener(`click`, (evt) => {
+// Switch View Controller
+switchContainer.addEventListener(`click`, (evt) => {
   evt.preventDefault();
 
-  if (evt.target.textContent === `Stats`) {
-    container.classList.add(`visually-hidden`);
-    statistics.classList.remove(`visually-hidden`);
-    getStatistics();
-  } else {
-    container.classList.remove(`visually-hidden`);
-    statistics.classList.add(`visually-hidden`);
-  }
+  switchItems.forEach((item) => {
+    item.classList.remove(`view-switch__item--active`);
+  });
 
-  toggleFilter(viewSwitch);
+  const activeItem = evt.target;
+  activeItem.classList.add(`view-switch__item--active`);
+
+  if (evt.target.textContent === `Stats`) {
+    mainContainer.classList.add(`visually-hidden`);
+    statisticsContainer.classList.remove(`visually-hidden`);
+    createStatistics();
+  } else {
+    mainContainer.classList.remove(`visually-hidden`);
+    statisticsContainer.classList.add(`visually-hidden`);
+  }
 });
