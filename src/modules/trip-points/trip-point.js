@@ -1,52 +1,57 @@
-import {Component} from '../../component';
-import {emojiList} from '../../helpers/emoji-list';
+import Component from '../../helpers/component';
+import {getDurationTime} from '../../helpers/utils';
+import * as moment from 'moment/moment';
 
 // Trip Point Class
-export class TripPoint extends Component {
+class TripPoint extends Component {
   constructor(data) {
     super();
-    this._favorite = data.favorite;
-    this._travelWay = data.travelWay;
+    this._isFavorite = data.isFavorite;
+    this._type = data.type;
     this._destination = data.destination;
-    this._destinationText = data.destinationText;
-    this._time = data.time;
-    this._timeDuration = data.timeDuration;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._totalPrice = data.totalPrice;
-    this._offer = data.offer;
-    this._picture = data.picture;
+    this._offers = data.offers;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._onEdit = null;
   }
 
   _onEditButtonClick() {
-    typeof this._onEdit === `function` && this._onEdit();
+    if (typeof this._onEdit === `function`) {
+      this._onEdit();
+    }
   }
 
   set onEdit(fn) {
-    this._onEdit = fn;
+    if (typeof fn === `function`) {
+      this._onEdit = fn;
+    }
   }
 
-  get offersList() {
-    return Object.keys(this._offer)
-      .filter((key) => this._offer[key])
-      .map((offer) => `<li><button class="trip-point__offer">${offer.split(`-`).join(` `).toLocaleLowerCase()}</button></li>`)
-      .join(``);
+  _renderTripPointOffers() {
+    const offersArray = [];
+    for (let offer of this._offers) {
+      if (offer.accepted) {
+        offersArray.push(`<li><button class="trip-point__offer">${offer.title} +&euro;&nbsp;${offer.price}</button></li>`);
+      }
+    }
+    return `<ul class="trip-point__offers">${offersArray.join(``)}</ul>`;
   }
 
   get template() {
     return `
-      <article class="trip-point ${this._favorite ? `trip-point--favorite` : ``}">
-        <i class="trip-icon">${emojiList[this._travelWay.toLocaleLowerCase()]}</i>
+      <article class="trip-point">
+        <i class="trip-icon">${this._type.icon}</i>
         <h3 class="trip-point__title">${this._destination}</h3>
         <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${this._time}</span>
-          <span class="trip-point__duration">${this._timeDuration}</span>
+          <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
+          <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
         </p>
         <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
         <ul class="trip-point__offers">
-          ${this.offersList}
+          ${this._renderTripPointOffers()}
         </ul>
       </article>`.trim();
   }
@@ -62,13 +67,14 @@ export class TripPoint extends Component {
   }
 
   update(data) {
-    this._favorite = data.favorite;
-    this._travelWay = data.travelWay;
+    this._isFavorite = data.isFavorite;
+    this._type = data.type;
     this._destination = data.destination;
-    this._day = data.day;
-    this._time = data.time;
-    this._timeDuration = data.timeDuration;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._offer = data.offer;
+    this._offers = data.offers;
   }
 }
+
+export default TripPoint;
