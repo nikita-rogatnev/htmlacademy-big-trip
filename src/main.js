@@ -18,6 +18,7 @@ const STORE_KEY = `store-key`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const store = new Store({key: STORE_KEY, storage: localStorage});
 const generateId = Date.now() + Math.random();
+const provider = new Provider({api, store, generateId});
 
 
 const tripDayContainer = document.querySelector(`.trip-points`);
@@ -28,11 +29,12 @@ const filtersNames = [`everything`, `future`, `past`];
 const switchContainer = document.querySelector(`.view-switch__items`);
 const switchItems = document.querySelectorAll(`.view-switch__item`);
 
+const newTripPointButton = document.querySelector(`.new-event`);
 const totalPriceContainer = document.querySelector(`.trip__total-cost`);
 
-const provider = new Provider({api, store, generateId});
-
 // Render Trip Points
+tripDayContainer.innerHTML = `Loading route...`;
+
 let tripPoints = null;
 let eventsDestination = null;
 let eventsOffers = null;
@@ -132,7 +134,7 @@ const getSortedEventByDay = (points) => {
 };
 
 const renderDays = (days) => {
-  tripDayContainer.innerHTML = `Loading route...`;
+  tripDayContainer.innerHTML = ``;
   const pointSortedDay = getSortedEventByDay(days);
 
   Object.entries(pointSortedDay).forEach((points) => {
@@ -145,6 +147,7 @@ const renderDays = (days) => {
     renderTripPoints(eventList, distEvents);
   });
 };
+
 
 // Online and Offline
 window.addEventListener(`offline`, () => {

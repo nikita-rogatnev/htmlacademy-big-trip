@@ -50,7 +50,7 @@ class API {
       .then(ModelOffer.parseOffers);
   }
 
-  createPoint({point}) {
+  createTripPoint({point}) {
     return this._load({
       url: `points`,
       method: this._METHODS.POST,
