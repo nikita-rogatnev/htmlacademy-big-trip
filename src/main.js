@@ -52,9 +52,9 @@ let eventsOffers = null;
 const renderTripPoints = (data) => {
   tripDayContainer.innerHTML = ``;
 
-  for (let point of data) {
-    let tripPointComponent = new TripPoint(point);
-    let tripPointEditComponent = new TripPointEdit(point, eventsOffers, eventsDestination);
+  for (let tripPoint of data) {
+    let tripPointComponent = new TripPoint(tripPoint);
+    let tripPointEditComponent = new TripPointEdit(tripPoint, eventsOffers, eventsDestination);
 
     // Enter Trip Point Edit Mode
     tripPointComponent.onEdit = () => {
@@ -129,9 +129,9 @@ const renderTripPoints = (data) => {
   }
 };
 
-const getSortedEventByDay = (events) => {
+const getSortedEventByDay = (points) => {
   let result = {};
-  for (let point of events) {
+  for (let point of points) {
     const day = moment(point.dateStart).format(`D MMM YY`);
 
     if (!result[day]) {
@@ -143,12 +143,12 @@ const getSortedEventByDay = (events) => {
   return result;
 };
 
-const renderDays = (events) => {
+const renderDays = (days) => {
   tripDayContainer.innerHTML = `Loading route...`;
-  const pointSortedDay = getSortedEventByDay(events);
+  const pointSortedDay = getSortedEventByDay(days);
 
-  Object.entries(pointSortedDay).forEach((item) => {
-    const [day, eventList] = item;
+  Object.entries(pointSortedDay).forEach((points) => {
+    const [day, eventList] = points;
     const dayTripPoints = new TravelDay(day).render();
 
     tripDayContainer.appendChild(dayTripPoints);
@@ -174,11 +174,11 @@ document.addEventListener(`DOMContentLoaded`, () => {
 createFilters(filtersNames, api);
 
 // Calculate Total Price In trip__total-cost
-const getTotalPrice = (events) => {
+const getTotalPrice = (points) => {
   let totalPrice = 0;
 
-  for (let item of events) {
-    totalPrice += +item[`price`];
+  for (let point of points) {
+    totalPrice += +point[`price`];
   }
 
   totalPriceContainer.textContent = `€ ${totalPrice}`;
