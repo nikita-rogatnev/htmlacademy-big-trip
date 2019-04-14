@@ -153,7 +153,7 @@ const renderDays = (days) => {
 newTripPointButton.addEventListener(`click`, () => {
   const tripPointMockData = {
     id: null,
-    type: {typeName: `taxi`, icon: `🚕`},
+    type: {name: `taxi`, icon: `🚕`},
     city: ``,
     destination: [],
     price: 0,
