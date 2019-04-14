@@ -6,6 +6,7 @@ import TripPoint from './modules/trip-points/trip-point';
 import TripPointEdit from './modules/trip-points/trip-point-edit';
 import TravelDay from './modules/travel-day/travel-day';
 import Filter from './modules/filters/filter';
+import TotalCost from './modules/total-cost/total-cost';
 
 import moment from 'moment';
 
@@ -26,17 +27,38 @@ const statisticsContainer = document.querySelector(`.statistic`);
 const filtersContainer = document.querySelector(`.trip-filter`);
 const sortingContainer = document.querySelector(`.trip-sorting`);
 
-const filtersList = [{description: `Everything`, isChecked: true}, {description: `Future`}, {description: `Past`}];
-const sortingList = [{
-  description: `Event`,
-  isChecked: true
-}, {description: `Time`}, {description: `Price`}, {description: `Offers`, isDisabled: true}];
+const filtersList = [
+  {description: `Everything`, isChecked: true},
+  {description: `Future`},
+  {description: `Past`}
+];
+
+const sortingList = [
+  {description: `Event`, isChecked: true},
+  {description: `Time`},
+  {description: `Price`},
+  {description: `Offers`, isDisabled: true}
+];
+
+const tripPointMockData = {
+  id: null,
+  type: {name: `taxi`, icon: `🚕`},
+  city: ``,
+  destination: [],
+  price: 0,
+  dateStart: Date.now(),
+  dateEnd: Date.now(),
+  pictures: [],
+  offers: [],
+  description: ``,
+  isFavorite: false,
+};
 
 const switchContainer = document.querySelector(`.view-switch__items`);
 const switchItems = document.querySelectorAll(`.view-switch__item`);
 
 const newTripPointButton = document.querySelector(`.new-event`);
-const totalPriceContainer = document.querySelector(`.trip__total-cost`);
+const totalCostContainer = document.querySelector(`.trip__total`);
 
 // Render Trip Points
 tripDayContainer.innerHTML = `Loading route...`;
@@ -71,8 +93,6 @@ const renderTripPoints = (data, dist) => {
 
       tripPointEditComponent.lockSave();
 
-      console.log(tripPoint.toRAW());
-
       provider.updateTripPoint({id: tripPoint.id, data: tripPoint.toRAW()})
         .then((response) => {
           if (response) {
@@ -81,10 +101,10 @@ const renderTripPoints = (data, dist) => {
             dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           }
         })
-        // .catch(() => {
-        //   tripPointEditComponent.error();
-        //   tripPointEditComponent.element.style.border = `1px solid red`;
-        // })
+        .catch(() => {
+          tripPointEditComponent.error();
+          tripPointEditComponent.element.style.border = `1px solid red`;
+        })
         .then(() => {
           tripPointEditComponent.unlockSave();
           tripPointEditComponent.unrender();
@@ -161,20 +181,6 @@ const renderTripDays = (days) => {
 
 // Create New Trip Point
 newTripPointButton.addEventListener(`click`, () => {
-  const tripPointMockData = {
-    id: null,
-    type: {name: `taxi`, icon: `🚕`},
-    city: ``,
-    destination: [],
-    price: 0,
-    dateStart: Date.now(),
-    dateEnd: Date.now(),
-    pictures: [],
-    offers: [],
-    description: ``,
-    isFavorite: false,
-  };
-
   const convertNewTripPointData = (data) => {
     return {
       'type': data.type,
@@ -286,15 +292,20 @@ const filterTripPoint = (items, filterName) => {
 renderFilters(filtersList, filtersContainer, `filters`);
 renderFilters(sortingList, sortingContainer, `sorting`);
 
-// Calculate Total Price In trip__total-cost
+// Calculate Total Price In trip__total
+const totalCostComponent = new TotalCost();
+totalCostContainer.appendChild(totalCostComponent.render());
+
 const getTotalPrice = (points) => {
-  let totalPrice = 0;
+  totalCostContainer.innerHTML = ``;
+  let updatedPrice = 0;
 
   for (let point of points) {
-    totalPrice += +point[`price`];
+    updatedPrice += +point[`price`];
   }
 
-  totalPriceContainer.textContent = `€ ${totalPrice}`;
+  const newTotalCostComponent = new TotalCost(updatedPrice);
+  totalCostContainer.appendChild(newTotalCostComponent.render());
 };
 
 // Switch View Controller
