@@ -30,7 +30,7 @@ const renderTripPoints = (filter, filterId) => {
     .then(([offers, destinations, points]) => {
       allTripPoints = (filter) ? filter(filterId, points) : points;
       allOffers = offers;
-
+      allOffers = offers;
       createTripPoints(destinations, allTripPoints, allOffers, api);
     })
     .catch(() => {
