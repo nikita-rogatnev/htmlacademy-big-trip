@@ -5,10 +5,10 @@ import Store from "./store";
 import TripPoint from './modules/trip-points/trip-point';
 import TripPointEdit from './modules/trip-points/trip-point-edit';
 import TravelDay from './modules/travel-day/travel-day';
+import Filter from './modules/filters/filter';
 
 import moment from 'moment';
 
-import createFilters from './modules/filters/filters';
 import createStatistics from './modules/statistics/statistics';
 
 // API
@@ -20,12 +20,18 @@ const store = new Store({key: STORE_KEY, storage: localStorage});
 const generateId = Date.now() + Math.random();
 const provider = new Provider({api, store, generateId});
 
-
 const tripDayContainer = document.querySelector(`.trip-points`);
 const mainContainer = document.querySelector(`.main`);
 const statisticsContainer = document.querySelector(`.statistic`);
+const filtersContainer = document.querySelector(`.trip-filter`);
+const sortingContainer = document.querySelector(`.trip-sorting`);
 
-const filtersNames = [`everything`, `future`, `past`];
+const filtersList = [{description: `Everything`, isChecked: true}, {description: `Future`}, {description: `Past`}];
+const sortingList = [{
+  description: `Event`,
+  isChecked: true
+}, {description: `Time`}, {description: `Price`}, {description: `Offers`, isDisabled: true}];
+
 const switchContainer = document.querySelector(`.view-switch__items`);
 const switchItems = document.querySelectorAll(`.view-switch__item`);
 
@@ -93,7 +99,7 @@ const renderTripPoints = (data, dist) => {
 
       provider.deleteTripPoint({id})
         .then(() => provider.getTripPoints())
-        .then(renderDays)
+        .then(renderTripDays)
         .then(() => {
           tripPointEditComponent.unlockDelete();
           tripPointEditComponent.unrender();
@@ -138,7 +144,7 @@ const getSortedTripPointsByDay = (points) => {
   return result;
 };
 
-const renderDays = (days) => {
+const renderTripDays = (days) => {
   tripDayContainer.innerHTML = ``;
   const pointSortedDay = getSortedTripPointsByDay(days);
 
@@ -192,7 +198,7 @@ newTripPointButton.addEventListener(`click`, () => {
         tripPointEditComponent.unlockSave();
         tripPoints.push(newPoint);
         getTotalPrice(tripPoints);
-        renderDays(tripPoints);
+        renderTripDays(tripPoints);
       })
       .catch(() => {
         tripPointEditComponent.error();
@@ -207,14 +213,14 @@ newTripPointButton.addEventListener(`click`, () => {
   tripPointEditComponent.onDelete = () => {
     tripPointEditComponent.lockDelete();
     tripPointEditComponent.unrender();
-    renderDays(tripPoints);
+    renderTripDays(tripPoints);
     newTripPointButton.disabled = false;
   };
 
   tripPointEditComponent.onKeydownEsc = () => {
     tripPointEditComponent.unlockDelete();
     tripPointEditComponent.unrender();
-    renderDays(tripPoints);
+    renderTripDays(tripPoints);
     newTripPointButton.disabled = false;
   };
 });
@@ -227,14 +233,58 @@ document.addEventListener(`DOMContentLoaded`, () => {
       eventsDestination = responseDestinations;
       eventsOffers = responseOffers;
       getTotalPrice(tripPoints);
-      renderDays(tripPoints);
+      renderTripDays(tripPoints);
     })
     .catch(() => {
       tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
     });
 });
 
-createFilters(filtersNames, api);
+// Render Filters
+const renderFilters = (filters, container, type) => {
+  for (let item of filters) {
+    const filter = new Filter(item, type);
+
+    filter.onFilter = () => {
+      tripDayContainer.innerHTML = ``;
+      let newTripPointData = filterTripPoint(tripPoints, filter.element.id);
+      renderTripDays(newTripPointData);
+    };
+
+    filter.render();
+    container.appendChild(filter.element);
+  }
+};
+
+const filterTripPoint = (items, filterName) => {
+  let filteredTripPoints = null;
+
+  switch (filterName) {
+    case `everything`:
+    case `offers`:
+      filteredTripPoints = items;
+      break;
+    case `future`:
+      filteredTripPoints = items.filter((item) => new Date() < new Date(item.dateStart));
+      break;
+    case `past`:
+      filteredTripPoints = items.filter((item) => new Date() > new Date(item.dateStart));
+      break;
+    case `price`:
+      filteredTripPoints = items.sort((a, b) => b.price - a.price);
+      break;
+    case `time`:
+      filteredTripPoints = items.sort((a, b) => b.dateStart - a.dateStart);
+      break;
+    default:
+      filteredTripPoints = items.sort((a, b) => a.id - b.id);
+  }
+
+  return filteredTripPoints;
+};
+
+renderFilters(filtersList, filtersContainer, `filters`);
+renderFilters(sortingList, sortingContainer, `sorting`);
 
 // Calculate Total Price In trip__total-cost
 const getTotalPrice = (points) => {

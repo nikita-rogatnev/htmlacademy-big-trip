@@ -7,13 +7,11 @@ export default class Store {
   setItem({key, item}) {
     const ITEMS = this.getAll();
     ITEMS[key] = item;
-
     this._storage.setItem(this._storeKey, JSON.stringify(ITEMS));
   }
 
   getItem({key}) {
     const ITEMS = this.getAll();
-
     return ITEMS[key];
   }
 
