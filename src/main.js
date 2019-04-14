@@ -1,12 +1,23 @@
-import API from './helpers/api';
-import createTripPoints from './modules/trip-points/trip-points';
+import API from './api';
+import Provider from "./provider";
+import Store from "./store";
+
+import TripPoint from './modules/trip-points/trip-point';
+import TripPointEdit from './modules/trip-points/trip-point-edit';
+import TravelDay from './modules/travel-day/travel-day';
+
+import moment from 'moment';
+
 import createFilters from './modules/filters/filters';
 import createStatistics from './modules/statistics/statistics';
 
 // API
 const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+const STORE_KEY = `store-key`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const store = new Store({key: STORE_KEY, storage: localStorage});
+const generateId = Date.now() + Math.random();
 
 const tripDayContainer = document.querySelector(`.trip-day__items`);
 const mainContainer = document.querySelector(`.main`);
@@ -16,30 +27,160 @@ const filtersNames = [`everything`, `future`, `past`];
 const switchContainer = document.querySelector(`.view-switch__items`);
 const switchItems = document.querySelectorAll(`.view-switch__item`);
 
-const renderTripPoints = (filter, filterId) => {
-  tripDayContainer.innerHTML = `Loading route...`;
+const totalPriceContainer = document.querySelector(`.trip__total-cost`);
 
-  let allTripPoints;
-  let allOffers;
+const provider = new Provider({api, store, generateId});
 
-  Promise.all([
-    api.getOffers(),
-    api.getDestinations(),
-    api.getTripPoints()
-  ])
-    .then(([offers, destinations, points]) => {
-      allTripPoints = (filter) ? filter(filterId, points) : points;
-      allOffers = offers;
-      allOffers = offers;
-      createTripPoints(destinations, allTripPoints, allOffers, api);
-    })
-    .catch(() => {
-      tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
-    });
+window.addEventListener(`offline`, () => {
+  console.log(`offline`);
+  document.title = `${document.title}[OFFLINE]`;
+});
+
+window.addEventListener(`online`, () => {
+  console.log(`online`);
+  document.title = `${document.title}[ONLINE]`;
+  // document.title = document.title.split(`[OFFLINE]`)[0];
+  provider.syncTripPoints();
+});
+
+// Render Trip Points
+let tripPoints = null;
+let eventsDestination = null;
+let eventsOffers = null;
+
+const renderTripPoints = (data) => {
+  tripDayContainer.innerHTML = ``;
+
+  for (let point of data) {
+    let tripPointComponent = new TripPoint(point);
+    let tripPointEditComponent = new TripPointEdit(point, eventsOffers, eventsDestination);
+
+    tripPointComponent.onEdit = () => {
+      tripPointEditComponent.render(tripDayContainer);
+      tripDayContainer.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
+      tripPointComponent.unrender();
+    };
+
+    tripPointEditComponent.onSubmit = (newData) => {
+      // item.type = newData.type;
+      // item.city = newData.city;
+      // item.offers = newData.offers;
+      // item.price = newData.price;
+      // item.timeline = newData.timeline;
+      // item.favorite = newData.favorite;
+      //
+      // trip.lockToSaving();
+      // provider.updatePoint({id: item.id, data: item.toRAW()})
+      //   .then((response) => {
+      //     if (response) {
+      //       point.update(response);
+      //       point.render();
+      //       dist.replaceChild(point.element, trip.element);
+      //     }
+      //   })
+      //   .catch(() => {
+      //     trip.shake();
+      //     trip.element.style.border = `1px solid #ff0000`;
+      //   })
+      //   .then(() => {
+      //     trip.unlockToSave();
+      //     trip.destroy();
+      //   });
+      //
+      // getTotalPrice(points);
+    };
+
+    tripPointEditComponent.onDelete = (id) => {
+      tripPointEditComponent.lockDelete();
+
+      provider.deleteTripPoint({id})
+        .then(() => provider.getTripPoints())
+        .then(renderDays)
+        .then(() => {
+          tripPointEditComponent.unlockDelete();
+          tripPointEditComponent.unrender();
+        })
+        .catch(() => {
+          tripPointEditComponent.error();
+          tripPointEditComponent.element.style.border = `1px solid red`;
+        })
+        .then(() => {
+          tripPointEditComponent.unlockDelete();
+          tripPointEditComponent.unrender();
+        });
+
+      tripPoints.splice(id, 1);
+
+      getTotalPrice(tripPoints);
+    };
+
+    tripPointEditComponent.onKeydownEsc = () => {
+      tripPointComponent.render(tripDayContainer);
+      tripDayContainer.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
+      tripPointEditComponent.unrender();
+    };
+
+    tripDayContainer.appendChild(tripPointComponent.render(tripDayContainer));
+  }
 };
 
-renderTripPoints();
-createFilters(filtersNames, renderTripPoints, api);
+
+const getSortedEventByDay = (events) => {
+  let result = {};
+  for (let point of events) {
+    const day = moment(point.dateStart).format(`D MMM YY`);
+
+    if (!result[day]) {
+      result[day] = [];
+    }
+    result[day].push(point);
+  }
+
+  return result;
+};
+
+const renderDays = (events) => {
+  tripDayContainer.innerHTML = `Loading route...`;
+  const pointSortedDay = getSortedEventByDay(events);
+
+  Object.entries(pointSortedDay).forEach((item) => {
+    const [day, eventList] = item;
+    const dayTripPoints = new TravelDay(day).render();
+
+    console.log(`trip day created`);
+
+    tripDayContainer.appendChild(dayTripPoints);
+    renderTripPoints(eventList);
+  });
+};
+
+document.addEventListener(`DOMContentLoaded`, () => {
+  Promise.all([provider.getTripPoints(), provider.getDestinations(), provider.getOffers()])
+    .then(([responseTripPoints, responseDestinations, responseOffers]) => {
+      tripPoints = responseTripPoints;
+      eventsDestination = responseDestinations;
+      eventsOffers = responseOffers;
+      getTotalPrice(tripPoints);
+      renderDays(tripPoints);
+    });
+  // .catch(() => {
+  //   tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+  // });
+});
+
+createFilters(filtersNames, api);
+
+const getTotalPrice = (events) => {
+  let totalPrice = 0;
+
+  for (let item of events) {
+    totalPrice += +item[`price`];
+  }
+
+  console.log(`price was changed`);
+
+  totalPriceContainer.textContent = `€ ${totalPrice}`;
+};
 
 // Switch View Controller
 switchContainer.addEventListener(`click`, (evt) => {

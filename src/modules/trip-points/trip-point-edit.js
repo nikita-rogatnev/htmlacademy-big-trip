@@ -27,6 +27,9 @@ class TripPointEdit extends Component {
 
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDelete = null;
+
+    this._onKeydownEsc = this._onKeydownEsc.bind(this);
+    this._onEsc = null;
   }
 
   _createPictures() {
@@ -255,12 +258,24 @@ class TripPointEdit extends Component {
     this._onDelete = fn;
   }
 
+  _onKeydownEsc(evt) {
+    if (typeof this._onEsc === `function` && evt.keyCode === 27) {
+      this._onEsc();
+    }
+  }
+
+  set onKeydownEsc(fn) {
+    this._onEsc = fn;
+  }
+
   bind() {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick);
 
     this._element.querySelector(`.point__button--delete`)
       .addEventListener(`click`, this._onDeleteButtonClick);
+
+    document.addEventListener(`keydown`, this._onKeydownEsc);
 
     this._buttonSave = this._element.querySelector(`.point__button--save`);
     this._buttonDelete = this._element.querySelector(`.point__button--delete`);
@@ -293,16 +308,35 @@ class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__button--delete`)
       .removeEventListener(`click`, this._onDeleteButtonClick);
+
+    document.removeEventListener(`keydown`, this._onKeydownEsc);
   }
 
-  deleteError() {
-    this._element.style.border = ``;
+  lockSave() {
+    this._buttonDelete.disabled = true;
+    this._buttonSave.disabled = true;
+    this._buttonSave.textContent = `Saving...`;
+  }
+
+  unlockSave() {
+    this._buttonDelete.disabled = false;
+    this._buttonSave.disabled = false;
+    this._buttonSave.textContent = `Save`;
+  }
+
+  lockDelete() {
+    this._buttonDelete.disabled = true;
+    this._buttonDelete.textContent = `Deleting...`;
+  }
+
+  unlockDelete() {
+    this._buttonSave.disabled = false;
+    this._buttonSave.textContent = `Delete`;
   }
 
   error() {
     const ANIMATION_TIMEOUT = 600;
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-    this._element.style.border = `1px solid red`;
     setTimeout(() => {
       this._element.style.animation = ``;
     }, ANIMATION_TIMEOUT);

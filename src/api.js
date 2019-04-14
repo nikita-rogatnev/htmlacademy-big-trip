@@ -1,5 +1,5 @@
-import ModelOffer from '../models/model-offer';
-import ModelTripPoint from '../models/model-trip-point';
+import ModelOffer from './models/model-offer';
+import ModelTripPoint from './models/model-trip-point';
 
 const CheckStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
