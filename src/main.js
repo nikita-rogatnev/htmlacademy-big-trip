@@ -55,32 +55,36 @@ const renderTripPoints = (data, dist) => {
 
     // Submit Edited Trip Point
     tripPointEditComponent.onSubmit = (newData) => {
-      // item.type = newData.type;
-      // item.city = newData.city;
-      // item.offers = newData.offers;
-      // item.price = newData.price;
-      // item.timeline = newData.timeline;
-      // item.favorite = newData.favorite;
-      //
-      // trip.lockToSaving();
-      // provider.updatePoint({id: item.id, data: item.toRAW()})
-      //   .then((response) => {
-      //     if (response) {
-      //       point.update(response);
-      //       point.render();
-      //       dist.replaceChild(point.element, trip.element);
-      //     }
-      //   })
-      //   .catch(() => {
-      //     trip.shake();
-      //     trip.element.style.border = `1px solid #ff0000`;
-      //   })
-      //   .then(() => {
-      //     trip.unlockToSave();
-      //     trip.destroy();
-      //   });
-      //
-      // getTotalPrice(points);
+      tripPoint.type = newData.type;
+      tripPoint.price = newData.price;
+      tripPoint.destination = newData.destination;
+      tripPoint.dateStart = newData.dateStart;
+      tripPoint.dateEnd = newData.dateEnd;
+      tripPoint.offers = newData.offers;
+      tripPoint.isFavorite = newData.isFavorite;
+
+      tripPointEditComponent.lockSave();
+
+      console.log(tripPoint.toRAW());
+
+      provider.updateTripPoint({id: tripPoint.id, data: tripPoint.toRAW()})
+        .then((response) => {
+          if (response) {
+            tripPointComponent.update(response);
+            tripPointComponent.render();
+            dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
+          }
+        })
+        // .catch(() => {
+        //   tripPointEditComponent.error();
+        //   tripPointEditComponent.element.style.border = `1px solid red`;
+        // })
+        .then(() => {
+          tripPointEditComponent.unlockSave();
+          tripPointEditComponent.unrender();
+        });
+
+      getTotalPrice(tripPoints);
     };
 
     // Delete Trip Point

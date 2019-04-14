@@ -277,6 +277,7 @@ class TripPointEdit extends Component {
 
     document.addEventListener(`keydown`, this._onKeydownEsc);
 
+    // Form Buttons
     this._buttonSave = this._element.querySelector(`.point__button--save`);
     this._buttonDelete = this._element.querySelector(`.point__button--delete`);
 
