@@ -31,6 +31,7 @@ const totalPriceContainer = document.querySelector(`.trip__total-cost`);
 
 const provider = new Provider({api, store, generateId});
 
+// Online and Offline
 window.addEventListener(`offline`, () => {
   console.log(`offline`);
   document.title = `${document.title}[OFFLINE]`;
@@ -55,12 +56,14 @@ const renderTripPoints = (data) => {
     let tripPointComponent = new TripPoint(point);
     let tripPointEditComponent = new TripPointEdit(point, eventsOffers, eventsDestination);
 
+    // Enter Trip Point Edit Mode
     tripPointComponent.onEdit = () => {
       tripPointEditComponent.render(tripDayContainer);
       tripDayContainer.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
       tripPointComponent.unrender();
     };
 
+    // Submit Edited Trip Point
     tripPointEditComponent.onSubmit = (newData) => {
       // item.type = newData.type;
       // item.city = newData.city;
@@ -90,6 +93,7 @@ const renderTripPoints = (data) => {
       // getTotalPrice(points);
     };
 
+    // Delete Trip Point
     tripPointEditComponent.onDelete = (id) => {
       tripPointEditComponent.lockDelete();
 
@@ -114,6 +118,7 @@ const renderTripPoints = (data) => {
       getTotalPrice(tripPoints);
     };
 
+    // Exit Trip Point Edit Mode
     tripPointEditComponent.onKeydownEsc = () => {
       tripPointComponent.render(tripDayContainer);
       tripDayContainer.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
@@ -123,7 +128,6 @@ const renderTripPoints = (data) => {
     tripDayContainer.appendChild(tripPointComponent.render(tripDayContainer));
   }
 };
-
 
 const getSortedEventByDay = (events) => {
   let result = {};
@@ -147,13 +151,12 @@ const renderDays = (events) => {
     const [day, eventList] = item;
     const dayTripPoints = new TravelDay(day).render();
 
-    console.log(`trip day created`);
-
     tripDayContainer.appendChild(dayTripPoints);
     renderTripPoints(eventList);
   });
 };
 
+// Get Trip Points, Destinations And Offers
 document.addEventListener(`DOMContentLoaded`, () => {
   Promise.all([provider.getTripPoints(), provider.getDestinations(), provider.getOffers()])
     .then(([responseTripPoints, responseDestinations, responseOffers]) => {
@@ -162,22 +165,21 @@ document.addEventListener(`DOMContentLoaded`, () => {
       eventsOffers = responseOffers;
       getTotalPrice(tripPoints);
       renderDays(tripPoints);
+    })
+    .catch(() => {
+      tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
     });
-  // .catch(() => {
-  //   tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
-  // });
 });
 
 createFilters(filtersNames, api);
 
+// Calculate Total Price In trip__total-cost
 const getTotalPrice = (events) => {
   let totalPrice = 0;
 
   for (let item of events) {
     totalPrice += +item[`price`];
   }
-
-  console.log(`price was changed`);
 
   totalPriceContainer.textContent = `€ ${totalPrice}`;
 };
