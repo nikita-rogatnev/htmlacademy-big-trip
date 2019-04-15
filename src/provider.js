@@ -53,6 +53,7 @@ export default class Provider {
   }
 
   updateTripPoint({id, data}) {
+    debugger;
     console.log(data);
 
     if (Provider._isOnline()) {
