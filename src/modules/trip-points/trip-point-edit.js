@@ -192,9 +192,6 @@ class TripPointEdit extends Component {
       this._onSubmit(newData);
     }
 
-    // TODO: remove
-    console.log(newData);
-
     this.update(newData);
   }
 
