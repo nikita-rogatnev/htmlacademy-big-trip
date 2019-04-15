@@ -40,18 +40,21 @@ export default class Provider {
   createTripPoint({point}) {
     if (Provider._isOnline()) {
       return this._api.createTripPoint({point})
-        .then((response) => {
-          this._store.setItem({key: response.id, item: response});
-          return response;
+        .then((data) => {
+          this._store.setItem({key: data.id, item: data.toRAW()});
+          return data;
         });
     }
     point.id = this._generateId();
     this._needSync = true;
+
     this._store.setItem({key: point.id, item: point});
     return Promise.resolve(ModelTripPoint.parseTripPoint(point));
   }
 
   updateTripPoint({id, data}) {
+    console.log(data);
+
     if (Provider._isOnline()) {
       return this._api.updateTripPoint({id, data})
         .then((point) => {

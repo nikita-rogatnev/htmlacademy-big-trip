@@ -42,7 +42,7 @@ const sortingList = [
 
 const tripPointMockData = {
   id: null,
-  type: {name: `taxi`, icon: `🚕`},
+  type: `sightseeing`,
   city: ``,
   destination: [],
   price: 0,
@@ -74,13 +74,6 @@ const renderTripPoints = (data, dist) => {
     let tripPointComponent = new TripPoint(tripPoint);
     let tripPointEditComponent = new TripPointEdit(tripPoint, tripOffers, tripDestinations);
 
-    // Enter Trip Point Edit Mode
-    tripPointComponent.onEdit = () => {
-      tripPointEditComponent.render(tripDayContainer);
-      dist.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
-      tripPointComponent.unrender();
-    };
-
     // Submit Edited Trip Point
     tripPointEditComponent.onSubmit = (newData) => {
       tripPoint.type = newData.type;
@@ -94,19 +87,20 @@ const renderTripPoints = (data, dist) => {
       tripPointEditComponent.lockSave();
 
       provider.updateTripPoint({id: tripPoint.id, data: tripPoint.toRAW()})
-        .then((response) => {
+        .then((newTripPoint) => {
+          tripPointEditComponent.element.style = `border: none`;
+          tripPointEditComponent.unlockSave();
+          
+          tripPointComponent.update(newTripPoint);
+          tripPointComponent.render(tripDayContainer);
 
-          if (response) {
-            tripPointComponent.update(response);
-            tripPointComponent.render();
-            dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
-            tripPointEditComponent.unlockSave();
-            tripPointEditComponent.unrender();
-          }
+          dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
+          tripPointEditComponent.unrender();
         });
       // .catch(() => {
-      //   tripPointEditComponent.error();
       //   tripPointEditComponent.element.style.border = `1px solid red`;
+      //   tripPointEditComponent.error();
+      //   tripPointEditComponent.unlockSave();
       // });
 
       getTotalPrice(tripPoints);
@@ -117,20 +111,31 @@ const renderTripPoints = (data, dist) => {
       tripPointEditComponent.lockDelete();
 
       provider.deleteTripPoint({id})
+        .then(() => {
+          tripPointEditComponent.element.style = `border: none`;
+          tripPointEditComponent.unlockDelete();
+        })
         .then(() => provider.getTripPoints())
         .then(renderTripDays)
         .then(() => {
-          tripPointEditComponent.unlockDelete();
           tripPointEditComponent.unrender();
         })
         .catch(() => {
-          tripPointEditComponent.error();
           tripPointEditComponent.element.style.border = `1px solid red`;
+          tripPointEditComponent.error();
+          tripPointEditComponent.unlockDelete();
         });
 
       tripPoints.splice(id, 1);
 
       getTotalPrice(tripPoints);
+    };
+
+    // Enter Trip Point Edit Mode
+    tripPointComponent.onEdit = () => {
+      tripPointEditComponent.render(tripDayContainer);
+      dist.replaceChild(tripPointEditComponent.element, tripPointComponent.element);
+      tripPointComponent.unrender();
     };
 
     // Exit Trip Point Edit Mode
@@ -194,20 +199,24 @@ newTripPointButton.addEventListener(`click`, () => {
 
   tripPointEditComponent.onSubmit = (newData) => {
     tripPointEditComponent.lockSave();
+
     provider.createTripPoint({point: convertNewTripPointData(newData)})
       .then((newPoint) => {
+        tripPointEditComponent.element.style = `border: none`;
         tripPointEditComponent.unlockSave();
+
         tripPoints.push(newPoint);
+      })
+      .then(() => {
+        newTripPointButton.disabled = false;
+
         renderTripDays(tripPoints);
         getTotalPrice(tripPoints);
       })
       .catch(() => {
-        tripPointEditComponent.error();
         tripPointEditComponent.element.style.border = `1px solid red`;
-      })
-      .then(() => {
-        tripPointEditComponent.element.style.border = ``;
-        newTripPointButton.disabled = false;
+        tripPointEditComponent.error();
+        tripPointEditComponent.unlockSave();
       });
   };
 
@@ -233,6 +242,8 @@ document.addEventListener(`DOMContentLoaded`, () => {
       tripPoints = responseTripPoints;
       tripDestinations = responseDestinations;
       tripOffers = responseOffers;
+    })
+    .then(() => {
       renderTripDays(tripPoints);
       getTotalPrice(tripPoints);
     })
