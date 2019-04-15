@@ -36,7 +36,7 @@ class TripPoint extends Component {
         offersArray.push(`<li><button class="trip-point__offer">${offer.title} +&euro;&nbsp;${offer.price}</button></li>`);
       }
     }
-    return `<ul class="trip-point__offers">${offersArray.join(``)}</ul>`;
+    return `<ul class="trip-point__offers">${offersArray.slice(0, 3).join(``)}</ul>`;
   }
 
   get template() {
