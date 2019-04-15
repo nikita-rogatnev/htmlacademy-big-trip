@@ -2,7 +2,7 @@ import Component from '../../helpers/component';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
-import {travelTypes} from '../../helpers/utils';
+import {TravelType} from '../../helpers/utils';
 
 // Trip Point Edit Class
 class TripPointEdit extends Component {
@@ -329,7 +329,7 @@ class TripPointEdit extends Component {
               choose day <input class="point__input" type="text" placeholder="MAR 18" name="day">
             </label>
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle-${this._id}">${travelTypes[this._type]}</label>
+              <label class="travel-way__label" for="travel-way__toggle-${this._id}">${TravelType[this._type.toUpperCase()]}</label>
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle-${this._id}">
               
               <div class="travel-way__select">

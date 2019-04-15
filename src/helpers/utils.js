@@ -15,15 +15,15 @@ export const getDurationTime = (timeFrom, timeTo) => {
 };
 
 // Travel types
-export const travelTypes = {
-  'taxi': `🚕`,
-  'bus': `🚌`,
-  'train': `🚂`,
-  'ship': `🛳️`,
-  'transport': `🚊`,
-  'drive': `🚗`,
-  'flight': `✈️`,
-  'check-in': `🏨`,
-  'sightseeing': `🏛️`,
-  'restaurant': `🍴`,
+export const TravelType = {
+  'TAXI': `🚕`,
+  'BUS': `🚌`,
+  'TRAIN': `🚂`,
+  'SHIP': `🛳️`,
+  'TRANSPORT': `🚊`,
+  'DRIVE': `🚗`,
+  'FLIGHT': `✈️`,
+  'CHECK-IN': `🏨`,
+  'SIGHTSEEING': `🏛️`,
+  'RESTAURANT': `🍴`,
 };
