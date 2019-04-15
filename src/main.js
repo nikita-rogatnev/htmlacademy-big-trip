@@ -64,15 +64,15 @@ const totalCostContainer = document.querySelector(`.trip__total`);
 tripDayContainer.innerHTML = `Loading route...`;
 
 let tripPoints = null;
-let eventsDestination = null;
-let eventsOffers = null;
+let tripDestinations = null;
+let tripOffers = null;
 
 const renderTripPoints = (data, dist) => {
   dist.innerHTML = ``;
 
   for (let tripPoint of data) {
     let tripPointComponent = new TripPoint(tripPoint);
-    let tripPointEditComponent = new TripPointEdit(tripPoint, eventsOffers, eventsDestination);
+    let tripPointEditComponent = new TripPointEdit(tripPoint, tripOffers, tripDestinations);
 
     // Enter Trip Point Edit Mode
     tripPointComponent.onEdit = () => {
@@ -95,6 +95,7 @@ const renderTripPoints = (data, dist) => {
 
       provider.updateTripPoint({id: tripPoint.id, data: tripPoint.toRAW()})
         .then((response) => {
+
           if (response) {
             tripPointComponent.update(response);
             tripPointComponent.render();
@@ -188,7 +189,7 @@ newTripPointButton.addEventListener(`click`, () => {
   };
 
   newTripPointButton.disabled = true;
-  let tripPointEditComponent = new TripPointEdit(tripPointMockData, eventsOffers, eventsDestination);
+  let tripPointEditComponent = new TripPointEdit(tripPointMockData, tripOffers, tripDestinations);
   tripDayContainer.insertBefore(tripPointEditComponent.render(), tripDayContainer.firstChild);
 
   tripPointEditComponent.onSubmit = (newData) => {
@@ -230,8 +231,8 @@ document.addEventListener(`DOMContentLoaded`, () => {
   Promise.all([provider.getTripPoints(), provider.getDestinations(), provider.getOffers()])
     .then(([responseTripPoints, responseDestinations, responseOffers]) => {
       tripPoints = responseTripPoints;
-      eventsDestination = responseDestinations;
-      eventsOffers = responseOffers;
+      tripDestinations = responseDestinations;
+      tripOffers = responseOffers;
       renderTripDays(tripPoints);
       getTotalPrice(tripPoints);
     })

@@ -3,7 +3,7 @@ import {travelTypes} from '../helpers/utils';
 class ModelTripPoint {
   constructor(data) {
     this.id = data.id;
-    this.type = this._getType(data.type);
+    this.type = data.type;
     this.destination = data[`destination`] ? data[`destination`].name : ``;
     this.description = data[`destination`] ? data[`destination`].description : ``;
     this.pictures = data[`destination`] ? data[`destination`].pictures : [];
@@ -12,10 +12,6 @@ class ModelTripPoint {
     this.dateEnd = data[`date_to`] || Date.now();
     this.isFavorite = data[`is_favorite`] || false;
     this.offers = data.offers;
-  }
-
-  _getType(dataType) {
-    return travelTypes.find((type) => type.name.toLocaleLowerCase() === dataType);
   }
 
   toRAW() {

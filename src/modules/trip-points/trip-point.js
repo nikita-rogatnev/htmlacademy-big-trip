@@ -1,12 +1,11 @@
 import Component from '../../helpers/component';
-import {getDurationTime} from '../../helpers/utils';
+import {getDurationTime, travelTypes} from '../../helpers/utils';
 import * as moment from 'moment/moment';
 
 // Trip Point Class
 class TripPoint extends Component {
   constructor(data) {
     super();
-    this._isFavorite = data.isFavorite;
     this._type = data.type;
     this._destination = data.destination;
     this._dateStart = data.dateStart;
@@ -43,7 +42,7 @@ class TripPoint extends Component {
   get template() {
     return `
       <article class="trip-point">
-        <i class="trip-icon">${this._type.icon}</i>
+        <i class="trip-icon">${travelTypes[this._type]}</i>
         <h3 class="trip-point__title">${this._destination}</h3>
         <p class="trip-point__schedule">
           <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
