@@ -6,6 +6,7 @@ import * as moment from 'moment/moment';
 class TripPoint extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._type = data.type;
     this._city = data.city;
     this._dateStart = data.dateStart;
@@ -41,7 +42,7 @@ class TripPoint extends Component {
 
   get template() {
     return `
-      <article class="trip-point">
+      <article class="trip-point" id="${this._id}">
         <i class="trip-icon">${TravelType[this._type.toUpperCase()]}</i>
         <h3 class="trip-point__title">${this._city}</h3>
         <p class="trip-point__schedule">

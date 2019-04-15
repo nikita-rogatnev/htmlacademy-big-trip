@@ -90,7 +90,6 @@ const renderTripPoints = (data, dist) => {
 
       provider.updateTripPoint({id: tripPoint.id, data: tripPoint.toRAW()})
         .then((newTripPoint) => {
-          tripPointEditComponent.element.style = `border: none`;
           tripPointEditComponent.unlockSave();
 
           tripPointComponent.update(newTripPoint);
@@ -114,7 +113,6 @@ const renderTripPoints = (data, dist) => {
 
       provider.deleteTripPoint({id})
         .then(() => {
-          tripPointEditComponent.element.style = `border: none`;
           tripPointEditComponent.unlockDelete();
         })
         .then(() => provider.getTripPoints())
@@ -204,8 +202,8 @@ newTripPointButton.addEventListener(`click`, () => {
 
     provider.createTripPoint({tripPoint})
       .then(() => {
-        newTripPointEditComponent.element.style = `border: none`;
         newTripPointEditComponent.unlockSave();
+        tripPoints.push(tripPoint);
       })
       .then(() => provider.getTripPoints())
       .then(() => {

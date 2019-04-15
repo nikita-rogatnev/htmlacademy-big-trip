@@ -24,11 +24,7 @@ const getTotalDuration = (data) => {
       return duration.days() * 24 + duration.hours() + (duration.minutes() > 30 ? 1 : 0);
     };
 
-    if (!result[typeName]) {
-      result[typeName] = getDuration([item.dateStart, item.dateEnd]);
-    } else {
-      result[typeName] += getDuration([item.dateStart, item.dateEnd]);
-    }
+    result[typeName] = (!result[typeName]) ? getDuration([item.dateStart, item.dateEnd]) : +getDuration([item.dateStart, item.dateEnd]);
   });
 
   return {
