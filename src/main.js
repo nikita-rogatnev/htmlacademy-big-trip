@@ -200,6 +200,8 @@ newTripPointButton.addEventListener(`click`, () => {
     tripPoint.offers = newData.offers;
     tripPoint.isFavorite = newData.isFavorite;
 
+    console.log(tripPoint);
+    
     newTripPointEditComponent.lockSave();
 
     provider.createTripPoint({tripPoint: tripPoint.toRAW()})
