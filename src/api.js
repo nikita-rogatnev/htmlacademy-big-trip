@@ -58,7 +58,7 @@ class API {
       headers: new Headers({'Content-Type': `application/json`}),
     })
       .then(toJSON)
-      .then(ModelTripPoint.parseTripPoints);
+      .then(ModelTripPoint.parseTripPoint);
   }
 
   updateTripPoint({id, data}) {
@@ -69,7 +69,7 @@ class API {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then(toJSON)
-      .then(ModelTripPoint.parseTripPoints);
+      .then(ModelTripPoint.parseTripPoint);
   }
 
   deleteTripPoint({id}) {
