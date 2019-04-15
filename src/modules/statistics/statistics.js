@@ -1,37 +1,115 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from 'moment';
 
-const createStatistics = () => {
-  const transportChartOptions = {
+const transportChartCtx = document.querySelector(`.statistic__transport`);
+const moneyChartCtx = document.querySelector(`.statistic__money`);
+const timeChartCtx = document.querySelector(`.statistic__time-spend`);
+const BAR_HEIGHT = 55;
+
+let moneyChart = null;
+let transportChart = null;
+let timeChart = null;
+
+// TIME SPENT Chart
+const getTotalDuration = (data) => {
+  let result = {};
+
+  data.forEach((item) => {
+    let typeName = `${item.type.icon} ${item.type.name}`;
+
+    const getDuration = (durationRange) => {
+      const duration = moment.duration(moment(durationRange[1]).diff(moment(durationRange[0])));
+      return duration.days() * 24 + duration.hours() + (duration.minutes() > 30 ? 1 : 0);
+    };
+
+    if (!result[typeName]) {
+      result[typeName] = getDuration([item.dateStart, item.dateEnd]);
+    } else {
+      result[typeName] += getDuration([item.dateStart, item.dateEnd]);
+    }
+  });
+
+  return {
+    labels: Object.keys(result),
+    values: Object.values(result),
+    title: `TIME SPENT`,
+    formatter: (val) => `${val}H`,
+  };
+};
+
+// MONEY Chart
+const getPrice = (data) => {
+  let result = {};
+
+  data.forEach((item) => {
+    let typeName = `${item.type.icon} ${item.type.name}`;
+    if (!result[typeName]) {
+      result[typeName] = 0;
+    }
+    result[typeName] += +item.price;
+  });
+
+  return {
+    labels: Object.keys(result),
+    values: Object.values(result),
+    title: `MONEY`,
+    formatter: (val) => `€ ${val}`,
+  };
+};
+
+// TRANSPORT Chart
+const getType = (data) => {
+  let result = {};
+
+  data.forEach((item) => {
+    let typeName = `${item.type.icon} ${item.type.name}`;
+    if (result[typeName]) {
+      result[typeName]++;
+    } else {
+      result[typeName] = 1;
+    }
+  });
+
+  return {
+    labels: Object.keys(result),
+    values: Object.values(result),
+    title: `TRANSPORT`,
+    formatter: (val) => `${val}x`,
+  };
+};
+
+const renderChart = (canvasElement, chartData) => {
+  const chart = new Chart(canvasElement, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`🚗 DRIVE`, `🚕 RIDE`, `✈️ FLY`, `🛳️ SAIL`],
+      labels: chartData.labels,
       datasets: [{
-        data: [4, 3, 2, 1],
+        data: chartData.values,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
-      }]
+        anchor: `start`,
+      }],
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: 13,
           },
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${val}x`
-        }
+          formatter: chartData.formatter,
+        },
       },
       title: {
         display: true,
-        text: `TRANSPORT`,
+        text: chartData.title,
         fontColor: `#000000`,
         fontSize: 23,
-        position: `left`
+        position: `left`,
       },
       scales: {
         yAxes: [{
@@ -42,7 +120,7 @@ const createStatistics = () => {
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
           barThickness: 44,
         }],
@@ -53,163 +131,39 @@ const createStatistics = () => {
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
-          minBarLength: 50
+          minBarLength: 50,
         }],
       },
       legend: {
-        display: false
+        display: false,
       },
       tooltips: {
         enabled: false,
-      }
-    }
-  };
-  const transportChartCtx = document.querySelector(`.statistic__transport`);
-  transportChartCtx.height = 220;
-
-  const moneyChartOptions = {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels: [`✈️ FLY`, `🏨 STAY`, `🚗 DRIVE`, `🏛️ LOOK`, `🏨 EAT`, `🚕 RIDE`],
-      datasets: [{
-        data: [400, 300, 200, 160, 150, 100],
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
-      }]
+      },
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13
-          },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `€ ${val}`
-        }
-      },
-      title: {
-        display: true,
-        text: `MONEY`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          barThickness: 44,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          minBarLength: 50
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      }
-    }
-  };
-  const moneyChartCtx = document.querySelector(`.statistic__money`);
-  moneyChartCtx.height = 330;
+  });
 
-  const renderChart = (ctx, options) => {
-    return new Chart(ctx, options);
-  };
+  chart.height = BAR_HEIGHT * chartData.values.length;
+  return chart;
+};
 
-  const timeChartOptions = {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels: [`🛳️ HOTEL`, `🚕 TO AIRPORT`, `🚗 TO GENEVA`, `🚕 TO CHAMONIX`],
-      datasets: [{
-        data: [72, 1, 3, 2],
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
-      }]
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13
-          },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `${val}H`
-        }
-      },
-      title: {
-        display: true,
-        text: `TIME SPENT`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          barThickness: 44
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          minBarLength: 50
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      }
-    }
-  };
-  const timeChartCtx = document.querySelector(`.statistic__time-spend`);
-  timeChartCtx.height = 220;
+const updateChart = (chart, data) => {
+  chart.data.labels = data.labels.map((item) => item.toUpperCase());
+  chart.data.datasets[0].data = data.values;
+  chart.height = BAR_HEIGHT * data.values.length;
+  chart.update();
+};
 
-  renderChart(transportChartCtx, transportChartOptions);
-  renderChart(moneyChartCtx, moneyChartOptions);
-  renderChart(timeChartCtx, timeChartOptions);
+export const createStatistics = (data) => {
+  moneyChart = renderChart(moneyChartCtx, getPrice(data));
+  transportChart = renderChart(transportChartCtx, getType(data));
+  timeChart = renderChart(timeChartCtx, getTotalDuration(data));
+
+  updateChart(moneyChart, getPrice(data));
+  updateChart(transportChart, getType(data));
+  updateChart(timeChart, getTotalDuration(data));
 };
 
 export default createStatistics;

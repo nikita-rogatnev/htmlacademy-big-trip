@@ -281,6 +281,14 @@ class TripPointEdit extends Component {
     this._buttonSave = this._element.querySelector(`.point__button--save`);
     this._buttonDelete = this._element.querySelector(`.point__button--delete`);
 
+    // Date Field For New Trip Point
+    this._element.querySelector(`.point__date .point__input`).flatpickr({
+      'altInput': true,
+      'altFormat': `M d`,
+      'dateFormat': `U`,
+      'defaultDate': this._dateStart,
+    });
+
     // Time Range
     this._element.querySelector(`.point__time .point__input[name="date-start"]`).flatpickr({
       'time_24hr': true,

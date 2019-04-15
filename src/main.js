@@ -99,16 +99,14 @@ const renderTripPoints = (data, dist) => {
             tripPointComponent.update(response);
             tripPointComponent.render();
             dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
+            tripPointEditComponent.unlockSave();
+            tripPointEditComponent.unrender();
           }
-        })
-        .catch(() => {
-          tripPointEditComponent.error();
-          tripPointEditComponent.element.style.border = `1px solid red`;
-        })
-        .then(() => {
-          tripPointEditComponent.unlockSave();
-          tripPointEditComponent.unrender();
         });
+      // .catch(() => {
+      //   tripPointEditComponent.error();
+      //   tripPointEditComponent.element.style.border = `1px solid red`;
+      // });
 
       getTotalPrice(tripPoints);
     };
@@ -127,10 +125,6 @@ const renderTripPoints = (data, dist) => {
         .catch(() => {
           tripPointEditComponent.error();
           tripPointEditComponent.element.style.border = `1px solid red`;
-        })
-        .then(() => {
-          tripPointEditComponent.unlockDelete();
-          tripPointEditComponent.unrender();
         });
 
       tripPoints.splice(id, 1);
@@ -322,7 +316,7 @@ switchContainer.addEventListener(`click`, (evt) => {
   if (evt.target.textContent === `Stats`) {
     mainContainer.classList.add(`visually-hidden`);
     statisticsContainer.classList.remove(`visually-hidden`);
-    createStatistics();
+    createStatistics(tripPoints);
   } else {
     mainContainer.classList.remove(`visually-hidden`);
     statisticsContainer.classList.add(`visually-hidden`);
