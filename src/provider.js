@@ -38,6 +38,8 @@ export default class Provider {
   }
 
   createTripPoint({tripPoint}) {
+    console.log(tripPoint);
+
     if (Provider._isOnline()) {
       return this._api.createTripPoint({tripPoint})
         .then((response) => {

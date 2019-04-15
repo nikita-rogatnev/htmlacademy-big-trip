@@ -2,6 +2,8 @@ import API from './api';
 import Provider from "./provider";
 import Store from "./store";
 
+import ModelTripPoint from "./models/model-trip-point";
+
 import TripPoint from './modules/trip-points/trip-point';
 import TripPointEdit from './modules/trip-points/trip-point-edit';
 import TravelDay from './modules/travel-day/travel-day';
@@ -185,28 +187,34 @@ newTripPointButton.addEventListener(`click`, () => {
   const newTripPointEditComponent = new TripPointEdit(tripPointMockData, tripOffers, tripDestinations);
   tripDayContainer.insertBefore(newTripPointEditComponent.render(), tripDayContainer.firstChild);
 
+  let tripPoint = ModelTripPoint.parseTripPoint(tripPointMockData, tripOffers, tripDestinations);
+
   newTripPointEditComponent.onSubmit = (newData) => {
-    const newTripPointComponent = new TripPoint(newData);
+    tripPoint.type = newData.type;
+    tripPoint.price = newData.price;
+    tripPoint.city = newData.city;
+    tripPoint.description = newData.description;
+    tripPoint.pictures = newData.pictures;
+    tripPoint.dateStart = newData.dateStart;
+    tripPoint.dateEnd = newData.dateEnd;
+    tripPoint.offers = newData.offers;
+    tripPoint.isFavorite = newData.isFavorite;
 
     newTripPointEditComponent.lockSave();
 
-    console.log(newData);
-
-    provider.createTripPoint({tripPoint: newData.toRAW()})
-      .then((newTripPoint) => {
+    provider.createTripPoint({tripPoint: tripPoint.toRAW()})
+      .then(() => {
         newTripPointEditComponent.element.style = `border: none`;
         newTripPointEditComponent.unlockSave();
-
-        newTripPointComponent.update(newTripPoint);
-        newTripPointComponent.render(tripDayContainer);
-
-        tripDayContainer.replaceChild(newTripPointComponent.element, newTripPointEditComponent.element);
-        newTripPointEditComponent.unrender();
-
-        newTripPointButton.disabled = false;
+      })
+      .then(() => provider.getTripPoints())
+      .then(() => {
         renderTripDays(tripPoints);
+        newTripPointButton.disabled = false;
+        newTripPointEditComponent.unrender();
         setTotalPrice(tripPoints);
       });
+
     // .catch(() => {
     //   newTripPointEditComponent.element.style.border = `1px solid red`;
     //   newTripPointEditComponent.error();

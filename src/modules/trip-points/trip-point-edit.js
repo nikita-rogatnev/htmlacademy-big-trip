@@ -142,6 +142,8 @@ class TripPointEdit extends Component {
       dateEnd: ``,
       price: 0,
       offers: this._offers,
+      pictures: this._pictures,
+      description: this._description
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
