@@ -1,6 +1,7 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
+import {travelTypes} from "../../helpers/utils";
 
 const transportChartCtx = document.querySelector(`.statistic__transport`);
 const moneyChartCtx = document.querySelector(`.statistic__money`);
@@ -16,7 +17,7 @@ const getTotalDuration = (data) => {
   let result = {};
 
   data.forEach((item) => {
-    let typeName = `${item.type.icon} ${item.type.name}`;
+    let typeName = `${travelTypes[item.type]} ${item.type}`;
 
     const getDuration = (durationRange) => {
       const duration = moment.duration(moment(durationRange[1]).diff(moment(durationRange[0])));
@@ -43,7 +44,7 @@ const getPrice = (data) => {
   let result = {};
 
   data.forEach((item) => {
-    let typeName = `${item.type.icon} ${item.type.name}`;
+    let typeName = `${travelTypes[item.type]} ${item.type}`;
     if (!result[typeName]) {
       result[typeName] = 0;
     }
@@ -63,7 +64,7 @@ const getType = (data) => {
   let result = {};
 
   data.forEach((item) => {
-    let typeName = `${item.type.icon} ${item.type.name}`;
+    let typeName = `${travelTypes[item.type]} ${item.type}`;
     if (result[typeName]) {
       result[typeName]++;
     } else {

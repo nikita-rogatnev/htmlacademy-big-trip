@@ -216,12 +216,12 @@ newTripPointButton.addEventListener(`click`, () => {
 
         renderTripDays(tripPoints);
         getTotalPrice(tripPoints);
+      })
+      .catch(() => {
+        tripPointEditComponent.element.style.border = `1px solid red`;
+        tripPointEditComponent.error();
+        tripPointEditComponent.unlockSave();
       });
-      // .catch(() => {
-      //   tripPointEditComponent.element.style.border = `1px solid red`;
-      //   tripPointEditComponent.error();
-      //   tripPointEditComponent.unlockSave();
-      // });
   };
 
   tripPointEditComponent.onDelete = () => {
