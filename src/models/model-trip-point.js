@@ -1,5 +1,3 @@
-import {travelTypes} from '../helpers/utils';
-
 class ModelTripPoint {
   constructor(data) {
     this.id = data.id;
