@@ -71,8 +71,8 @@ const renderTripPoints = (data, dist) => {
   dist.innerHTML = ``;
 
   for (let tripPoint of data) {
-    let tripPointComponent = new TripPoint(tripPoint);
-    let tripPointEditComponent = new TripPointEdit(tripPoint, tripOffers, tripDestinations);
+    const tripPointComponent = new TripPoint(tripPoint);
+    const tripPointEditComponent = new TripPointEdit(tripPoint, tripOffers, tripDestinations);
 
     // Submit Edited Trip Point
     tripPointEditComponent.onSubmit = (newData) => {
@@ -198,7 +198,7 @@ newTripPointButton.addEventListener(`click`, () => {
   };
 
   newTripPointButton.disabled = true;
-  let tripPointEditComponent = new TripPointEdit(tripPointMockData, tripOffers, tripDestinations);
+  const tripPointEditComponent = new TripPointEdit(tripPointMockData, tripOffers, tripDestinations);
   tripDayContainer.insertBefore(tripPointEditComponent.render(), tripDayContainer.firstChild);
 
   tripPointEditComponent.onSubmit = (newData) => {
