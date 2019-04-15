@@ -78,7 +78,7 @@ const renderTripPoints = (data, dist) => {
     tripPointEditComponent.onSubmit = (newData) => {
       tripPoint.type = newData.type;
       tripPoint.price = newData.price;
-      tripPoint.destination = newData.destination;
+      tripPoint.city = newData.city;
       tripPoint.dateStart = newData.dateStart;
       tripPoint.dateEnd = newData.dateEnd;
       tripPoint.offers = newData.offers;
@@ -90,18 +90,18 @@ const renderTripPoints = (data, dist) => {
         .then((newTripPoint) => {
           tripPointEditComponent.element.style = `border: none`;
           tripPointEditComponent.unlockSave();
-          
+
           tripPointComponent.update(newTripPoint);
           tripPointComponent.render(tripDayContainer);
 
           dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           tripPointEditComponent.unrender();
+        })
+        .catch(() => {
+          tripPointEditComponent.element.style.border = `1px solid red`;
+          tripPointEditComponent.error();
+          tripPointEditComponent.unlockSave();
         });
-      // .catch(() => {
-      //   tripPointEditComponent.element.style.border = `1px solid red`;
-      //   tripPointEditComponent.error();
-      //   tripPointEditComponent.unlockSave();
-      // });
 
       getTotalPrice(tripPoints);
     };
@@ -185,7 +185,11 @@ newTripPointButton.addEventListener(`click`, () => {
     return {
       'type': data.type,
       'base_price': data.price,
-      'destination': data.destination,
+      'destination': {
+        'name': data.city,
+        'description': data.description,
+        'pictures': data.pictures,
+      },
       'date_from': data.dateStart,
       'date_to': data.dateEnd,
       'offers': data.offers,

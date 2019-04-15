@@ -2,9 +2,9 @@ class ModelTripPoint {
   constructor(data) {
     this.id = data.id;
     this.type = data.type;
-    this.destination = data[`destination`] ? data[`destination`].name : ``;
-    this.description = data[`destination`] ? data[`destination`].description : ``;
-    this.pictures = data[`destination`] ? data[`destination`].pictures : [];
+    this.city = data[`destination`][`name`] || ``;
+    this.description = data[`destination`][`description`] || ``;
+    this.pictures = data[`destination`][`pictures`] || [];
     this.price = data[`base_price`] || 0;
     this.dateStart = data[`date_from`] || Date.now();
     this.dateEnd = data[`date_to`] || Date.now();
@@ -20,7 +20,11 @@ class ModelTripPoint {
       'base_price': this.price,
       'date_from': this.dateStart,
       'date_to': this.dateEnd,
-      'destination': this.destination,
+      'destination': {
+        'name': this.city,
+        'description': this.description,
+        'pictures': this.pictures,
+      },
       'offers': this.offers,
     };
   }

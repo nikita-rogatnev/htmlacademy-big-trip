@@ -11,8 +11,9 @@ class TripPointEdit extends Component {
     this._id = data.id;
     this._isFavorite = data.isFavorite;
     this._type = data.type;
-    this._destination = data.destination;
+    this._city = data.city;
     this._description = data.description;
+    this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
@@ -99,9 +100,9 @@ class TripPointEdit extends Component {
 
     for (let destination of this._destinations) {
       if (destination.name === value) {
-        this._destination.name = destination.name;
-        this._destination.description = destination.description;
-        this._destination.pictures = destination.pictures;
+        this._city = destination.name;
+        this._description = destination.description;
+        this._pictures = destination.pictures;
       }
     }
 
@@ -124,7 +125,7 @@ class TripPointEdit extends Component {
   update(data) {
     this._isFavorite = data.isFavorite;
     this._type = data.type;
-    this._destination = data.destination;
+    this._city = data.city;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
@@ -136,7 +137,7 @@ class TripPointEdit extends Component {
       id: this._id,
       isFavorite: false,
       type: ``,
-      destination: ``,
+      city: ``,
       dateStart: ``,
       dateEnd: ``,
       price: 0,
@@ -164,7 +165,7 @@ class TripPointEdit extends Component {
         target.type = value;
       },
       'destination': (value) => {
-        target.destination = value;
+        target.city = value;
       },
       'date-start': (value) => {
         target.dateStart = value * 1000;
@@ -190,6 +191,9 @@ class TripPointEdit extends Component {
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
+
+    // TODO: remove
+    console.log(newData);
 
     this.update(newData);
   }
@@ -353,7 +357,7 @@ class TripPointEdit extends Component {
             
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">${this._type} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination}" name="destination">
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._city}" name="destination">
               ${this._createDestinations()}
             </div>
             

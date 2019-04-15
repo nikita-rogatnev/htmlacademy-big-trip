@@ -7,7 +7,7 @@ class TripPoint extends Component {
   constructor(data) {
     super();
     this._type = data.type;
-    this._destination = data.destination;
+    this._city = data.city;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
@@ -43,7 +43,7 @@ class TripPoint extends Component {
     return `
       <article class="trip-point">
         <i class="trip-icon">${travelTypes[this._type]}</i>
-        <h3 class="trip-point__title">${this._destination}</h3>
+        <h3 class="trip-point__title">${this._city}</h3>
         <p class="trip-point__schedule">
           <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
           <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
@@ -66,9 +66,8 @@ class TripPoint extends Component {
   }
 
   update(data) {
-    this._isFavorite = data.isFavorite;
     this._type = data.type;
-    this._destination = data.destination;
+    this._city = data.city;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
