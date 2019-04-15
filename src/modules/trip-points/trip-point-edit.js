@@ -46,11 +46,7 @@ class TripPointEdit extends Component {
       this._type = evt.target.value;
       this._price = 0;
 
-      console.log(this._offersList);
-
       for (let item of this._offersList) {
-        console.log(this._type);
-
         if (item.type === this._type) {
           this._offers = item.offers.map((offer) => {
             return {
@@ -66,8 +62,8 @@ class TripPointEdit extends Component {
 
   _onChangeOffers(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
-      const offerTitle = evt.target.value.split(`--`)[0];
-      const offerPrice = +evt.target.value.split(`--`)[1];
+      const offerTitle = evt.target.value.split(`-`)[0];
+      const offerPrice = +evt.target.value.split(`-`)[1];
 
       if (evt.target.checked) {
         for (let offer of this._offers) {
@@ -196,6 +192,8 @@ class TripPointEdit extends Component {
     }
 
     // TODO: remove
+    console.log(newData);
+
     this.update(newData);
   }
 
