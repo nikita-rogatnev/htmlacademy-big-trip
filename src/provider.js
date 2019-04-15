@@ -39,9 +39,7 @@ export default class Provider {
 
   createTripPoint({tripPoint}) {
     if (Provider._isOnline()) {
-      console.log({tripPoint});
-
-      return this._api.createTripPoint({tripPoint})
+      return this._api.createTripPoint({point: tripPoint.toRAW()})
         .then((response) => {
           this._store.setItem({key: response.id, item: response.toRAW()});
 

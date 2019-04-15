@@ -202,7 +202,7 @@ newTripPointButton.addEventListener(`click`, () => {
 
     newTripPointEditComponent.lockSave();
 
-    provider.createTripPoint({tripPoint: tripPoint.toRAW()})
+    provider.createTripPoint({tripPoint})
       .then(() => {
         newTripPointEditComponent.element.style = `border: none`;
         newTripPointEditComponent.unlockSave();
