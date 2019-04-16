@@ -66,6 +66,8 @@ const totalCostContainer = document.querySelector(`.trip__total`);
 tripDayContainer.innerHTML = `Loading route...`;
 
 let tripPoints = null;
+let tripPointsSorted = null;
+let isTripPointsSorted = false;
 let tripDestinations = null;
 let tripOffers = null;
 
@@ -179,6 +181,79 @@ const renderTripDays = (days) => {
   });
 };
 
+// Render Filters: EVERYTHING / FUTURE / PAST
+const renderFilters = (filters, container, type) => {
+  for (let item of filters) {
+    const filter = new Filter(item, type);
+
+    filter.onFilter = () => {
+      isTripPointsSorted = true;
+      sortingContainer.querySelector(`input[name=trip-sorting]:first-child`).checked = true;
+      tripDayContainer.innerHTML = ``;
+      let newTripPointData = filterTripPoint(tripPoints, filter.element.id);
+      renderTripDays(newTripPointData);
+    };
+
+    filter.render();
+    container.appendChild(filter.element);
+  }
+};
+
+const filterTripPoint = (items, filterName) => {
+  let filteredTripPoints = null;
+
+  switch (filterName) {
+    case `future`:
+      filteredTripPoints = items.filter((item) => new Date() < new Date(item.dateStart));
+      break;
+    case `past`:
+      filteredTripPoints = items.filter((item) => new Date() > new Date(item.dateStart));
+      break;
+    default:
+      isTripPointsSorted = false;
+      filteredTripPoints = items.sort((a, b) => a.id - b.id);
+  }
+
+  tripPointsSorted = filteredTripPoints;
+  return filteredTripPoints;
+};
+
+// Render Sorters: EVENT / TIME / PRICE / OFFERS
+const renderSorters = (filters, container, type) => {
+  for (let item of filters) {
+    const filter = new Filter(item, type);
+
+    filter.onFilter = () => {
+      tripDayContainer.innerHTML = ``;
+      let newTripPointData = (isTripPointsSorted) ? sortTripPoint(tripPointsSorted, filter.element.id) : sortTripPoint(tripPoints, filter.element.id);
+      renderTripDays(newTripPointData);
+    };
+
+    filter.render();
+    container.appendChild(filter.element);
+  }
+};
+
+const sortTripPoint = (items, filterName) => {
+  let sortedTripPoints = null;
+
+  switch (filterName) {
+    case `price`:
+      sortedTripPoints = items.sort((a, b) => b.price - a.price);
+      break;
+    case `time`:
+      sortedTripPoints = items.sort((a, b) => b.dateStart - a.dateStart);
+      break;
+    default:
+      sortedTripPoints = items.sort((a, b) => a.id - b.id);
+  }
+
+  return sortedTripPoints;
+};
+
+renderFilters(filtersList, filtersContainer, `filters`);
+renderSorters(sortingList, sortingContainer, `sorting`);
+
 // Create New Trip Point
 newTripPointButton.addEventListener(`click`, () => {
   newTripPointButton.disabled = true;
@@ -250,52 +325,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
       tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
     });
 });
-
-// Render Filters
-const renderFilters = (filters, container, type) => {
-  for (let item of filters) {
-    const filter = new Filter(item, type);
-
-    filter.onFilter = () => {
-      tripDayContainer.innerHTML = ``;
-      let newTripPointData = filterTripPoint(tripPoints, filter.element.id);
-      renderTripDays(newTripPointData);
-    };
-
-    filter.render();
-    container.appendChild(filter.element);
-  }
-};
-
-const filterTripPoint = (items, filterName) => {
-  let filteredTripPoints = null;
-
-  switch (filterName) {
-    case `everything`:
-    case `offers`:
-      filteredTripPoints = items;
-      break;
-    case `future`:
-      filteredTripPoints = items.filter((item) => new Date() < new Date(item.dateStart));
-      break;
-    case `past`:
-      filteredTripPoints = items.filter((item) => new Date() > new Date(item.dateStart));
-      break;
-    case `price`:
-      filteredTripPoints = items.sort((a, b) => b.price - a.price);
-      break;
-    case `time`:
-      filteredTripPoints = items.sort((a, b) => b.dateStart - a.dateStart);
-      break;
-    default:
-      filteredTripPoints = items.sort((a, b) => a.id - b.id);
-  }
-
-  return filteredTripPoints;
-};
-
-renderFilters(filtersList, filtersContainer, `filters`);
-renderFilters(sortingList, sortingContainer, `sorting`);
 
 // Calculate Total Price In trip__total
 const totalCostComponent = new TotalCost();
