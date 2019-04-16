@@ -211,12 +211,12 @@ newTripPointButton.addEventListener(`click`, () => {
         newTripPointButton.disabled = false;
         newTripPointEditComponent.unrender();
         setTotalPrice(tripPoints);
-      })
-      .catch(() => {
-        newTripPointEditComponent.element.style.border = `1px solid red`;
-        newTripPointEditComponent.error();
-        newTripPointEditComponent.unlockSave();
       });
+    // .catch(() => {
+    //   newTripPointEditComponent.element.style.border = `1px solid red`;
+    //   newTripPointEditComponent.error();
+    //   newTripPointEditComponent.unlockSave();
+    // });
   };
 
   newTripPointEditComponent.onDelete = () => {

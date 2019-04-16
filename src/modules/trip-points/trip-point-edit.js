@@ -255,11 +255,31 @@ class TripPointEdit extends Component {
       'altFormat': `M d`,
       'dateFormat': `U`,
       'defaultDate': this._dateStart,
-      'onChange': function (selectedDates) {
-        console.log(moment(selectedDates).get(`year`));
+      'onChange': function (data, string) {
+        const selectedDate = moment.unix(Number(string));
 
-        dateStartInput.value = moment.unix(dateStartInput.value).set(`year`, 2013).utc();
-        dateEndInput.value = moment.unix(dateEndInput.value).set(`year`, 2013).utc();
+        const newYear = parseInt(moment(selectedDate).format(`YYYY`), 10);
+        const newMonth = parseInt(moment(selectedDate).format(`MM`), 10);
+        const newDay = parseInt(moment(selectedDate).format(`DD`), 10);
+
+        console.log(newYear, newMonth, newDay);
+
+        const newDateStartInput = moment.unix(dateStartInput.value)
+          .set(`year`, newYear)
+          .set(`month`, newMonth - 1)
+          .set(`day`, newDay)
+          .format(`X`);
+
+        const newDateEndInput = moment.unix(dateEndInput.value)
+          .set(`year`, newYear)
+          .set(`month`, newMonth - 1)
+          .set(`day`, newDay)
+          .format(`X`);
+
+        dateStartInput.value = newDateStartInput;
+        dateEndInput.value = newDateEndInput;
+
+        console.log(moment.unix(dateStartInput.value).format(`YYYY-MM-DD HH:mm`));
       }
     });
 
@@ -272,9 +292,6 @@ class TripPointEdit extends Component {
       'altFormat': `H:i`,
       'dateFormat': `U`,
       'defaultDate': this._dateStart,
-      'onChange': function (selectedDates) {
-        console.log(selectedDates);
-      }
     });
 
     this._element.querySelector(`.point__time .point__input[name="date-end"]`).flatpickr({
@@ -285,9 +302,6 @@ class TripPointEdit extends Component {
       'altFormat': `H:i`,
       'dateFormat': `U`,
       'defaultDate': this._dateEnd,
-      'onChange': function (selectedDates) {
-        console.log(selectedDates);
-      }
     });
   }
 
@@ -381,8 +395,8 @@ class TripPointEdit extends Component {
             
             <div class="point__time">
               choose time
-              <input class="point__input" type="text" name="date-start" placeholder="19:00">
-              <input class="point__input" type="text" name="date-end" placeholder="21:00">
+              <input class="point__input" type="text" name="date-start" placeholder="19:00" data-time="${this._dateStart}">
+              <input class="point__input" type="text" name="date-end" placeholder="21:00" data-time="${this._dateEnd}">
             </div>
 
             <label class="point__price">
