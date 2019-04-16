@@ -262,8 +262,6 @@ class TripPointEdit extends Component {
         const newMonth = parseInt(moment(selectedDate).format(`MM`), 10);
         const newDay = parseInt(moment(selectedDate).format(`DD`), 10);
 
-        console.log(newYear, newMonth, newDay);
-
         const newDateStartInput = moment.unix(dateStartInput.value)
           .set(`year`, newYear)
           .set(`month`, newMonth - 1)
@@ -278,8 +276,6 @@ class TripPointEdit extends Component {
 
         dateStartInput.value = newDateStartInput;
         dateEndInput.value = newDateEndInput;
-
-        console.log(moment.unix(dateStartInput.value).format(`YYYY-MM-DD HH:mm`));
       }
     });
 
