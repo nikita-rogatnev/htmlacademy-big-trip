@@ -48,6 +48,7 @@ const tripPointMockData = {
   city: ``,
   destination: [],
   price: 0,
+  fullPrice: 0,
   dateStart: Date.now(),
   dateEnd: Date.now(),
   pictures: [],
@@ -82,6 +83,7 @@ const renderTripPoints = (data, dist) => {
     tripPointEditComponent.onSubmit = (newData) => {
       tripPoint.type = newData.type;
       tripPoint.price = newData.price;
+      tripPoint.fullPrice = newData.fullPrice;
       tripPoint.city = newData.city;
       tripPoint.dateStart = newData.dateStart;
       tripPoint.dateEnd = newData.dateEnd;
@@ -99,12 +101,12 @@ const renderTripPoints = (data, dist) => {
 
           dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           tripPointEditComponent.unrender();
-        })
-        .catch(() => {
-          tripPointEditComponent.element.style.border = `1px solid red`;
-          tripPointEditComponent.error();
-          tripPointEditComponent.unlockSave();
         });
+      // .catch(() => {
+      //   tripPointEditComponent.element.style.border = `1px solid red`;
+      //   tripPointEditComponent.error();
+      //   tripPointEditComponent.unlockSave();
+      // });
 
       setTotalPrice(tripPoints);
     };
@@ -121,12 +123,12 @@ const renderTripPoints = (data, dist) => {
         .then(renderTripDays)
         .then(() => {
           tripPointEditComponent.unrender();
-        })
-        .catch(() => {
-          tripPointEditComponent.element.style.border = `1px solid red`;
-          tripPointEditComponent.error();
-          tripPointEditComponent.unlockDelete();
         });
+      // .catch(() => {
+      //   tripPointEditComponent.element.style.border = `1px solid red`;
+      //   tripPointEditComponent.error();
+      //   tripPointEditComponent.unlockDelete();
+      // });
 
       tripPoints.splice(id, 1);
 
@@ -239,7 +241,7 @@ const sortTripPoint = (items, filterName) => {
 
   switch (filterName) {
     case `price`:
-      sortedTripPoints = items.sort((a, b) => b.price - a.price);
+      sortedTripPoints = items.sort((a, b) => b.fullPrice - a.fullPrice);
       break;
     case `time`:
       sortedTripPoints = items.sort((a, b) => b.dateStart - a.dateStart);
@@ -265,6 +267,7 @@ newTripPointButton.addEventListener(`click`, () => {
   newTripPointEditComponent.onSubmit = (newData) => {
     tripPoint.type = newData.type;
     tripPoint.price = newData.price;
+    tripPoint.fullPrice = newData.fullPrice;
     tripPoint.city = newData.city;
     tripPoint.description = newData.description;
     tripPoint.pictures = newData.pictures;
@@ -286,12 +289,12 @@ newTripPointButton.addEventListener(`click`, () => {
         newTripPointButton.disabled = false;
         newTripPointEditComponent.unrender();
         setTotalPrice(tripPoints);
-      })
-      .catch(() => {
-        newTripPointEditComponent.element.style.border = `1px solid red`;
-        newTripPointEditComponent.error();
-        newTripPointEditComponent.unlockSave();
       });
+    // .catch(() => {
+    //   newTripPointEditComponent.element.style.border = `1px solid red`;
+    //   newTripPointEditComponent.error();
+    //   newTripPointEditComponent.unlockSave();
+    // });
   };
 
   newTripPointEditComponent.onDelete = () => {
@@ -335,7 +338,7 @@ const setTotalPrice = (points) => {
   let updatedPrice = 0;
 
   for (let point of points) {
-    updatedPrice += +point[`price`];
+    updatedPrice += +point[`fullPrice`];
   }
 
   const newTotalCostComponent = new TotalCost(updatedPrice);

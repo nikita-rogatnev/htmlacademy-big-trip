@@ -18,6 +18,7 @@ class TripPointEdit extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
+    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
     this._pictures = data.pictures;
 
@@ -46,7 +47,6 @@ class TripPointEdit extends Component {
   _onChangeType(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
       this._type = evt.target.value;
-      this._price = 0;
 
       for (let item of this._offersList) {
         if (item.type === this._type) {
@@ -58,6 +58,8 @@ class TripPointEdit extends Component {
           });
         }
       }
+
+      this._fullPrice = this._price;
       this._partialUpdate();
     }
   }
@@ -70,7 +72,7 @@ class TripPointEdit extends Component {
       if (evt.target.checked) {
         for (let offer of this._offers) {
           if (offerPrice === offer.price && offerTitle === offer.title) {
-            this._price += +offerPrice;
+            this._fullPrice += +offerPrice;
             offer.accepted = true;
             break;
           }
@@ -79,7 +81,7 @@ class TripPointEdit extends Component {
       } else {
         for (let offer of this._offers) {
           if (offerPrice === offer.price && offerTitle === offer.title) {
-            this._price -= offerPrice;
+            this._fullPrice -= offerPrice;
             offer.accepted = false;
             break;
           }
@@ -130,6 +132,7 @@ class TripPointEdit extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
+    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
   }
 
@@ -141,7 +144,8 @@ class TripPointEdit extends Component {
       city: ``,
       dateStart: ``,
       dateEnd: ``,
-      price: 0,
+      price: this._price,
+      fullPrice: 0,
       offers: this._offers,
       pictures: this._pictures,
       description: this._description
@@ -177,7 +181,7 @@ class TripPointEdit extends Component {
         target.dateEnd = value * 1000;
       },
       'price': (value) => {
-        target.price = parseInt(value, 10);
+        target.fullPrice = parseInt(value, 10);
       },
       'offers': (value) => {
         target.offers = value;
@@ -262,24 +266,20 @@ class TripPointEdit extends Component {
         const newMonth = parseInt(moment(selectedDate).format(`MM`), 10);
         const newDay = parseInt(moment(selectedDate).format(`DD`), 10);
 
-        console.log(newYear, newMonth, newDay);
-
         const newDateStartInput = moment.unix(dateStartInput.value)
           .set(`year`, newYear)
           .set(`month`, newMonth - 1)
-          .set(`day`, newDay)
+          .set(`date`, newDay)
           .format(`X`);
 
         const newDateEndInput = moment.unix(dateEndInput.value)
           .set(`year`, newYear)
           .set(`month`, newMonth - 1)
-          .set(`day`, newDay)
+          .set(`date`, newDay)
           .format(`X`);
 
         dateStartInput.value = newDateStartInput;
         dateEndInput.value = newDateEndInput;
-
-        console.log(moment.unix(dateStartInput.value).format(`YYYY-MM-DD HH:mm`));
       }
     });
 
@@ -402,7 +402,7 @@ class TripPointEdit extends Component {
             <label class="point__price">
               write price
               <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="${this._price}" name="price">
+              <input class="point__input" type="text" value="${this._fullPrice}" name="price">
             </label>
 
             <div class="point__buttons">

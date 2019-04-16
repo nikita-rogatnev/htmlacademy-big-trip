@@ -12,6 +12,7 @@ class TripPoint extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
+    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
@@ -40,22 +41,6 @@ class TripPoint extends Component {
     return `<ul class="trip-point__offers">${offersArray.slice(0, 3).join(``)}</ul>`;
   }
 
-  get template() {
-    return `
-      <article class="trip-point">
-        <i class="trip-icon">${TravelType[this._type.toUpperCase()]}</i>
-        <h3 class="trip-point__title">${this._city}</h3>
-        <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
-          <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
-        </p>
-        <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
-        <ul class="trip-point__offers">
-          ${this._renderTripPointOffers()}
-        </ul>
-      </article>`.trim();
-  }
-
   bind() {
     this._element.querySelector(`.trip-icon`)
       .addEventListener(`click`, this._onEditButtonClick);
@@ -72,7 +57,24 @@ class TripPoint extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
+    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
+  }
+
+  get template() {
+    return `
+      <article class="trip-point">
+        <i class="trip-icon">${TravelType[this._type.toUpperCase()]}</i>
+        <h3 class="trip-point__title">${this._city}</h3>
+        <p class="trip-point__schedule">
+          <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
+          <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
+        </p>
+        <p class="trip-point__price">&euro;&nbsp; ${this._fullPrice}</p>
+        <ul class="trip-point__offers">
+          ${this._renderTripPointOffers()}
+        </ul>
+      </article>`.trim();
   }
 }
 
