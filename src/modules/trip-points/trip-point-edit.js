@@ -1,4 +1,5 @@
 import Component from '../../helpers/component';
+import * as moment from 'moment/moment';
 import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
@@ -242,12 +243,24 @@ class TripPointEdit extends Component {
     this._buttonSave = this._element.querySelector(`.point__button--save`);
     this._buttonDelete = this._element.querySelector(`.point__button--delete`);
 
+    const dateStartInput = this._element
+      .querySelector(`.point__time .point__input[name="date-start"]`);
+
+    const dateEndInput = this._element
+      .querySelector(`.point__time .point__input[name="date-end"]`);
+
     // Date Field For New Trip Point
     this._element.querySelector(`.point__date .point__input`).flatpickr({
       'altInput': true,
       'altFormat': `M d`,
       'dateFormat': `U`,
       'defaultDate': this._dateStart,
+      'onChange': function (selectedDates) {
+        console.log(moment(selectedDates).get(`year`));
+
+        dateStartInput.value = moment.unix(dateStartInput.value).set(`year`, 2013).utc();
+        dateEndInput.value = moment.unix(dateEndInput.value).set(`year`, 2013).utc();
+      }
     });
 
     // Time Range
@@ -259,6 +272,9 @@ class TripPointEdit extends Component {
       'altFormat': `H:i`,
       'dateFormat': `U`,
       'defaultDate': this._dateStart,
+      'onChange': function (selectedDates) {
+        console.log(selectedDates);
+      }
     });
 
     this._element.querySelector(`.point__time .point__input[name="date-end"]`).flatpickr({
@@ -269,6 +285,9 @@ class TripPointEdit extends Component {
       'altFormat': `H:i`,
       'dateFormat': `U`,
       'defaultDate': this._dateEnd,
+      'onChange': function (selectedDates) {
+        console.log(selectedDates);
+      }
     });
   }
 

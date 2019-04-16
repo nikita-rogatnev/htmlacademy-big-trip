@@ -1,6 +1,6 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from 'moment';
+import * as moment from 'moment/moment';
 import {TravelType} from "../../helpers/utils";
 
 const transportChartCtx = document.querySelector(`.statistic__transport`);

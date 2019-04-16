@@ -10,7 +10,7 @@ import TravelDay from './modules/travel-day/travel-day';
 import Filter from './modules/filters/filter';
 import TotalCost from './modules/total-cost/total-cost';
 
-import moment from 'moment';
+import * as moment from 'moment/moment';
 
 import createStatistics from './modules/statistics/statistics';
 
@@ -211,13 +211,12 @@ newTripPointButton.addEventListener(`click`, () => {
         newTripPointButton.disabled = false;
         newTripPointEditComponent.unrender();
         setTotalPrice(tripPoints);
+      })
+      .catch(() => {
+        newTripPointEditComponent.element.style.border = `1px solid red`;
+        newTripPointEditComponent.error();
+        newTripPointEditComponent.unlockSave();
       });
-
-    // .catch(() => {
-    //   newTripPointEditComponent.element.style.border = `1px solid red`;
-    //   newTripPointEditComponent.error();
-    //   newTripPointEditComponent.unlockSave();
-    // });
   };
 
   newTripPointEditComponent.onDelete = () => {
