@@ -6,11 +6,13 @@ class ModelTripPoint {
     this.description = data[`destination`][`description`] || ``;
     this.pictures = data[`destination`][`pictures`] || [];
     this.price = data[`base_price`] || 0;
-    this.fullPrice = this._calculateFullPrice(data[`base_price`], data.offers) || 0;
     this.dateStart = data[`date_from`] || Date.now();
     this.dateEnd = data[`date_to`] || Date.now();
     this.isFavorite = data[`is_favorite`] || false;
     this.offers = data.offers;
+
+    this.fullPrice = this._calculateFullPrice(data[`base_price`], data.offers) || 0;
+    this.fullOffersPrice = this._calculateOffersPrice(data.offers) || 0;
   }
 
   _calculateFullPrice(price, offers) {
@@ -25,6 +27,18 @@ class ModelTripPoint {
     offersPrice += price;
 
     return offersPrice;
+  }
+
+  _calculateOffersPrice(offers) {
+    let fullOffersPrice = 0;
+
+    for (let offer of offers) {
+      if (offer.accepted) {
+        fullOffersPrice += offer.price;
+      }
+    }
+
+    return fullOffersPrice;
   }
 
   toRAW() {

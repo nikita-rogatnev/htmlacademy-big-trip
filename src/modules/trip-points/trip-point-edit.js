@@ -22,6 +22,12 @@ class TripPointEdit extends Component {
     this._offers = data.offers;
     this._pictures = data.pictures;
 
+    this._primaryFullPrice = data.fullPrice;
+    this._fullOffersPrice = data.fullOffersPrice;
+
+    this._primaryType = data.type;
+    this._primaryOffers = data.offers;
+
     this._offersList = offersList;
     this._destinations = destinations;
 
@@ -46,25 +52,34 @@ class TripPointEdit extends Component {
 
   _onChangeType(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
-      this._type = evt.target.value;
+      if (this._primaryType !== evt.target.value) {
+        this._type = evt.target.value;
 
-      for (let item of this._offersList) {
-        if (item.type === this._type) {
-          this._offers = item.offers.map((offer) => {
-            return {
-              title: offer.name,
-              price: offer.price,
-            };
-          });
+        for (let item of this._offersList) {
+          if (item.type === this._type) {
+            this._offers = item.offers.map((offer) => {
+              return {
+                title: offer.name,
+                price: offer.price,
+              };
+            });
+          }
         }
+        this._fullPrice = this._price;
+      } else {
+        this._type = this._primaryType;
+        this._offers = this._primaryOffers;
+
+        this._fullPrice = this._primaryFullPrice + this._checkedOffersPrice;
       }
 
-      this._fullPrice = this._price;
       this._partialUpdate();
     }
   }
 
   _onChangeOffers(evt) {
+    console.log(this._checkedOffersPrice);
+
     if (evt.target.tagName.toLowerCase() === `input`) {
       const offerTitle = evt.target.value.split(`-`)[0];
       const offerPrice = +evt.target.value.split(`-`)[1];
@@ -72,6 +87,8 @@ class TripPointEdit extends Component {
       if (evt.target.checked) {
         for (let offer of this._offers) {
           if (offerPrice === offer.price && offerTitle === offer.title) {
+
+            this._checkedOffersPrice = this._checkedOffersPrice + offerPrice;
             this._fullPrice += +offerPrice;
             offer.accepted = true;
             break;
@@ -81,11 +98,19 @@ class TripPointEdit extends Component {
       } else {
         for (let offer of this._offers) {
           if (offerPrice === offer.price && offerTitle === offer.title) {
+            this._checkedOffersPrice = this._checkedOffersPrice - offerPrice;
             this._fullPrice -= offerPrice;
             offer.accepted = false;
             break;
           }
         }
+
+        console.log(this._checkedOffersPrice);
+
+        if (this._primaryType === this._type) {
+          this._fullOffersPrice = this._primaryFullPrice - this._checkedOffersPrice;
+        }
+
         this._partialUpdate();
       }
     }
