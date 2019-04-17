@@ -17,19 +17,13 @@ class TripPointEdit extends Component {
     this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
+    this._pictures = data.pictures;
+    this._destinations = destinations;
+
     this._price = data.price;
     this._fullPrice = data.fullPrice;
     this._offers = data.offers;
-    this._pictures = data.pictures;
-
-    this._primaryFullPrice = data.fullPrice;
-    this._fullOffersPrice = data.fullOffersPrice;
-
-    this._primaryType = data.type;
-    this._primaryOffers = data.offers;
-
     this._offersList = offersList;
-    this._destinations = destinations;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -52,34 +46,23 @@ class TripPointEdit extends Component {
 
   _onChangeType(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
-      if (this._primaryType !== evt.target.value) {
-        this._type = evt.target.value;
+      this._type = evt.target.value;
 
-        for (let item of this._offersList) {
-          if (item.type === this._type) {
-            this._offers = item.offers.map((offer) => {
-              return {
-                title: offer.name,
-                price: offer.price,
-              };
-            });
-          }
+      for (let item of this._offersList) {
+        if (item.type === this._type) {
+          this._offers = item.offers.map((offer) => {
+            return {
+              title: offer.name,
+              price: offer.price,
+            };
+          });
         }
-        this._fullPrice = this._price;
-      } else {
-        this._type = this._primaryType;
-        this._offers = this._primaryOffers;
-
-        this._fullPrice = this._primaryFullPrice + this._checkedOffersPrice;
       }
-
       this._partialUpdate();
     }
   }
 
   _onChangeOffers(evt) {
-    console.log(this._checkedOffersPrice);
-
     if (evt.target.tagName.toLowerCase() === `input`) {
       const offerTitle = evt.target.value.split(`-`)[0];
       const offerPrice = +evt.target.value.split(`-`)[1];
@@ -87,8 +70,6 @@ class TripPointEdit extends Component {
       if (evt.target.checked) {
         for (let offer of this._offers) {
           if (offerPrice === offer.price && offerTitle === offer.title) {
-
-            this._checkedOffersPrice = this._checkedOffersPrice + offerPrice;
             this._fullPrice += +offerPrice;
             offer.accepted = true;
             break;
@@ -98,17 +79,10 @@ class TripPointEdit extends Component {
       } else {
         for (let offer of this._offers) {
           if (offerPrice === offer.price && offerTitle === offer.title) {
-            this._checkedOffersPrice = this._checkedOffersPrice - offerPrice;
             this._fullPrice -= offerPrice;
             offer.accepted = false;
             break;
           }
-        }
-
-        console.log(this._checkedOffersPrice);
-
-        if (this._primaryType === this._type) {
-          this._fullOffersPrice = this._primaryFullPrice - this._checkedOffersPrice;
         }
 
         this._partialUpdate();
@@ -117,10 +91,49 @@ class TripPointEdit extends Component {
   }
 
   _createOffers() {
-    return this._offers.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.title}-${this._id}" name="offer" value="${offer.title}-${offer.price}" ${offer.accepted ? `checked` : ``}>
-    <label for="${offer.title}-${this._id}" class="point__offers-label">
-      <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
-    </label>`.trim()).join(``);
+    let offers = [];
+
+    // Array of offers from _offersList without active
+    const currentTypeOffers = this._offersList.find((offer) => offer.type === this._type);
+    const currentTypeOffersArray = currentTypeOffers.offers;
+
+    // Array of offers from _offers with active
+    const currentTypeOffersAccepted = this._offers.find((offer) => offer.accepted === true);
+
+    if (currentTypeOffersAccepted) {
+      let currentTypeOffersActiveArray = [];
+      currentTypeOffersActiveArray.push(currentTypeOffersAccepted);
+      currentTypeOffersActiveArray = currentTypeOffersActiveArray.map((item) => {
+        return {
+          name: item.title,
+          price: item.price,
+          accepted: item.accepted
+        };
+      });
+
+      // Arrays merge
+      function mergeArrays(arrays, prop) {
+        const merged = {};
+
+        arrays.forEach((arr) => {
+          arr.forEach((item) => {
+            merged[item[prop]] = Object.assign({}, merged[item[prop]], item);
+          });
+        });
+
+        return Object.values(merged);
+      }
+
+      offers = mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
+      this._offers = offers;
+    } else {
+      this._offers = currentTypeOffersArray;
+    }
+
+    return this._offers.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${this._id}" name="offer" value="${offer.name}-${offer.price}" ${offer.accepted ? `checked` : ``}>
+      <label for="${offer.name}-${this._id}" class="point__offers-label">
+        <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
+      </label>`.trim()).join(``);
   }
 
   _onChangeDestination(evt) {
