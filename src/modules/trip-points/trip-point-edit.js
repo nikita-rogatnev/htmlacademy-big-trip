@@ -58,13 +58,13 @@ class TripPointEdit extends Component {
     // Array of offers from _offers with active
     const currentTypeOffersAccepted = this._offers
       .filter((offer) => offer.accepted)
-      .map((offer) => offer.name);
+      .map((offer) => offer.title);
 
     return currentTypeOffersArray.map((item) => {
       return {
         name: item.name,
         price: item.price,
-        accepted: currentTypeOffersAccepted.includes(item.title)
+        accepted: currentTypeOffersAccepted.includes(item.name)
       };
     });
   }
