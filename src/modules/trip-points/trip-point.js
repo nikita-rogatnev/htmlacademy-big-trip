@@ -6,17 +6,12 @@ import * as moment from 'moment/moment';
 class TripPoint extends Component {
   constructor(data) {
     super();
-    this._id = data.id;
-    this._isFavorite = data.isFavorite;
     this._type = data.type;
     this._city = data.city;
-    this._description = data.description;
-    this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
-    this._price = data.price;
-    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
+    this._price = data.price;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._onEdit = null;
@@ -64,7 +59,6 @@ class TripPoint extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
   }
 
@@ -77,7 +71,7 @@ class TripPoint extends Component {
           <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
           <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
         </p>
-        <p class="trip-point__price">&euro;&nbsp; ${this._fullPrice}</p>
+        <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
         <ul class="trip-point__offers">
           ${this._renderTripPointOffers()}
         </ul>

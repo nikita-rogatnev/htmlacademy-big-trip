@@ -52,7 +52,6 @@ const tripPointMockData = {
   dateStart: Date.now(),
   dateEnd: Date.now(),
   price: 0,
-  fullPrice: 0,
   offers: [],
   destination: [],
 };
@@ -87,7 +86,6 @@ const renderTripPoints = (data, dist) => {
       tripPoint.dateStart = newData.dateStart;
       tripPoint.dateEnd = newData.dateEnd;
       tripPoint.price = newData.price;
-      tripPoint.fullPrice = newData.fullPrice;
       tripPoint.offers = newData.offers;
 
       tripPointEditComponent.lockSave();
@@ -241,7 +239,7 @@ const sortTripPoint = (items, filterName) => {
 
   switch (filterName) {
     case `price`:
-      sortedTripPoints = items.sort((a, b) => b.fullPrice - a.fullPrice);
+      sortedTripPoints = items.sort((a, b) => b.price - a.price);
       break;
     case `time`:
       sortedTripPoints = items.sort((a, b) => b.dateStart - a.dateStart);
@@ -274,7 +272,6 @@ newTripPointButton.addEventListener(`click`, () => {
     tripPoint.dateStart = newData.dateStart;
     tripPoint.dateEnd = newData.dateEnd;
     tripPoint.price = newData.price;
-    tripPoint.fullPrice = newData.fullPrice;
     tripPoint.offers = newData.offers;
 
     newTripPointEditComponent.lockSave();
@@ -339,7 +336,7 @@ const setTotalPrice = (points) => {
   let updatedPrice = 0;
 
   for (let point of points) {
-    updatedPrice += +point[`fullPrice`];
+    updatedPrice += +point[`price`];
   }
 
   const newTotalCostComponent = new TotalCost(updatedPrice);

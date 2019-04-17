@@ -18,7 +18,6 @@ class TripPointEdit extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price; // Primary price
-    this._fullPrice = data.fullPrice; // Price with offers
     this._offers = data.offers; // Offers list we use to set _offersList active offers
 
     this._destinations = destinations;
@@ -36,7 +35,6 @@ class TripPointEdit extends Component {
 
     this._onChangeType = this._onChangeType.bind(this);
     this._onChangeDestination = this._onChangeDestination.bind(this);
-    this._onChangeOffers = this._onChangeOffers.bind(this);
   }
 
   _createPictures() {
@@ -50,7 +48,6 @@ class TripPointEdit extends Component {
 
       for (let item of this._offersList) {
         if (item.type === this._type) {
-          this._fullPrice = this._price;
           this._offersShow = item.offers.map((offer) => {
             return {
               name: offer.name,
@@ -58,38 +55,6 @@ class TripPointEdit extends Component {
               accepted: offer.accepted
             };
           });
-        }
-      }
-      this._partialUpdate();
-    }
-  }
-
-  _onChangeOffers(evt) {
-    if (evt.target.tagName.toLowerCase() === `input`) {
-      const offerTitle = evt.target.value.split(`-`)[0];
-      const offerPrice = +evt.target.value.split(`-`)[1];
-
-      if (evt.target.checked) {
-        for (let item of this._offersList) {
-          if (item.type === this._type) {
-            item.offers.map((offer) => {
-              if (offer.name === offerTitle) {
-                this._fullPrice += offerPrice;
-                offer.accepted = true;
-              }
-            });
-          }
-        }
-      } else {
-        for (let item of this._offersList) {
-          if (item.type === this._type) {
-            item.offers.map((offer) => {
-              if (offer.name === offerTitle) {
-                this._fullPrice -= offerPrice;
-                offer.accepted = false;
-              }
-            });
-          }
         }
       }
       this._partialUpdate();
@@ -181,20 +146,7 @@ class TripPointEdit extends Component {
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
-    this._fullPrice = data.fullPrice;
     this._offers = data.offers;
-  }
-
-  _processOffers() {
-    // Array of offers from _offersList
-    const currentOffers = this._offersList.find((offer) => offer.type === this._type);
-    return currentOffers.offers.map((item) => {
-      return {
-        title: item.name,
-        price: item.price,
-        accepted: item.accepted
-      };
-    });
   }
 
   _processForm(formData) {
@@ -207,9 +159,8 @@ class TripPointEdit extends Component {
       pictures: this._pictures,
       dateStart: ``,
       dateEnd: ``,
-      price: this._price,
-      fullPrice: 0,
-      offers: this._processOffers(),
+      price: 0,
+      offers: [],
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -242,7 +193,11 @@ class TripPointEdit extends Component {
         target.dateEnd = value * 1000;
       },
       'price': (value) => {
-        target.fullPrice = parseInt(value, 10);
+        target.price = value;
+      },
+      'offer': (value) => {
+        const [title, price] = value.split(`-`);
+        target.offers.push({title, price, accepted: true});
       }
     };
   }
@@ -294,8 +249,6 @@ class TripPointEdit extends Component {
     this._element.querySelector(`.point__destination-input`)
       .addEventListener(`change`, this._onChangeDestination);
 
-    this._element.querySelector(`.point__offers-wrap`)
-      .addEventListener(`click`, this._onChangeOffers);
 
     this._element.querySelector(`.travel-way__select`)
       .addEventListener(`change`, this._onChangeType);
@@ -374,9 +327,6 @@ class TripPointEdit extends Component {
 
     this._element.querySelector(`.point__destination-input`)
       .removeEventListener(`change`, this._onChangeDestination);
-
-    this._element.querySelector(`.point__offers-wrap`)
-      .removeEventListener(`click`, this._onChangeOffers);
 
     this._element.querySelector(`.travel-way__select`)
       .removeEventListener(`change`, this._onChangeType);
@@ -462,7 +412,7 @@ class TripPointEdit extends Component {
             <label class="point__price">
               write price
               <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="${this._fullPrice}" name="price">
+              <input class="point__input" type="text" value="${this._price}" name="price">
             </label>
 
             <div class="point__buttons">
