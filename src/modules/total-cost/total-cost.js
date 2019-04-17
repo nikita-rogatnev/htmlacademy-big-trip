@@ -19,7 +19,7 @@ class TotalCost extends Component {
       .reduce((offerItems, tripPoint) => offerItems.concat(tripPoint.offers), [])
       .map((offer) => parseInt(offer.price, 10))
       .flat();
-    
+
     const offersPrice = offers.reduce((partialSum, a) => partialSum + a);
     this._totalPrice = tripPointPrice + offersPrice;
 
