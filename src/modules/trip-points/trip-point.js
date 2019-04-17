@@ -1,18 +1,18 @@
 import Component from '../../helpers/component';
-import {getDurationTime} from '../../helpers/utils';
+import {getDurationTime, TravelType} from '../../helpers/utils';
 import * as moment from 'moment/moment';
 
 // Trip Point Class
 class TripPoint extends Component {
   constructor(data) {
     super();
-    this._isFavorite = data.isFavorite;
+    this._id = data.id;
     this._type = data.type;
-    this._destination = data.destination;
+    this._city = data.city;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
-    this._price = data.price;
     this._offers = data.offers;
+    this._price = data.price;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._onEdit = null;
@@ -37,23 +37,7 @@ class TripPoint extends Component {
         offersArray.push(`<li><button class="trip-point__offer">${offer.title} +&euro;&nbsp;${offer.price}</button></li>`);
       }
     }
-    return `<ul class="trip-point__offers">${offersArray.join(``)}</ul>`;
-  }
-
-  get template() {
-    return `
-      <article class="trip-point">
-        <i class="trip-icon">${this._type.icon}</i>
-        <h3 class="trip-point__title">${this._destination}</h3>
-        <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
-          <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
-        </p>
-        <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
-        <ul class="trip-point__offers">
-          ${this._renderTripPointOffers()}
-        </ul>
-      </article>`.trim();
+    return `<ul class="trip-point__offers">${offersArray.slice(0, 3).join(``)}</ul>`;
   }
 
   bind() {
@@ -67,13 +51,32 @@ class TripPoint extends Component {
   }
 
   update(data) {
+    this._id = data.id;
     this._isFavorite = data.isFavorite;
     this._type = data.type;
-    this._destination = data.destination;
+    this._city = data.city;
+    this._description = data.description;
+    this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._offers = data.offers;
+  }
+
+  get template() {
+    return `
+      <article class="trip-point" id="${this._id}">
+        <i class="trip-icon">${TravelType[this._type.toUpperCase()]}</i>
+        <h3 class="trip-point__title">${this._city}</h3>
+        <p class="trip-point__schedule">
+          <span class="trip-point__timetable">${moment(this._dateStart).format(`HH:mm`)} — ${moment(this._dateEnd).format(`HH:mm`)}</span>
+          <span class="trip-point__duration">${moment(getDurationTime(this._dateStart, this._dateEnd)).format(`H[H] mm[M]`)}</span>
+        </p>
+        <p class="trip-point__price">&euro;&nbsp; ${this._price}</p>
+        <ul class="trip-point__offers">
+          ${this._renderTripPointOffers()}
+        </ul>
+      </article>`.trim();
   }
 }
 
