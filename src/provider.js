@@ -42,13 +42,11 @@ export default class Provider {
       return this._api.createTripPoint({point: tripPoint.toRAW()})
         .then((response) => {
           this._store.setItem({key: response.id, item: response.toRAW()});
-
           return response;
         });
     }
     tripPoint.id = this._generateId();
     this._needSync = true;
-
     this._store.setItem({key: tripPoint.id, item: tripPoint});
     return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
   }
@@ -76,7 +74,6 @@ export default class Provider {
         });
     } else {
       this._needSync = true;
-
       this._store.removeItem({key: id});
       return Promise.resolve(true);
     }

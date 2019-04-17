@@ -333,13 +333,8 @@ totalCostContainer.appendChild(totalCostComponent.render());
 
 const setTotalPrice = (points) => {
   totalCostContainer.innerHTML = ``;
-  let updatedPrice = 0;
-
-  for (let point of points) {
-    updatedPrice += +point[`price`];
-  }
-
-  const newTotalCostComponent = new TotalCost(updatedPrice);
+  const newTotalCostComponent = new TotalCost();
+  newTotalCostComponent.getPrice(points);
   totalCostContainer.appendChild(newTotalCostComponent.render());
 };
 
