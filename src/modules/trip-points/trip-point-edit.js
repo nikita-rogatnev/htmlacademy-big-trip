@@ -45,19 +45,6 @@ class TripPointEdit extends Component {
   _onChangeType(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
       this._type = evt.target.value;
-
-      // for (let item of this._offersList) {
-      //   if (item.type === this._type) {
-      //     this._offersShow = item.offers.map((offer) => {
-      //       return {
-      //         name: offer.name,
-      //         price: offer.price,
-      //         accepted: offer.accepted
-      //       };
-      //     });
-      //   }
-      // }
-
       this._partialUpdate();
     }
   }
@@ -82,23 +69,17 @@ class TripPointEdit extends Component {
     // Array of offers from _offers with active
     const currentTypeOffersAccepted = this._offers.filter((offer) => offer.accepted === true);
 
-    if (currentTypeOffersAccepted) {
-      let currentTypeOffersActiveArray = Array.from(currentTypeOffersAccepted);
+    let currentTypeOffersActiveArray = Array.from(currentTypeOffersAccepted);
 
-      currentTypeOffersActiveArray = currentTypeOffersActiveArray.map((item) => {
-        return {
-          name: item.title,
-          price: item.price,
-          accepted: item.accepted
-        };
-      });
+    currentTypeOffersActiveArray = currentTypeOffersActiveArray.map((item) => {
+      return {
+        name: item.title,
+        price: item.price,
+        accepted: item.accepted
+      };
+    });
 
-      this._offersShow = this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
-      console.log(this._offersShow);
-
-    } else {
-      this._offersShow = currentTypeOffersArray;
-    }
+    this._offersShow = this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
   }
 
   _createOffers() {
