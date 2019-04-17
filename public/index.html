@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Big Trip</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:500,600,700,800,900&amp;subset=cyrillic-ext"
-        rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Montserrat:500,600,700,800,900&amp;subset=cyrillic-ext">
   <link rel="stylesheet" type="text/css" media="screen" href="css/normalize.css"/>
   <link rel="stylesheet" type="text/css" media="screen" href="css/main.css"/>
 </head>
@@ -20,7 +20,7 @@
         <h1 class="trip__points">Amsterdam&nbsp;&mdash; Geneva&nbsp;&mdash; Chamonix</h1>
         <p class="trip__dates">Mar 17&nbsp;&mdash; 19</p>
       </div>
-      <p class="trip__total">Total: <span class="trip__total-cost">&euro;&nbsp;1500</span></p>
+      <p class="trip__total"></p>
     </section>
 
     <section class="trip-controls">
@@ -29,51 +29,25 @@
           <a href="#table" class="view-switch__item view-switch__item--active">Table</a>
           <a href="#stats" class="view-switch__item">Stats</a>
         </div>
-
         <form class="trip-filter"></form>
       </nav>
-
       <button class="trip-controls__new-event new-event">+ New Event</button>
     </section>
   </div>
 </header>
 
 <main class="main content-wrap" id="table">
-  <form class="trip-sorting">
-    <input type="radio" name="trip-sorting" id="sorting-event" value="event" checked>
-    <label class="trip-sorting__item trip-sorting__item--event" for="sorting-event">Event</label>
-
-    <input type="radio" name="trip-sorting" id="sorting-time" value="time">
-    <label class="trip-sorting__item trip-sorting__item--time" for="sorting-time">Time</label>
-
-    <input type="radio" name="trip-sorting" id="sorting-price" value="price">
-    <label class="trip-sorting__item trip-sorting__item--price" for="sorting-price">Price</label>
-
-    <span class="trip-sorting__item trip-sorting__item--offers">Offers</span>
-  </form>
-
-  <section class="trip-points">
-    <section class="trip-day">
-      <article class="trip-day__info">
-        <span class="trip-day__caption">Day</span>
-        <p class="trip-day__number">1</p>
-        <h2 class="trip-day__title">Mar 31</h2>
-      </article>
-
-      <div class="trip-day__items"></div>
-    </section>
-  </section>
+  <form class="trip-sorting"></form>
+  <section class="trip-points"></section>
 </main>
 
 <section class="statistic content-wrap visually-hidden" id="stats">
   <div class="statistic__item statistic__item--money">
     <canvas class="statistic__money" width="900"></canvas>
   </div>
-
   <div class="statistic__item statistic__item--transport">
     <canvas class="statistic__transport" width="900"></canvas>
   </div>
-
   <div class="statistic__item statistic__item--time-spend">
     <canvas class="statistic__time-spend" width="900"></canvas>
   </div>
