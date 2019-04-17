@@ -48,41 +48,30 @@ class TripPointEdit extends Component {
     }
   }
 
-  _mergeArrays(arrays, prop) {
-    const merged = {};
-
-    arrays.forEach((arr) => {
-      arr.forEach((item) => {
-        merged[item[prop]] = Object.assign({}, merged[item[prop]], item);
-      });
-    });
-
-    return Object.values(merged);
-  }
-
   _createInitialOffers() {
     // Array of offers from _offersList without active
     const currentTypeOffers = this._offersList.find((offer) => offer.type === this._type);
     const currentTypeOffersArray = currentTypeOffers.offers;
 
+    console.log(currentTypeOffersArray);
+
     // Array of offers from _offers with active
-    const currentTypeOffersAccepted = this._offers.filter((offer) => offer.accepted === true);
+    const currentTypeOffersAccepted = this._offers
+      .filter((offer) => offer.accepted)
+      .map((offer) => offer.name);
 
-    let currentTypeOffersActiveArray = Array.from(currentTypeOffersAccepted);
-
-    currentTypeOffersActiveArray = currentTypeOffersActiveArray.map((item) => {
+    return currentTypeOffersArray.map((item) => {
       return {
-        name: item.title,
+        name: item.name,
         price: item.price,
-        accepted: item.accepted
+        accepted: currentTypeOffersAccepted.includes(item.title)
       };
     });
-
-    return this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
   }
 
   _createOffers() {
     const offers = this._createInitialOffers();
+    console.log(offers);
 
     return offers.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${this._id}" name="offer" value="${offer.name}-${offer.price}" ${offer.accepted ? `checked` : ``}>
       <label for="${offer.name}-${this._id}" class="point__offers-label">
