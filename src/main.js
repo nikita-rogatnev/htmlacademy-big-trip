@@ -12,7 +12,7 @@ import TotalCost from './modules/total-cost/total-cost';
 
 import * as moment from 'moment/moment';
 
-import createStatistics from './modules/statistics/statistics';
+import createStatistics, {updateStatistics} from './modules/statistics/statistics';
 
 // API
 const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;
@@ -179,6 +179,9 @@ const renderTripDays = (days) => {
     const distEvents = dayTripPoints.querySelector(`.trip-day__items`);
     renderTripPoints(eventList, distEvents);
   });
+
+  // Create Statistics
+  createStatistics(tripPoints);
 };
 
 // Render Filters: EVERYTHING / FUTURE / PAST
@@ -192,6 +195,7 @@ const renderFilters = (filters, container, type) => {
       tripDayContainer.innerHTML = ``;
       let newTripPointData = filterTripPoint(tripPoints, filter.element.id);
       renderTripDays(newTripPointData);
+      updateStatistics(newTripPointData);
     };
 
     filter.render();
@@ -352,7 +356,7 @@ switchContainer.addEventListener(`click`, (evt) => {
   if (evt.target.textContent === `Stats`) {
     mainContainer.classList.add(`visually-hidden`);
     statisticsContainer.classList.remove(`visually-hidden`);
-    createStatistics(tripPoints);
+    updateStatistics(tripPoints);
   } else {
     mainContainer.classList.remove(`visually-hidden`);
     statisticsContainer.classList.add(`visually-hidden`);

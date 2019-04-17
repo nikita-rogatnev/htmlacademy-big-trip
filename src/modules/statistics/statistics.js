@@ -153,11 +153,14 @@ const updateChart = (chart, data) => {
   chart.update();
 };
 
-export const createStatistics = (data) => {
+const createStatistics = (data) => {
   moneyChart = renderChart(moneyChartCtx, getPrice(data));
   transportChart = renderChart(transportChartCtx, getType(data));
   timeChart = renderChart(timeChartCtx, getTotalDuration(data));
+};
 
+
+export const updateStatistics = (data) => {
   updateChart(moneyChart, getPrice(data));
   updateChart(transportChart, getType(data));
   updateChart(timeChart, getTotalDuration(data));
