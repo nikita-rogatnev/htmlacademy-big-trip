@@ -17,11 +17,11 @@ class TripPointEdit extends Component {
     this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
-    this._price = data.price; // Primary price
-    this._offers = data.offers; // Offers list we use to set _offersList active offers
-
+    this._price = data.price;
     this._destinations = destinations;
-    this._offersList = offersList; // Offers list we store
+
+    this._offers = data.offers; // Offers list we use to set _offersList active offers
+    this._offersList = offersList; // Offers full list
     this._offersShow = null; // Offers list we show
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -46,17 +46,18 @@ class TripPointEdit extends Component {
     if (evt.target.tagName.toLowerCase() === `input`) {
       this._type = evt.target.value;
 
-      for (let item of this._offersList) {
-        if (item.type === this._type) {
-          this._offersShow = item.offers.map((offer) => {
-            return {
-              name: offer.name,
-              price: offer.price,
-              accepted: offer.accepted
-            };
-          });
-        }
-      }
+      // for (let item of this._offersList) {
+      //   if (item.type === this._type) {
+      //     this._offersShow = item.offers.map((offer) => {
+      //       return {
+      //         name: offer.name,
+      //         price: offer.price,
+      //         accepted: offer.accepted
+      //       };
+      //     });
+      //   }
+      // }
+
       this._partialUpdate();
     }
   }
