@@ -16,10 +16,10 @@ class TotalCost extends Component {
 
     // Calculate Offers Sum
     const offers = data
-      .map((tripPoint) => tripPoint.offers
-        .map((item) => parseInt(item.price, 10)))
+      .reduce((offerItems, tripPoint) => offerItems.concat(tripPoint.offers), [])
+      .map((offer) => parseInt(offer.price, 10))
       .flat();
-
+    
     const offersPrice = offers.reduce((partialSum, a) => partialSum + a);
     this._totalPrice = tripPointPrice + offersPrice;
 

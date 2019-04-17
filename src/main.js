@@ -99,12 +99,12 @@ const renderTripPoints = (data, dist) => {
 
           dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           tripPointEditComponent.unrender();
+        })
+        .catch(() => {
+          tripPointEditComponent.element.style.border = `1px solid red`;
+          tripPointEditComponent.error();
+          tripPointEditComponent.unlockSave();
         });
-      // .catch(() => {
-      //   tripPointEditComponent.element.style.border = `1px solid red`;
-      //   tripPointEditComponent.error();
-      //   tripPointEditComponent.unlockSave();
-      // });
 
       setTotalPrice(tripPoints);
     };
@@ -121,12 +121,12 @@ const renderTripPoints = (data, dist) => {
         .then(renderTripDays)
         .then(() => {
           tripPointEditComponent.unrender();
+        })
+        .catch(() => {
+          tripPointEditComponent.element.style.border = `1px solid red`;
+          tripPointEditComponent.error();
+          tripPointEditComponent.unlockDelete();
         });
-      // .catch(() => {
-      //   tripPointEditComponent.element.style.border = `1px solid red`;
-      //   tripPointEditComponent.error();
-      //   tripPointEditComponent.unlockDelete();
-      // });
 
       tripPoints.splice(id, 1);
 
@@ -179,9 +179,6 @@ const renderTripDays = (days) => {
     const distEvents = dayTripPoints.querySelector(`.trip-day__items`);
     renderTripPoints(eventList, distEvents);
   });
-
-  // Create Statistics
-  createStatistics(tripPoints);
 };
 
 // Render Filters: EVERYTHING / FUTURE / PAST
@@ -291,12 +288,12 @@ newTripPointButton.addEventListener(`click`, () => {
         newTripPointButton.disabled = false;
         newTripPointEditComponent.unrender();
         setTotalPrice(tripPoints);
+      })
+      .catch(() => {
+        newTripPointEditComponent.element.style.border = `1px solid red`;
+        newTripPointEditComponent.error();
+        newTripPointEditComponent.unlockSave();
       });
-    // .catch(() => {
-    //   newTripPointEditComponent.element.style.border = `1px solid red`;
-    //   newTripPointEditComponent.error();
-    //   newTripPointEditComponent.unlockSave();
-    // });
   };
 
   newTripPointEditComponent.onDelete = () => {
@@ -325,6 +322,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
     .then(() => {
       renderTripDays(tripPoints);
       setTotalPrice(tripPoints);
+      createStatistics(tripPoints);
     })
     .catch(() => {
       tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
