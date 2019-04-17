@@ -12,7 +12,7 @@ import TotalCost from './modules/total-cost/total-cost';
 
 import * as moment from 'moment/moment';
 
-import renderStatistics, {updateStatistics} from './modules/statistics/statistics';
+import {renderStatistics, updateStatistics} from './modules/statistics/statistics';
 
 // API
 const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;

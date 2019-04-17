@@ -153,7 +153,7 @@ const updateChart = (chart, data) => {
   chart.update();
 };
 
-const renderStatistics = (data) => {
+export const renderStatistics = (data) => {
   moneyChart = renderChart(moneyChartCtx, getPrice(data));
   transportChart = renderChart(transportChartCtx, getType(data));
   timeChart = renderChart(timeChartCtx, getTotalDuration(data));
@@ -166,4 +166,3 @@ export const updateStatistics = (data) => {
   updateChart(timeChart, getTotalDuration(data));
 };
 
-export default renderStatistics;
