@@ -12,7 +12,7 @@ import TotalCost from './modules/total-cost/total-cost';
 
 import * as moment from 'moment/moment';
 
-import createStatistics, {updateStatistics} from './modules/statistics/statistics';
+import renderStatistics, {updateStatistics} from './modules/statistics/statistics';
 
 // API
 const AUTHORIZATION = `Basic wqe21fwq32WEF32CDWae2d=${Math.random()}`;
@@ -322,7 +322,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
     .then(() => {
       renderTripDays(tripPoints);
       setTotalPrice(tripPoints);
-      createStatistics(tripPoints);
+      renderStatistics(tripPoints);
     })
     .catch(() => {
       tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
