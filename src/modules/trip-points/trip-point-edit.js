@@ -22,7 +22,6 @@ class TripPointEdit extends Component {
 
     this._offers = data.offers; // Offers list we use to set _offersList active offers
     this._offersList = offersList; // Offers full list
-    this._offersShow = null; // Offers list we show
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -79,13 +78,13 @@ class TripPointEdit extends Component {
       };
     });
 
-    this._offersShow = this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
+    return this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
   }
 
   _createOffers() {
-    this._createInitialOffers();
+    const offers = this._createInitialOffers();
 
-    return this._offersShow.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${this._id}" name="offer" value="${offer.name}-${offer.price}" ${offer.accepted ? `checked` : ``}>
+    return offers.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${this._id}" name="offer" value="${offer.name}-${offer.price}" ${offer.accepted ? `checked` : ``}>
       <label for="${offer.name}-${this._id}" class="point__offers-label">
         <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
       </label>`.trim()).join(``);
