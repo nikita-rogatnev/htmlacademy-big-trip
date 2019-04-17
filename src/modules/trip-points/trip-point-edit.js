@@ -232,7 +232,8 @@ class TripPointEdit extends Component {
       .querySelector(`.point__time .point__input[name="date-end"]`);
 
     // Date Field For New Trip Point
-    this._element.querySelector(`.point__date .point__input`).flatpickr({
+    const dateInput = this._element.querySelector(`.point__date .point__input`);
+    const dateOptions = {
       'altInput': true,
       'altFormat': `M d`,
       'dateFormat': `U`,
@@ -259,10 +260,12 @@ class TripPointEdit extends Component {
         dateStartInput.value = newDateStartInput;
         dateEndInput.value = newDateEndInput;
       }
-    });
+    };
+    flatpickr(dateInput, dateOptions);
 
     // Time Range
-    this._element.querySelector(`.point__time .point__input[name="date-start"]`).flatpickr({
+    const startDateInput = this._element.querySelector(`.point__time .point__input[name="date-start"]`);
+    const startOptions = {
       'time_24hr': true,
       'enableTime': true,
       'noCalendar': true,
@@ -270,9 +273,11 @@ class TripPointEdit extends Component {
       'altFormat': `H:i`,
       'dateFormat': `U`,
       'defaultDate': this._dateStart,
-    });
+    };
+    flatpickr(startDateInput, startOptions);
 
-    this._element.querySelector(`.point__time .point__input[name="date-end"]`).flatpickr({
+    const endDateInput = this._element.querySelector(`.point__time .point__input[name="date-end"]`);
+    const endOptions = {
       'time_24hr': true,
       'enableTime': true,
       'noCalendar': true,
@@ -280,7 +285,8 @@ class TripPointEdit extends Component {
       'altFormat': `H:i`,
       'dateFormat': `U`,
       'defaultDate': this._dateEnd,
-    });
+    };
+    flatpickr(endDateInput, endOptions);
   }
 
   unbind() {
