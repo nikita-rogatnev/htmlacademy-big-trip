@@ -17,13 +17,13 @@ class TripPointEdit extends Component {
     this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
-    this._pictures = data.pictures;
-    this._destinations = destinations;
+    this._price = data.price; // Primary price
+    this._fullPrice = data.fullPrice; // Price with offers
+    this._offers = data.offers; // Offers list we use to set _offersList active offers
 
-    this._price = data.price;
-    this._fullPrice = data.fullPrice;
-    this._offers = data.offers;
-    this._offersList = offersList;
+    this._destinations = destinations;
+    this._offersList = offersList; // Offers list we store
+    this._offersShow = null; // Offers list we show
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onSubmit = null;
@@ -50,10 +50,14 @@ class TripPointEdit extends Component {
 
       for (let item of this._offersList) {
         if (item.type === this._type) {
-          this._offers = item.offers.map((offer) => {
+          console.log(item);
+
+          this._fullPrice = this._price;
+          this._offersShow = item.offers.map((offer) => {
             return {
-              title: offer.name,
+              name: offer.name,
               price: offer.price,
+              accepted: offer.accepted
             };
           });
         }
@@ -68,31 +72,46 @@ class TripPointEdit extends Component {
       const offerPrice = +evt.target.value.split(`-`)[1];
 
       if (evt.target.checked) {
-        for (let offer of this._offers) {
-          if (offerPrice === offer.price && offerTitle === offer.title) {
-            this._fullPrice += +offerPrice;
-            offer.accepted = true;
-            break;
+        for (let item of this._offersList) {
+          if (item.type === this._type) {
+            item.offers.map((offer) => {
+              if (offer.name === offerTitle) {
+                this._fullPrice += offerPrice;
+                offer.accepted = true;
+              }
+            });
           }
         }
-        this._partialUpdate();
       } else {
-        for (let offer of this._offers) {
-          if (offerPrice === offer.price && offerTitle === offer.title) {
-            this._fullPrice -= offerPrice;
-            offer.accepted = false;
-            break;
+        for (let item of this._offersList) {
+          if (item.type === this._type) {
+            item.offers.map((offer) => {
+              if (offer.name === offerTitle) {
+                this._fullPrice -= offerPrice;
+                offer.accepted = false;
+                console.log(offer);
+              }
+            });
           }
         }
-
-        this._partialUpdate();
       }
+      this._partialUpdate();
     }
   }
 
-  _createOffers() {
-    let offers = [];
+  _mergeArrays(arrays, prop) {
+    const merged = {};
 
+    arrays.forEach((arr) => {
+      arr.forEach((item) => {
+        merged[item[prop]] = Object.assign({}, merged[item[prop]], item);
+      });
+    });
+
+    return Object.values(merged);
+  }
+
+  _createInitialOffers() {
     // Array of offers from _offersList without active
     const currentTypeOffers = this._offersList.find((offer) => offer.type === this._type);
     const currentTypeOffersArray = currentTypeOffers.offers;
@@ -111,26 +130,16 @@ class TripPointEdit extends Component {
         };
       });
 
-      // Arrays merge
-      function mergeArrays(arrays, prop) {
-        const merged = {};
-
-        arrays.forEach((arr) => {
-          arr.forEach((item) => {
-            merged[item[prop]] = Object.assign({}, merged[item[prop]], item);
-          });
-        });
-
-        return Object.values(merged);
-      }
-
-      offers = mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
-      this._offers = offers;
+      this._offersShow = this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
     } else {
-      this._offers = currentTypeOffersArray;
+      this._offersShow = currentTypeOffersArray;
     }
+  }
 
-    return this._offers.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${this._id}" name="offer" value="${offer.name}-${offer.price}" ${offer.accepted ? `checked` : ``}>
+  _createOffers() {
+    this._createInitialOffers();
+
+    return this._offersShow.map((offer) => `<input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${this._id}" name="offer" value="${offer.name}-${offer.price}" ${offer.accepted ? `checked` : ``}>
       <label for="${offer.name}-${this._id}" class="point__offers-label">
         <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
       </label>`.trim()).join(``);
@@ -164,14 +173,18 @@ class TripPointEdit extends Component {
   }
 
   update(data) {
+    this._id = data.id;
     this._isFavorite = data.isFavorite;
     this._type = data.type;
     this._city = data.city;
+    this._description = data.description;
+    this._pictures = data.pictures;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
     this._price = data.price;
     this._fullPrice = data.fullPrice;
     this._offers = data.offers;
+    this._offersList = data.offersList;
   }
 
   _processForm(formData) {
@@ -180,13 +193,13 @@ class TripPointEdit extends Component {
       isFavorite: false,
       type: ``,
       city: ``,
+      description: this._description,
+      pictures: this._pictures,
       dateStart: ``,
       dateEnd: ``,
       price: this._price,
       fullPrice: 0,
-      offers: this._offers,
-      pictures: this._pictures,
-      description: this._description
+      offers: this._processOffers(),
     };
 
     const tripPointEditMapper = TripPointEdit.createMapper(entry);
@@ -220,10 +233,7 @@ class TripPointEdit extends Component {
       },
       'price': (value) => {
         target.fullPrice = parseInt(value, 10);
-      },
-      'offers': (value) => {
-        target.offers = value;
-      },
+      }
     };
   }
 
@@ -236,6 +246,8 @@ class TripPointEdit extends Component {
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
+
+    console.log(newData);
 
     this.update(newData);
   }

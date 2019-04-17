@@ -1,13 +1,13 @@
 class ModelTripPoint {
   constructor(data) {
     this.id = data.id;
+    this.isFavorite = data[`is_favorite`] || false;
     this.type = data.type;
     this.city = data[`destination`][`name`] || ``;
     this.description = data[`destination`][`description`] || ``;
     this.pictures = data[`destination`][`pictures`] || [];
     this.dateStart = data[`date_from`] || Date.now();
     this.dateEnd = data[`date_to`] || Date.now();
-    this.isFavorite = data[`is_favorite`] || false;
     this.price = data[`base_price`] || 0;
     this.fullPrice = this._calculateFullPrice(data[`base_price`], data.offers) || 0;
     this.offers = data.offers;

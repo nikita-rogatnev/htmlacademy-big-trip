@@ -44,17 +44,17 @@ const sortingList = [
 
 const tripPointMockData = {
   id: null,
+  isFavorite: false,
   type: `sightseeing`,
   city: ``,
-  destination: [],
-  price: 0,
-  fullPrice: 0,
+  description: ``,
+  pictures: [],
   dateStart: Date.now(),
   dateEnd: Date.now(),
-  pictures: [],
+  price: 0,
+  fullPrice: 0,
   offers: [],
-  description: ``,
-  isFavorite: false,
+  destination: [],
 };
 
 const switchContainer = document.querySelector(`.view-switch__items`);
@@ -81,14 +81,14 @@ const renderTripPoints = (data, dist) => {
 
     // Submit Edited Trip Point
     tripPointEditComponent.onSubmit = (newData) => {
+      tripPoint.isFavorite = newData.isFavorite;
       tripPoint.type = newData.type;
-      tripPoint.price = newData.price;
-      tripPoint.fullPrice = newData.fullPrice;
       tripPoint.city = newData.city;
       tripPoint.dateStart = newData.dateStart;
       tripPoint.dateEnd = newData.dateEnd;
+      tripPoint.price = newData.price;
+      tripPoint.fullPrice = newData.fullPrice;
       tripPoint.offers = newData.offers;
-      tripPoint.isFavorite = newData.isFavorite;
 
       tripPointEditComponent.lockSave();
 
@@ -265,16 +265,16 @@ newTripPointButton.addEventListener(`click`, () => {
   let tripPoint = ModelTripPoint.parseTripPoint(tripPointMockData, tripOffers, tripDestinations);
 
   newTripPointEditComponent.onSubmit = (newData) => {
+    tripPoint.isFavorite = newData.isFavorite;
     tripPoint.type = newData.type;
-    tripPoint.price = newData.price;
-    tripPoint.fullPrice = newData.fullPrice;
     tripPoint.city = newData.city;
     tripPoint.description = newData.description;
     tripPoint.pictures = newData.pictures;
     tripPoint.dateStart = newData.dateStart;
     tripPoint.dateEnd = newData.dateEnd;
+    tripPoint.price = newData.price;
+    tripPoint.fullPrice = newData.fullPrice;
     tripPoint.offers = newData.offers;
-    tripPoint.isFavorite = newData.isFavorite;
 
     newTripPointEditComponent.lockSave();
 
