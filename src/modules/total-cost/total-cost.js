@@ -3,7 +3,7 @@ import Component from '../../helpers/component';
 class TotalCost extends Component {
   constructor() {
     super();
-    this._totalPrice = null;
+    this._totalPrice = 0;
   }
 
   getPrice(data) {
