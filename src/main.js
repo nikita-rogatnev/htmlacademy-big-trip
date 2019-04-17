@@ -265,6 +265,7 @@ newTripPointButton.addEventListener(`click`, () => {
   let tripPoint = ModelTripPoint.parseTripPoint(tripPointMockData, tripOffers, tripDestinations);
 
   newTripPointEditComponent.onSubmit = (newData) => {
+    tripPoint.id = newData.id;
     tripPoint.isFavorite = newData.isFavorite;
     tripPoint.type = newData.type;
     tripPoint.city = newData.city;

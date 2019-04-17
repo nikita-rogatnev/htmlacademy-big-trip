@@ -50,8 +50,6 @@ class TripPointEdit extends Component {
 
       for (let item of this._offersList) {
         if (item.type === this._type) {
-          console.log(item);
-
           this._fullPrice = this._price;
           this._offersShow = item.offers.map((offer) => {
             return {
@@ -89,7 +87,6 @@ class TripPointEdit extends Component {
               if (offer.name === offerTitle) {
                 this._fullPrice -= offerPrice;
                 offer.accepted = false;
-                console.log(offer);
               }
             });
           }
@@ -117,11 +114,11 @@ class TripPointEdit extends Component {
     const currentTypeOffersArray = currentTypeOffers.offers;
 
     // Array of offers from _offers with active
-    const currentTypeOffersAccepted = this._offers.find((offer) => offer.accepted === true);
+    const currentTypeOffersAccepted = this._offers.filter((offer) => offer.accepted === true);
 
     if (currentTypeOffersAccepted) {
-      let currentTypeOffersActiveArray = [];
-      currentTypeOffersActiveArray.push(currentTypeOffersAccepted);
+      let currentTypeOffersActiveArray = Array.from(currentTypeOffersAccepted);
+
       currentTypeOffersActiveArray = currentTypeOffersActiveArray.map((item) => {
         return {
           name: item.title,
@@ -131,6 +128,8 @@ class TripPointEdit extends Component {
       });
 
       this._offersShow = this._mergeArrays([currentTypeOffersArray, currentTypeOffersActiveArray], `name`);
+      console.log(this._offersShow);
+
     } else {
       this._offersShow = currentTypeOffersArray;
     }
@@ -184,7 +183,18 @@ class TripPointEdit extends Component {
     this._price = data.price;
     this._fullPrice = data.fullPrice;
     this._offers = data.offers;
-    this._offersList = data.offersList;
+  }
+
+  _processOffers() {
+    // Array of offers from _offersList
+    const currentOffers = this._offersList.find((offer) => offer.type === this._type);
+    return currentOffers.offers.map((item) => {
+      return {
+        title: item.name,
+        price: item.price,
+        accepted: item.accepted
+      };
+    });
   }
 
   _processForm(formData) {
