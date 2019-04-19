@@ -18,49 +18,10 @@ class TripPoint extends Component {
     this._onEdit = null;
   }
 
-  _onEditButtonClick() {
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
-    }
-  }
-
   set onEdit(fn) {
     if (typeof fn === `function`) {
       this._onEdit = fn;
     }
-  }
-
-  _renderTripPointOffers() {
-    const offersArray = [];
-    for (let offer of this._offers) {
-      if (offer.accepted) {
-        offersArray.push(`<li><button class="trip-point__offer">${offer.title} +&euro;&nbsp;${offer.price}</button></li>`);
-      }
-    }
-    return `<ul class="trip-point__offers">${offersArray.slice(0, 3).join(``)}</ul>`;
-  }
-
-  bind() {
-    this._element.querySelector(`.trip-icon`)
-      .addEventListener(`click`, this._onEditButtonClick);
-  }
-
-  unbind() {
-    this._element.querySelector(`.trip-icon`)
-      .removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-  update(data) {
-    this._id = data.id;
-    this._isFavorite = data.isFavorite;
-    this._type = data.type;
-    this._city = data.city;
-    this._description = data.description;
-    this._pictures = data.pictures;
-    this._dateStart = data.dateStart;
-    this._dateEnd = data.dateEnd;
-    this._price = data.price;
-    this._offers = data.offers;
   }
 
   get template() {
@@ -77,6 +38,45 @@ class TripPoint extends Component {
           ${this._renderTripPointOffers()}
         </ul>
       </article>`.trim();
+  }
+
+  update(data) {
+    this._id = data.id;
+    this._isFavorite = data.isFavorite;
+    this._type = data.type;
+    this._city = data.city;
+    this._description = data.description;
+    this._pictures = data.pictures;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
+    this._price = data.price;
+    this._offers = data.offers;
+  }
+  
+  _renderTripPointOffers() {
+    const offersArray = [];
+    for (let offer of this._offers) {
+      if (offer.accepted) {
+        offersArray.push(`<li><button class="trip-point__offer">${offer.title} +&euro;&nbsp;${offer.price}</button></li>`);
+      }
+    }
+    return `<ul class="trip-point__offers">${offersArray.slice(0, 3).join(``)}</ul>`;
+  }
+
+  _onEditButtonClick() {
+    if (typeof this._onEdit === `function`) {
+      this._onEdit();
+    }
+  }
+
+  bind() {
+    this._element
+      .addEventListener(`click`, this._onEditButtonClick);
+  }
+
+  unbind() {
+    this._element
+      .removeEventListener(`click`, this._onEditButtonClick);
   }
 }
 

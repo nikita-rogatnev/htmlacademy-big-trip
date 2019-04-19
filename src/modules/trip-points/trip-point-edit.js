@@ -36,16 +36,100 @@ class TripPointEdit extends Component {
     this._onChangeDestination = this._onChangeDestination.bind(this);
   }
 
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
+  set onKeydownEsc(fn) {
+    this._onEsc = fn;
+  }
+
+  get template() {
+    return `
+      <article class="point">
+        <form action="" method="get">
+          <header class="point__header">
+            <label class="point__date">
+              choose day <input class="point__input" type="text" placeholder="MAR 18" name="day">
+            </label>
+            <div class="travel-way">
+              <label class="travel-way__label" for="travel-way__toggle-${this._id}">${TravelType[this._type.toUpperCase()]}</label>
+              <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle-${this._id}">
+              
+              <div class="travel-way__select">
+                <div class="travel-way__select-group">
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi-${this._id}" name="travel-way" value="taxi" ${this._type === `taxi` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-taxi-${this._id}">🚕 taxi</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus-${this._id}" name="travel-way" value="bus" ${this._type === `bus` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-bus-${this._id}">🚌 bus</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train-${this._id}" name="travel-way" value="train" ${this._type === `train` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-train-${this._id}">🚂 train</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight-${this._id}" name="travel-way" value="flight" ${this._type === `flight` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-flight-${this._id}">✈️ flight</label>
+                </div>
+                <div class="travel-way__select-group">
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in-${this._id}" name="travel-way" value="check-in" ${this._type === `check-in` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-check-in-${this._id}">🏨 check-in</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing-${this._id}" name="travel-way" value="sightseeing" ${this._type === `sightseeing` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-sightseeing-${this._id}">🏛 sightseeing</label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="point__destination-wrap">
+              <label class="point__destination-label" for="destination">${this._type} to</label>
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._city}" name="destination">
+              ${this._createDestinations()}
+            </div>
+            
+            <div class="point__time">
+              choose time
+              <input class="point__input" type="text" name="date-start" placeholder="19:00" data-time="${this._dateStart}">
+              <input class="point__input" type="text" name="date-end" placeholder="21:00" data-time="${this._dateEnd}">
+            </div>
+
+            <label class="point__price">
+              write price
+              <span class="point__price-currency">€</span>
+              <input class="point__input" type="text" value="${this._price}" name="price">
+            </label>
+
+            <div class="point__buttons">
+              <button class="point__button point__button--save" type="submit">Save</button>
+              <button class="point__button point__button--delete" type="reset">Delete</button>
+            </div>
+
+            <div class="paint__favorite-wrap">
+              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
+              <label class="point__favorite" for="favorite">favorite</label>
+            </div>
+          </header>
+
+          <section class="point__details">
+            <section class="point__offers">
+              <h3 class="point__details-title">Offers</h3>
+              <div class="point__offers-wrap">
+                ${this._createOffers()}
+              </div>
+            </section>
+            <section class="point__destination">
+              <h3 class="point__details-title">Destination</h3>
+              <p class="point__destination-text">${this._description}</p>
+              ${this._createPictures()}
+            </section>
+            <input type="hidden" class="point__total-price" name="total-price" value="">
+          </section>
+        </form>
+      </article>`.trim();
+  }
+
   _createPictures() {
     const picturesList = this._pictures.map((picture) => `<img src="${picture.src}" alt="${picture.description}" class="point__destination-image">`);
     return `<div class="point__destination-images">${picturesList.join(``)}</div>`;
-  }
-
-  _onChangeType(evt) {
-    if (evt.target.tagName.toLowerCase() === `input`) {
-      this._type = evt.target.value;
-      this._partialUpdate();
-    }
   }
 
   _createInitialOffers() {
@@ -76,20 +160,6 @@ class TripPointEdit extends Component {
       </label>`.trim()).join(``);
   }
 
-  _onChangeDestination(evt) {
-    const value = evt.target.value;
-
-    for (let destination of this._destinations) {
-      if (destination.name === value) {
-        this._city = destination.name;
-        this._description = destination.description;
-        this._pictures = destination.pictures;
-      }
-    }
-
-    this._partialUpdate();
-  }
-
   _createDestinations() {
     const options = this._destinations.map((destinations) => `<option value="${destinations.name}"></option>`).join(``);
     return `<datalist id="destination-select">${options}</datalist>`;
@@ -101,19 +171,6 @@ class TripPointEdit extends Component {
     this._element.parentNode.replaceChild(this.render(), oldElement);
     oldElement.remove();
     this.bind();
-  }
-
-  update(data) {
-    this._id = data.id;
-    this._isFavorite = data.isFavorite;
-    this._type = data.type;
-    this._city = data.city;
-    this._description = data.description;
-    this._pictures = data.pictures;
-    this._dateStart = data.dateStart;
-    this._dateEnd = data.dateEnd;
-    this._price = data.price;
-    this._offers = data.offers;
   }
 
   _processForm(formData) {
@@ -142,33 +199,6 @@ class TripPointEdit extends Component {
     return entry;
   }
 
-  static createMapper(target) {
-    return {
-      'favorite': (value) => {
-        target.isFavorite = (value === `on`);
-      },
-      'travel-way': (value) => {
-        target.type = value;
-      },
-      'destination': (value) => {
-        target.city = value;
-      },
-      'date-start': (value) => {
-        target.dateStart = value * 1000;
-      },
-      'date-end': (value) => {
-        target.dateEnd = value * 1000;
-      },
-      'price': (value) => {
-        target.price = value;
-      },
-      'offer': (value) => {
-        const [title, price] = value.split(`-`);
-        target.offers.push({title, price, accepted: true});
-      }
-    };
-  }
-
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
 
@@ -182,16 +212,8 @@ class TripPointEdit extends Component {
     this.update(newData);
   }
 
-  set onSubmit(fn) {
-    this._onSubmit = fn;
-  }
-
   _onDeleteButtonClick() {
     return (typeof this._onDelete === `function`) && this._onDelete(this._id);
-  }
-
-  set onDelete(fn) {
-    this._onDelete = fn;
   }
 
   _onKeydownEsc(evt) {
@@ -200,8 +222,38 @@ class TripPointEdit extends Component {
     }
   }
 
-  set onKeydownEsc(fn) {
-    this._onEsc = fn;
+  _onChangeDestination(evt) {
+    const value = evt.target.value;
+
+    for (let destination of this._destinations) {
+      if (destination.name === value) {
+        this._city = destination.name;
+        this._description = destination.description;
+        this._pictures = destination.pictures;
+      }
+    }
+
+    this._partialUpdate();
+  }
+
+  _onChangeType(evt) {
+    if (evt.target.tagName.toLowerCase() === `input`) {
+      this._type = evt.target.value;
+      this._partialUpdate();
+    }
+  }
+
+  update(data) {
+    this._id = data.id;
+    this._isFavorite = data.isFavorite;
+    this._type = data.type;
+    this._city = data.city;
+    this._description = data.description;
+    this._pictures = data.pictures;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
+    this._price = data.price;
+    this._offers = data.offers;
   }
 
   bind() {
@@ -336,84 +388,33 @@ class TripPointEdit extends Component {
     }, ANIMATION_TIMEOUT);
   }
 
-  get template() {
-    return `
-      <article class="point">
-        <form action="" method="get">
-          <header class="point__header">
-            <label class="point__date">
-              choose day <input class="point__input" type="text" placeholder="MAR 18" name="day">
-            </label>
-            <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle-${this._id}">${TravelType[this._type.toUpperCase()]}</label>
-              <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle-${this._id}">
-              
-              <div class="travel-way__select">
-                <div class="travel-way__select-group">
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi-${this._id}" name="travel-way" value="taxi" ${this._type === `taxi` ? `checked` : ``}>
-                  <label class="travel-way__select-label" for="travel-way-taxi-${this._id}">🚕 taxi</label>
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus-${this._id}" name="travel-way" value="bus" ${this._type === `bus` ? `checked` : ``}>
-                  <label class="travel-way__select-label" for="travel-way-bus-${this._id}">🚌 bus</label>
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train-${this._id}" name="travel-way" value="train" ${this._type === `train` ? `checked` : ``}>
-                  <label class="travel-way__select-label" for="travel-way-train-${this._id}">🚂 train</label>
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight-${this._id}" name="travel-way" value="flight" ${this._type === `flight` ? `checked` : ``}>
-                  <label class="travel-way__select-label" for="travel-way-flight-${this._id}">✈️ flight</label>
-                </div>
-                <div class="travel-way__select-group">
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in-${this._id}" name="travel-way" value="check-in" ${this._type === `check-in` ? `checked` : ``}>
-                  <label class="travel-way__select-label" for="travel-way-check-in-${this._id}">🏨 check-in</label>
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing-${this._id}" name="travel-way" value="sightseeing" ${this._type === `sightseeing` ? `checked` : ``}>
-                  <label class="travel-way__select-label" for="travel-way-sightseeing-${this._id}">🏛 sightseeing</label>
-                </div>
-              </div>
-            </div>
-            
-            <div class="point__destination-wrap">
-              <label class="point__destination-label" for="destination">${this._type} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._city}" name="destination">
-              ${this._createDestinations()}
-            </div>
-            
-            <div class="point__time">
-              choose time
-              <input class="point__input" type="text" name="date-start" placeholder="19:00" data-time="${this._dateStart}">
-              <input class="point__input" type="text" name="date-end" placeholder="21:00" data-time="${this._dateEnd}">
-            </div>
-
-            <label class="point__price">
-              write price
-              <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="${this._price}" name="price">
-            </label>
-
-            <div class="point__buttons">
-              <button class="point__button point__button--save" type="submit">Save</button>
-              <button class="point__button point__button--delete" type="reset">Delete</button>
-            </div>
-
-            <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
-              <label class="point__favorite" for="favorite">favorite</label>
-            </div>
-          </header>
-
-          <section class="point__details">
-            <section class="point__offers">
-              <h3 class="point__details-title">Offers</h3>
-              <div class="point__offers-wrap">
-                ${this._createOffers()}
-              </div>
-            </section>
-            <section class="point__destination">
-              <h3 class="point__details-title">Destination</h3>
-              <p class="point__destination-text">${this._description}</p>
-              ${this._createPictures()}
-            </section>
-            <input type="hidden" class="point__total-price" name="total-price" value="">
-          </section>
-        </form>
-      </article>`.trim();
+  static createMapper(target) {
+    return {
+      'favorite': (value) => {
+        target.isFavorite = (value === `on`);
+      },
+      'travel-way': (value) => {
+        target.type = value;
+      },
+      'destination': (value) => {
+        target.city = value;
+      },
+      'date-start': (value) => {
+        target.dateStart = value * 1000;
+      },
+      'date-end': (value) => {
+        target.dateEnd = value * 1000;
+      },
+      'price': (value) => {
+        target.price = value;
+      },
+      'offer': (value) => {
+        const [title, price] = value.split(`-`);
+        target.offers.push({title, price, accepted: true});
+      }
+    };
   }
+
 }
 
 export default TripPointEdit;

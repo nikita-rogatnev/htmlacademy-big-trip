@@ -1,7 +1,7 @@
 import ModelOffer from './models/model-offer';
 import ModelTripPoint from './models/model-trip-point';
 
-const CheckStatus = (response) => {
+const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
@@ -83,7 +83,7 @@ class API {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(CheckStatus)
+      .then(checkStatus)
       .catch((error) => {
         throw error;
       });

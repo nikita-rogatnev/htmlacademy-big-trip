@@ -8,7 +8,6 @@ class Component {
 
     this._element = null;
     this._container = null;
-    this._state = {};
   }
 
   get element() {
@@ -33,20 +32,20 @@ class Component {
     this._container = null;
   }
 
-  bind() {
-    // Bind
-  }
-
-  unbind() {
-    // Unbind
-  }
-
   _partialUpdate() {
     this.unbind();
     this._element = createElement(this.template);
     this._container.replaceChild(this._element, this._element);
     this._element.remove();
     this.bind();
+  }
+
+  bind() {
+    // Bind
+  }
+
+  unbind() {
+    // Unbind
   }
 }
 

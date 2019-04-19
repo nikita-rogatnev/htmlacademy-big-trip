@@ -3,10 +3,13 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as moment from 'moment/moment';
 import {TravelType} from "../../helpers/utils";
 
+const BAR_HEIGHT = 55;
+const HOURS_DAY = 24;
+const HALF_MINUTE = 30;
+
 const transportChartCtx = document.querySelector(`.statistic__transport`);
 const moneyChartCtx = document.querySelector(`.statistic__money`);
 const timeChartCtx = document.querySelector(`.statistic__time-spend`);
-const BAR_HEIGHT = 55;
 
 let moneyChart = null;
 let transportChart = null;
@@ -21,7 +24,7 @@ const getTotalDuration = (data) => {
 
     const getDuration = (durationRange) => {
       const duration = moment.duration(moment(durationRange[1]).diff(moment(durationRange[0])));
-      return duration.days() * 24 + duration.hours() + (duration.minutes() > 30 ? 1 : 0);
+      return duration.days() * HOURS_DAY + duration.hours() + (duration.minutes() > HALF_MINUTE ? 1 : 0);
     };
 
     result[typeName] = (!result[typeName]) ? getDuration([item.dateStart, item.dateEnd]) : +getDuration([item.dateStart, item.dateEnd]);

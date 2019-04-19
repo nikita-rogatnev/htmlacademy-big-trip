@@ -16,24 +16,24 @@ class Filter extends Component {
     this._onFilter = fn;
   }
 
+  get template() {
+    const sortingTemplate = `<span id="${this._description.toLowerCase()}">
+        <input type="radio" name="trip-sorting" id="sorting-${this._description.toLowerCase()}" value="${this._description.toLowerCase()}" ${this._isChecked ? `checked` : ``} ${this._isDisabled ? `disabled` : ``}>
+            <label class="trip-sorting__item trip-sorting__item--${this._description.toLowerCase()}" for="sorting-${this._description.toLowerCase()}">${this._description}</label>
+      </span>`.trim();
+
+    const filtersTemplate = `<span id="${this._description.toLowerCase()}">
+      <input type="radio" id="filter-${this._description.toLowerCase()}" name="filter" value="${this._description.toLowerCase()}" ${this._isChecked ? `checked` : ``} ${this._isDisabled ? `disabled` : ``}>
+        <label class="trip-filter__item" for="filter-${this._description.toLowerCase()}">${this._description}</label>
+    </span>`.trim();
+
+    return (this._type === `sorting`) ? sortingTemplate : filtersTemplate;
+  }
+
   _onClickFilter() {
     if (typeof this._onFilter === `function`) {
       this._onFilter();
     }
-  }
-
-  get template() {
-    if (this._type === `sorting`) {
-      return `<span id="${this._description.toLowerCase()}">
-        <input type="radio" name="trip-sorting" id="sorting-${this._description.toLowerCase()}" value="${this._description.toLowerCase()}" ${this._isChecked ? `checked` : ``} ${this._isDisabled ? `disabled` : ``}>
-            <label class="trip-sorting__item trip-sorting__item--${this._description.toLowerCase()}" for="sorting-${this._description.toLowerCase()}">${this._description}</label>
-      </span>`.trim();
-    }
-
-    return `<span id="${this._description.toLowerCase()}">
-      <input type="radio" id="filter-${this._description.toLowerCase()}" name="filter" value="${this._description.toLowerCase()}" ${this._isChecked ? `checked` : ``} ${this._isDisabled ? `disabled` : ``}>
-        <label class="trip-filter__item" for="filter-${this._description.toLowerCase()}">${this._description}</label>
-    </span>`.trim();
   }
 
   bind() {

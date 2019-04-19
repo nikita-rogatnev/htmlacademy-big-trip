@@ -6,6 +6,15 @@ class TotalCost extends Component {
     this._totalPrice = 0;
   }
 
+  get template() {
+    return `<div>
+      Total: 
+      <span class="trip__total-cost">
+        € ${this._totalPrice}
+      </span>
+    </div>`.trim();
+  }
+
   getPrice(data) {
     // Calculate Trip Points Sum
     let tripPointPrice = 0;
@@ -24,15 +33,6 @@ class TotalCost extends Component {
     this._totalPrice = tripPointPrice + offersPrice;
 
     return this._totalPrice;
-  }
-
-  get template() {
-    return `<div>
-      Total: 
-      <span class="trip__total-cost">
-        € ${this._totalPrice}
-      </span>
-    </div>`.trim();
   }
 }
 

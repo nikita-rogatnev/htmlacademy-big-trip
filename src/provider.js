@@ -9,7 +9,6 @@ export default class Provider {
     this._api = api;
     this._store = store;
     this._generateId = generateId;
-    this._needSync = false;
   }
 
   getTripPoints() {
@@ -19,12 +18,12 @@ export default class Provider {
           points.map((item) => this._store.setItem({key: item.id, item: item.toRAW()}));
           return points;
         });
-    } else {
-      const rawPointsMap = this._store.getAll();
-      const rawPoints = objectToArray(rawPointsMap);
-      const points = ModelTripPoint.parseTripPoints(rawPoints);
-      return Promise.resolve(points);
     }
+
+    const rawPointsMap = this._store.getAll();
+    const rawPoints = objectToArray(rawPointsMap);
+    const points = ModelTripPoint.parseTripPoints(rawPoints);
+    return Promise.resolve(points);
   }
 
   getDestinations() {
@@ -46,7 +45,6 @@ export default class Provider {
         });
     }
     tripPoint.id = this._generateId();
-    this._needSync = true;
     this._store.setItem({key: tripPoint.id, item: tripPoint});
     return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
   }
@@ -58,12 +56,10 @@ export default class Provider {
           this._store.setItem({key: tripPoint.id, item: tripPoint.toRAW()});
           return tripPoint;
         });
-    } else {
-      const tripPoint = data;
-      this._needSync = true;
-      this._store.setItem({key: tripPoint.id, item: tripPoint});
-      return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
     }
+    const tripPoint = data;
+    this._store.setItem({key: tripPoint.id, item: tripPoint});
+    return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
   }
 
   deleteTripPoint({id}) {
@@ -72,11 +68,9 @@ export default class Provider {
         .then(() => {
           this._store.removeItem({key: id});
         });
-    } else {
-      this._needSync = true;
-      this._store.removeItem({key: id});
-      return Promise.resolve(true);
     }
+    this._store.removeItem({key: id});
+    return Promise.resolve(true);
   }
 
   syncTripPoints() {
