@@ -209,8 +209,6 @@ class TripPointEdit extends Component {
       this._onSubmit(newData);
     }
 
-    console.log(newData);
-
     this.update(newData);
   }
 

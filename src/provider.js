@@ -44,8 +44,7 @@ export default class Provider {
           return response;
         });
     }
-    tripPoint.id = this._generateId();
-    this._store.setItem({key: tripPoint.id, item: tripPoint});
+    this._store.setItem({key: tripPoint.id, item: tripPoint, storeKey: `store-key`});
     return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
   }
 

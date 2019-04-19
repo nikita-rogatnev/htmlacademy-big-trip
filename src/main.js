@@ -20,8 +20,7 @@ const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const STORE_KEY = `store-key`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const store = new Store({key: STORE_KEY, storage: localStorage});
-const generateId = Date.now() + Math.random();
-const provider = new Provider({api, store, generateId});
+const provider = new Provider({api, store});
 
 const tripDayContainer = document.querySelector(`.trip-points`);
 const mainContainer = document.querySelector(`.main`);
@@ -43,7 +42,7 @@ const sortingList = [
 ];
 
 const tripPointMockData = {
-  id: null,
+  id: String(Date.now()),
   isFavorite: false,
   type: `sightseeing`,
   city: ``,
