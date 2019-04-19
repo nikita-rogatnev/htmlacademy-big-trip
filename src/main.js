@@ -53,7 +53,7 @@ const tripPointMockData = {
   dateEnd: Date.now(),
   price: 0,
   offers: [],
-  destinations: [],
+  destination: ``,
 };
 
 const switchContainer = document.querySelector(`.view-switch__items`);
@@ -100,11 +100,11 @@ const renderTripPoints = (data, dist) => {
           dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           tripPointEditComponent.unrender();
         })
-        // .catch(() => {
-        //   tripPointEditComponent.element.style.border = `1px solid red`;
-        //   tripPointEditComponent.error();
-        //   tripPointEditComponent.unlockSave();
-        // });
+      // .catch(() => {
+      //   tripPointEditComponent.element.style.border = `1px solid red`;
+      //   tripPointEditComponent.error();
+      //   tripPointEditComponent.unlockSave();
+      // });
 
       setTotalPrice(tripPoints);
     };
@@ -122,11 +122,11 @@ const renderTripPoints = (data, dist) => {
         .then(() => {
           tripPointEditComponent.unrender();
         })
-        // .catch(() => {
-        //   tripPointEditComponent.element.style.border = `1px solid red`;
-        //   tripPointEditComponent.error();
-        //   tripPointEditComponent.unlockDelete();
-        // });
+      // .catch(() => {
+      //   tripPointEditComponent.element.style.border = `1px solid red`;
+      //   tripPointEditComponent.error();
+      //   tripPointEditComponent.unlockDelete();
+      // });
 
       tripPoints.splice(id, 1);
 
@@ -289,11 +289,11 @@ newTripPointButton.addEventListener(`click`, () => {
         newTripPointEditComponent.unrender();
         setTotalPrice(tripPoints);
       })
-      // .catch(() => {
-      //   newTripPointEditComponent.element.style.border = `1px solid red`;
-      //   newTripPointEditComponent.error();
-      //   newTripPointEditComponent.unlockSave();
-      // });
+    // .catch(() => {
+    //   newTripPointEditComponent.element.style.border = `1px solid red`;
+    //   newTripPointEditComponent.error();
+    //   newTripPointEditComponent.unlockSave();
+    // });
   };
 
   newTripPointEditComponent.onDelete = () => {
@@ -324,9 +324,9 @@ document.addEventListener(`DOMContentLoaded`, () => {
       setTotalPrice(tripPoints);
       renderStatistics(tripPoints);
     })
-    // .catch(() => {
-    //   tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
-    // });
+  // .catch(() => {
+  //   tripDayContainer.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+  // });
 });
 
 // Calculate Total Price In trip__total
