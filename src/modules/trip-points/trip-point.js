@@ -52,7 +52,7 @@ class TripPoint extends Component {
     this._price = data.price;
     this._offers = data.offers;
   }
-  
+
   _renderTripPointOffers() {
     const offersArray = [];
     for (let offer of this._offers) {
