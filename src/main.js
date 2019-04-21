@@ -264,7 +264,6 @@ newTripPointButton.addEventListener(`click`, () => {
 
 
   newTripPointEditComponent.onSubmit = (newData) => {
-    tripPoint.id = (tripPoints.length + 1).toString();
     tripPoint.isFavorite = newData.isFavorite;
     tripPoint.type = newData.type;
     tripPoint.city = newData.city;
@@ -280,10 +279,10 @@ newTripPointButton.addEventListener(`click`, () => {
     provider.createTripPoint({tripPoint})
       .then(() => {
         newTripPointEditComponent.unlockSave();
-        tripPoints.push(tripPoint);
       })
       .then(() => provider.getTripPoints())
-      .then(() => {
+      .then((points) => {
+        tripPoints = points;
         renderTripDays(tripPoints);
         newTripPointButton.disabled = false;
         newTripPointEditComponent.unrender();
