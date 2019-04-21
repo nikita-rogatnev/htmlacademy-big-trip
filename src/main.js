@@ -99,11 +99,11 @@ const renderTripPoints = (data, dist) => {
           dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           tripPointEditComponent.unrender();
         })
-        .catch(() => {
-          tripPointEditComponent.element.style.border = `1px solid red`;
-          tripPointEditComponent.error();
-          tripPointEditComponent.unlockSave();
-        });
+        // .catch(() => {
+        //   tripPointEditComponent.element.style.border = `1px solid red`;
+        //   tripPointEditComponent.error();
+        //   tripPointEditComponent.unlockSave();
+        // });
 
       setTotalPrice(tripPoints);
     };
