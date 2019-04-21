@@ -5,10 +5,9 @@ const objectToArray = (object) => {
 };
 
 export default class Provider {
-  constructor({api, store, generateId}) {
+  constructor({api, store}) {
     this._api = api;
     this._store = store;
-    this._generateId = generateId;
   }
 
   getTripPoints() {
@@ -44,8 +43,9 @@ export default class Provider {
           return response;
         });
     }
-    this._store.setItem({key: tripPoint.id, item: tripPoint, storeKey: `store-key`});
-    return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
+    tripPoint.id = String(Date.now());
+    this._store.setItem({key: tripPoint.id, item: tripPoint});
+    return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint.toRAW()));
   }
 
   updateTripPoint({id, data}) {
@@ -56,9 +56,8 @@ export default class Provider {
           return tripPoint;
         });
     }
-    const tripPoint = data;
-    this._store.setItem({key: tripPoint.id, item: tripPoint});
-    return Promise.resolve(ModelTripPoint.parseTripPoint(tripPoint));
+    this._store.setItem({key: id, item: data});
+    return Promise.resolve(ModelTripPoint.parseTripPoint(data));
   }
 
   deleteTripPoint({id}) {
