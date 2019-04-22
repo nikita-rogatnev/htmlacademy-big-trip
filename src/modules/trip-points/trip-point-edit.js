@@ -4,6 +4,7 @@ import flatpickr from 'flatpickr';
 import "../../../node_modules/flatpickr/dist/flatpickr.css";
 import "../../../node_modules/flatpickr/dist/themes/dark.css";
 import {TravelType} from '../../helpers/utils';
+import ModelOffer from "../../models/model-offer";
 
 // Trip Point Edit Class
 class TripPointEdit extends Component {
@@ -70,12 +71,20 @@ class TripPointEdit extends Component {
                   <label class="travel-way__select-label" for="travel-way-train-${this._id}">🚂 train</label>
                   <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight-${this._id}" name="travel-way" value="flight" ${this._type === `flight` ? `checked` : ``}>
                   <label class="travel-way__select-label" for="travel-way-flight-${this._id}">✈️ flight</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-ship-${this._id}" name="travel-way" value="ship" ${this._type === `ship` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-ship-${this._id}">🛳️ Ship</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-transport-${this._id}" name="travel-way" value="transport" ${this._type === `transport` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-transport-${this._id}">🚊 Transport</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-drive-${this._id}" name="travel-way" value="drive" ${this._type === `drive` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-drive-${this._id}">🚗 Drive</label>
                 </div>
                 <div class="travel-way__select-group">
                   <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in-${this._id}" name="travel-way" value="check-in" ${this._type === `check-in` ? `checked` : ``}>
                   <label class="travel-way__select-label" for="travel-way-check-in-${this._id}">🏨 check-in</label>
                   <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing-${this._id}" name="travel-way" value="sightseeing" ${this._type === `sightseeing` ? `checked` : ``}>
                   <label class="travel-way__select-label" for="travel-way-sightseeing-${this._id}">🏛 sightseeing</label>
+                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-restaurant-${this._id}" name="travel-way" value="restaurant" ${this._type === `restaurant` ? `checked` : ``}>
+                  <label class="travel-way__select-label" for="travel-way-restaurant-${this._id}">🍴 Restaurant</label>
                 </div>
               </div>
             </div>
@@ -134,7 +143,24 @@ class TripPointEdit extends Component {
 
   _createInitialOffers() {
     // Array of offers from _offersList without active
-    const currentTypeOffers = this._offersList.find((offer) => offer.type === this._type);
+    let currentTypeOffers = this._offersList.find((offer) => offer.type === this._type);
+
+    // Add Additional Offers If undefined
+    if (currentTypeOffers === undefined) {
+      let additionalOffers = [
+        {type: `ship`, offers: []},
+        {type: `transport`, offers: []},
+        {type: `drive`, offers: []},
+        {type: `restaurant`, offers: []},
+      ];
+
+      for (let additionalOffer of additionalOffers) {
+        this._offersList.push(ModelOffer.parseOffer(additionalOffer));
+      }
+
+      currentTypeOffers = this._offersList.find((offer) => offer.type === this._type);
+    }
+
     const currentTypeOffersArray = currentTypeOffers.offers;
 
     // Array of offers from _offers with active
@@ -414,7 +440,6 @@ class TripPointEdit extends Component {
       }
     };
   }
-
 }
 
 export default TripPointEdit;

@@ -99,11 +99,11 @@ const renderTripPoints = (data, dist) => {
           dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
           tripPointEditComponent.unrender();
         })
-        // .catch(() => {
-        //   tripPointEditComponent.element.style.border = `1px solid red`;
-        //   tripPointEditComponent.error();
-        //   tripPointEditComponent.unlockSave();
-        // });
+        .catch(() => {
+          tripPointEditComponent.element.style.border = `1px solid red`;
+          tripPointEditComponent.error();
+          tripPointEditComponent.unlockSave();
+        });
 
       setTotalPrice(tripPoints);
     };
@@ -142,8 +142,8 @@ const renderTripPoints = (data, dist) => {
     // Exit Trip Point Edit Mode
     tripPointEditComponent.onKeydownEsc = () => {
       tripPointComponent.render(tripDayContainer);
-      dist.replaceChild(tripPointComponent.element, tripPointEditComponent.element);
       tripPointEditComponent.unrender();
+      renderTripDays(tripPoints);
     };
 
     dist.appendChild(tripPointComponent.render(tripDayContainer));
@@ -261,7 +261,6 @@ newTripPointButton.addEventListener(`click`, () => {
   tripDayContainer.insertBefore(newTripPointEditComponent.render(), tripDayContainer.firstChild);
 
   let tripPoint = ModelTripPoint.parseTripPoint(tripPointMockData, tripOffers, tripDestinations);
-
 
   newTripPointEditComponent.onSubmit = (newData) => {
     tripPoint.isFavorite = newData.isFavorite;
